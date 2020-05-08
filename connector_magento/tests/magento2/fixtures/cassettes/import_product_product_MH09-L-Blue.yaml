@@ -1,0 +1,362 @@
+interactions:
+- request:
+    body: null
+    headers:
+      Accept: ['*/*']
+      Accept-Encoding: ['gzip, deflate']
+      Connection: [keep-alive]
+      User-Agent: [python-requests/2.19.1]
+    method: GET
+    uri: http://magento/index.php/rest/V1/products/MH09-L-Blue
+  response:
+    body: {string: '{"id":190,"sku":"MH09-L-Blue","name":"Abominable Hoodie-L-Blue","attribute_set_id":9,"price":69,"status":1,"visibility":1,"type_id":"simple","created_at":"2020-03-27
+        16:06:41","updated_at":"2020-03-27 16:06:41","weight":1,"extension_attributes":{"website_ids":[1],"category_links":[{"position":0,"category_id":"15"}],"stock_item":{"item_id":190,"product_id":190,"stock_id":1,"qty":100,"is_in_stock":true,"is_qty_decimal":false,"show_default_notification_message":false,"use_config_min_qty":true,"min_qty":0,"use_config_min_sale_qty":1,"min_sale_qty":1,"use_config_max_sale_qty":true,"max_sale_qty":10000,"use_config_backorders":true,"backorders":0,"use_config_notify_stock_qty":true,"notify_stock_qty":1,"use_config_qty_increments":true,"qty_increments":0,"use_config_enable_qty_inc":true,"enable_qty_increments":false,"use_config_manage_stock":true,"manage_stock":true,"low_stock_date":null,"is_decimal_divided":false,"stock_status_changed_auto":0}},"product_links":[],"options":[],"media_gallery_entries":[{"id":298,"media_type":"image","label":"","position":1,"disabled":false,"types":["image","small_image","thumbnail"],"file":"\/m\/h\/mh09-blue_main_1.jpg"},{"id":299,"media_type":"image","label":"","position":2,"disabled":false,"types":[],"file":"\/m\/h\/mh09-blue_alt1_1.jpg"},{"id":300,"media_type":"image","label":"","position":3,"disabled":false,"types":[],"file":"\/m\/h\/mh09-blue_back_1.jpg"}],"tier_prices":[],"custom_attributes":[{"attribute_code":"image","value":"\/m\/h\/mh09-blue_main_1.jpg"},{"attribute_code":"small_image","value":"\/m\/h\/mh09-blue_main_1.jpg"},{"attribute_code":"thumbnail","value":"\/m\/h\/mh09-blue_main_1.jpg"},{"attribute_code":"options_container","value":"container2"},{"attribute_code":"msrp_display_actual_price_type","value":"0"},{"attribute_code":"url_key","value":"abominable-hoodie-l-blue"},{"attribute_code":"required_options","value":"0"},{"attribute_code":"has_options","value":"0"},{"attribute_code":"tax_class_id","value":"2"},{"attribute_code":"category_ids","value":["15"]},{"attribute_code":"description","value":"<p>It
+        took CoolTech&trade; weather apparel know-how and lots of wind-resistant fabric
+        to get the Abominable Hoodie just right. It''s aggressively warm when it needs
+        to be, while maintaining your comfort in milder climes.<\/p>\n<p>&bull; Blue
+        heather hoodie.<br \/>&bull; Relaxed fit. <br \/>&bull; Moisture-wicking.
+        <br \/>&bull; Machine wash\/dry.<\/p>"},{"attribute_code":"size","value":"5596"},{"attribute_code":"color","value":"5477"}]}'}
+    headers:
+      Cache-Control: ['no-store, no-cache, must-revalidate']
+      Connection: [keep-alive]
+      Content-Type: [application/json; charset=utf-8]
+      Date: ['Fri, 01 May 2020 16:31:29 GMT']
+      Expires: ['Thu, 19 Nov 1981 08:52:00 GMT']
+      Pragma: [no-cache]
+      Server: [nginx/1.14.0 (Ubuntu)]
+      Set-Cookie: ['PHPSESSID=cdceuht4mchps1pcmpr404o48o; expires=Fri, 01-May-2020
+          17:31:29 GMT; Max-Age=3600; path=/; domain=magento; HttpOnly']
+      Transfer-Encoding: [chunked]
+      Vary: [Accept-Encoding]
+      X-Frame-Options: [SAMEORIGIN]
+      content-length: ['2512']
+    status: {code: 200, message: OK}
+- request:
+    body: null
+    headers:
+      Accept: ['*/*']
+      Accept-Encoding: ['gzip, deflate']
+      Connection: [keep-alive]
+      User-Agent: [python-requests/2.19.1]
+    method: GET
+    uri: http://magento/index.php/rest/V1/categories/15
+  response:
+    body: {string: '{"id":15,"parent_id":12,"name":"Hoodies & Sweatshirts","is_active":true,"position":2,"level":4,"children":"","created_at":"2020-03-27
+        16:06:36","updated_at":"2020-03-27 16:06:36","path":"1\/2\/11\/12\/15","available_sort_by":[],"include_in_menu":true,"custom_attributes":[{"attribute_code":"is_anchor","value":"1"},{"attribute_code":"path","value":"1\/2\/11\/12\/15"},{"attribute_code":"children_count","value":"0"},{"attribute_code":"url_key","value":"hoodies-and-sweatshirts-men"},{"attribute_code":"url_path","value":"men\/tops-men\/hoodies-and-sweatshirts-men"}]}'}
+    headers:
+      Cache-Control: ['no-store, no-cache, must-revalidate']
+      Connection: [keep-alive]
+      Content-Type: [application/json; charset=utf-8]
+      Date: ['Fri, 01 May 2020 16:31:30 GMT']
+      Expires: ['Thu, 19 Nov 1981 08:52:00 GMT']
+      Pragma: [no-cache]
+      Server: [nginx/1.14.0 (Ubuntu)]
+      Set-Cookie: ['PHPSESSID=4mohi9asj6d6379sbco0h6b3c7; expires=Fri, 01-May-2020
+          17:31:30 GMT; Max-Age=3600; path=/; domain=magento; HttpOnly']
+      Transfer-Encoding: [chunked]
+      Vary: [Accept-Encoding]
+      X-Frame-Options: [SAMEORIGIN]
+      content-length: ['567']
+    status: {code: 200, message: OK}
+- request:
+    body: null
+    headers:
+      Accept: ['*/*']
+      Accept-Encoding: ['gzip, deflate']
+      Connection: [keep-alive]
+      User-Agent: [python-requests/2.19.1]
+    method: GET
+    uri: http://magento/index.php/rest/V1/categories/12
+  response:
+    body: {string: '{"id":12,"parent_id":11,"name":"Tops","is_active":true,"position":1,"level":3,"children":"14,15,16,17","created_at":"2020-03-27
+        16:06:36","updated_at":"2020-03-27 16:06:36","path":"1\/2\/11\/12","available_sort_by":[],"include_in_menu":true,"custom_attributes":[{"attribute_code":"is_anchor","value":"1"},{"attribute_code":"path","value":"1\/2\/11\/12"},{"attribute_code":"children_count","value":"4"},{"attribute_code":"url_key","value":"tops-men"},{"attribute_code":"url_path","value":"men\/tops-men"}]}'}
+    headers:
+      Cache-Control: ['no-store, no-cache, must-revalidate']
+      Connection: [keep-alive]
+      Content-Type: [application/json; charset=utf-8]
+      Date: ['Fri, 01 May 2020 16:31:30 GMT']
+      Expires: ['Thu, 19 Nov 1981 08:52:00 GMT']
+      Pragma: [no-cache]
+      Server: [nginx/1.14.0 (Ubuntu)]
+      Set-Cookie: ['PHPSESSID=tttn8mm6edaoboksmuh9epovqp; expires=Fri, 01-May-2020
+          17:31:30 GMT; Max-Age=3600; path=/; domain=magento; HttpOnly']
+      Transfer-Encoding: [chunked]
+      Vary: [Accept-Encoding]
+      X-Frame-Options: [SAMEORIGIN]
+      content-length: ['505']
+    status: {code: 200, message: OK}
+- request:
+    body: null
+    headers:
+      Accept: ['*/*']
+      Accept-Encoding: ['gzip, deflate']
+      Connection: [keep-alive]
+      User-Agent: [python-requests/2.19.1]
+    method: GET
+    uri: http://magento/index.php/rest/V1/categories/11
+  response:
+    body: {string: '{"id":11,"parent_id":2,"name":"Men","is_active":true,"position":3,"level":2,"children":"12,13","created_at":"2020-03-27
+        16:06:36","updated_at":"2020-03-27 16:06:36","path":"1\/2\/11","available_sort_by":[],"include_in_menu":true,"custom_attributes":[{"attribute_code":"display_mode","value":"PAGE"},{"attribute_code":"is_anchor","value":"0"},{"attribute_code":"path","value":"1\/2\/11"},{"attribute_code":"children_count","value":"8"},{"attribute_code":"url_key","value":"men"},{"attribute_code":"url_path","value":"men"}]}'}
+    headers:
+      Cache-Control: ['no-store, no-cache, must-revalidate']
+      Connection: [keep-alive]
+      Content-Type: [application/json; charset=utf-8]
+      Date: ['Fri, 01 May 2020 16:31:30 GMT']
+      Expires: ['Thu, 19 Nov 1981 08:52:00 GMT']
+      Pragma: [no-cache]
+      Server: [nginx/1.14.0 (Ubuntu)]
+      Set-Cookie: ['PHPSESSID=h7adtevuhqlsrar2fvglr2sge3; expires=Fri, 01-May-2020
+          17:31:30 GMT; Max-Age=3600; path=/; domain=magento; HttpOnly']
+      Transfer-Encoding: [chunked]
+      Vary: [Accept-Encoding]
+      X-Frame-Options: [SAMEORIGIN]
+      content-length: ['523']
+    status: {code: 200, message: OK}
+- request:
+    body: null
+    headers:
+      Accept: ['*/*']
+      Accept-Encoding: ['gzip, deflate']
+      Connection: [keep-alive]
+      User-Agent: [python-requests/2.19.1]
+    method: GET
+    uri: http://magento/index.php/rest/V1/categories/2
+  response:
+    body: {string: '{"id":2,"parent_id":1,"name":"Default Category","is_active":true,"position":1,"level":1,"children":"3,9,11,20,37,38","created_at":"2020-03-27
+        15:25:28","updated_at":"2020-04-24 10:01:36","path":"1\/2","available_sort_by":[],"include_in_menu":true,"custom_attributes":[{"attribute_code":"display_mode","value":"PRODUCTS"},{"attribute_code":"path","value":"1\/2"},{"attribute_code":"children_count","value":"39"}]}'}
+    headers:
+      Cache-Control: ['no-store, no-cache, must-revalidate']
+      Connection: [keep-alive]
+      Content-Type: [application/json; charset=utf-8]
+      Date: ['Fri, 01 May 2020 16:31:30 GMT']
+      Expires: ['Thu, 19 Nov 1981 08:52:00 GMT']
+      Pragma: [no-cache]
+      Server: [nginx/1.14.0 (Ubuntu)]
+      Set-Cookie: ['PHPSESSID=rtr6v970u8dlpgfgeb2vng7lge; expires=Fri, 01-May-2020
+          17:31:30 GMT; Max-Age=3600; path=/; domain=magento; HttpOnly']
+      Transfer-Encoding: [chunked]
+      Vary: [Accept-Encoding]
+      X-Frame-Options: [SAMEORIGIN]
+      content-length: ['412']
+    status: {code: 200, message: OK}
+- request:
+    body: null
+    headers:
+      Accept: ['*/*']
+      Accept-Encoding: ['gzip, deflate']
+      Connection: [keep-alive]
+      User-Agent: [python-requests/2.19.1]
+    method: GET
+    uri: http://magento/index.php/rest/V1/categories/1
+  response:
+    body: {string: '{"id":1,"parent_id":0,"name":"Root Catalog","position":0,"level":0,"children":"2","created_at":"2020-03-27
+        15:25:28","updated_at":"2020-04-24 10:01:36","path":"1","available_sort_by":[],"include_in_menu":true,"custom_attributes":[{"attribute_code":"path","value":"1"},{"attribute_code":"children_count","value":"40"}]}'}
+    headers:
+      Cache-Control: ['no-store, no-cache, must-revalidate']
+      Connection: [keep-alive]
+      Content-Type: [application/json; charset=utf-8]
+      Date: ['Fri, 01 May 2020 16:31:30 GMT']
+      Expires: ['Thu, 19 Nov 1981 08:52:00 GMT']
+      Pragma: [no-cache]
+      Server: [nginx/1.14.0 (Ubuntu)]
+      Set-Cookie: ['PHPSESSID=mqb8rc96skob7j5oir5dekv1t5; expires=Fri, 01-May-2020
+          17:31:30 GMT; Max-Age=3600; path=/; domain=magento; HttpOnly']
+      Transfer-Encoding: [chunked]
+      Vary: [Accept-Encoding]
+      X-Frame-Options: [SAMEORIGIN]
+      content-length: ['318']
+    status: {code: 200, message: OK}
+- request:
+    body: null
+    headers:
+      Accept: ['*/*']
+      Accept-Encoding: ['gzip, deflate']
+      Connection: [keep-alive]
+      User-Agent: [python-requests/2.19.1]
+    method: GET
+    uri: http://magento/index.php/rest/default/V1/categories/1
+  response:
+    body: {string: '{"id":1,"parent_id":0,"name":"Root Catalog","position":0,"level":0,"children":"2","created_at":"2020-03-27
+        15:25:28","updated_at":"2020-04-24 10:01:36","path":"1","available_sort_by":[],"include_in_menu":true,"custom_attributes":[{"attribute_code":"path","value":"1"},{"attribute_code":"children_count","value":"40"}]}'}
+    headers:
+      Cache-Control: ['no-store, no-cache, must-revalidate']
+      Connection: [keep-alive]
+      Content-Type: [application/json; charset=utf-8]
+      Date: ['Fri, 01 May 2020 16:31:30 GMT']
+      Expires: ['Thu, 19 Nov 1981 08:52:00 GMT']
+      Pragma: [no-cache]
+      Server: [nginx/1.14.0 (Ubuntu)]
+      Set-Cookie: ['PHPSESSID=8u3551ch2lf65rlnct19abu07h; expires=Fri, 01-May-2020
+          17:31:30 GMT; Max-Age=3600; path=/; domain=magento; HttpOnly']
+      Transfer-Encoding: [chunked]
+      Vary: [Accept-Encoding]
+      X-Frame-Options: [SAMEORIGIN]
+      content-length: ['318']
+    status: {code: 200, message: OK}
+- request:
+    body: null
+    headers:
+      Accept: ['*/*']
+      Accept-Encoding: ['gzip, deflate']
+      Connection: [keep-alive]
+      User-Agent: [python-requests/2.19.1]
+    method: GET
+    uri: http://magento/index.php/rest/default/V1/categories/2
+  response:
+    body: {string: '{"id":2,"parent_id":1,"name":"Default Category","is_active":true,"position":1,"level":1,"children":"3,9,11,20,37,38","created_at":"2020-03-27
+        15:25:28","updated_at":"2020-04-24 10:01:36","path":"1\/2","available_sort_by":[],"include_in_menu":true,"custom_attributes":[{"attribute_code":"display_mode","value":"PRODUCTS"},{"attribute_code":"path","value":"1\/2"},{"attribute_code":"children_count","value":"39"}]}'}
+    headers:
+      Cache-Control: ['no-store, no-cache, must-revalidate']
+      Connection: [keep-alive]
+      Content-Type: [application/json; charset=utf-8]
+      Date: ['Fri, 01 May 2020 16:31:30 GMT']
+      Expires: ['Thu, 19 Nov 1981 08:52:00 GMT']
+      Pragma: [no-cache]
+      Server: [nginx/1.14.0 (Ubuntu)]
+      Set-Cookie: ['PHPSESSID=3bjsplmlo1u9ql47cv16emq0dn; expires=Fri, 01-May-2020
+          17:31:30 GMT; Max-Age=3600; path=/; domain=magento; HttpOnly']
+      Transfer-Encoding: [chunked]
+      Vary: [Accept-Encoding]
+      X-Frame-Options: [SAMEORIGIN]
+      content-length: ['412']
+    status: {code: 200, message: OK}
+- request:
+    body: null
+    headers:
+      Accept: ['*/*']
+      Accept-Encoding: ['gzip, deflate']
+      Connection: [keep-alive]
+      User-Agent: [python-requests/2.19.1]
+    method: GET
+    uri: http://magento/index.php/rest/default/V1/categories/11
+  response:
+    body: {string: '{"id":11,"parent_id":2,"name":"Men","is_active":true,"position":3,"level":2,"children":"12,13","created_at":"2020-03-27
+        16:06:36","updated_at":"2020-03-27 16:06:36","path":"1\/2\/11","available_sort_by":[],"include_in_menu":true,"custom_attributes":[{"attribute_code":"display_mode","value":"PAGE"},{"attribute_code":"is_anchor","value":"0"},{"attribute_code":"path","value":"1\/2\/11"},{"attribute_code":"children_count","value":"8"},{"attribute_code":"url_key","value":"men"},{"attribute_code":"url_path","value":"men"}]}'}
+    headers:
+      Cache-Control: ['no-store, no-cache, must-revalidate']
+      Connection: [keep-alive]
+      Content-Type: [application/json; charset=utf-8]
+      Date: ['Fri, 01 May 2020 16:31:31 GMT']
+      Expires: ['Thu, 19 Nov 1981 08:52:00 GMT']
+      Pragma: [no-cache]
+      Server: [nginx/1.14.0 (Ubuntu)]
+      Set-Cookie: ['PHPSESSID=s5de78ktm11g4afk40d2pfru07; expires=Fri, 01-May-2020
+          17:31:30 GMT; Max-Age=3600; path=/; domain=magento; HttpOnly']
+      Transfer-Encoding: [chunked]
+      Vary: [Accept-Encoding]
+      X-Frame-Options: [SAMEORIGIN]
+      content-length: ['523']
+    status: {code: 200, message: OK}
+- request:
+    body: null
+    headers:
+      Accept: ['*/*']
+      Accept-Encoding: ['gzip, deflate']
+      Connection: [keep-alive]
+      User-Agent: [python-requests/2.19.1]
+    method: GET
+    uri: http://magento/index.php/rest/default/V1/categories/12
+  response:
+    body: {string: '{"id":12,"parent_id":11,"name":"Tops","is_active":true,"position":1,"level":3,"children":"14,15,16,17","created_at":"2020-03-27
+        16:06:36","updated_at":"2020-03-27 16:06:36","path":"1\/2\/11\/12","available_sort_by":[],"include_in_menu":true,"custom_attributes":[{"attribute_code":"is_anchor","value":"1"},{"attribute_code":"path","value":"1\/2\/11\/12"},{"attribute_code":"children_count","value":"4"},{"attribute_code":"url_key","value":"tops-men"},{"attribute_code":"url_path","value":"men\/tops-men"}]}'}
+    headers:
+      Cache-Control: ['no-store, no-cache, must-revalidate']
+      Connection: [keep-alive]
+      Content-Type: [application/json; charset=utf-8]
+      Date: ['Fri, 01 May 2020 16:31:31 GMT']
+      Expires: ['Thu, 19 Nov 1981 08:52:00 GMT']
+      Pragma: [no-cache]
+      Server: [nginx/1.14.0 (Ubuntu)]
+      Set-Cookie: ['PHPSESSID=msk39k9sbuc92bvqkd13ik69ol; expires=Fri, 01-May-2020
+          17:31:31 GMT; Max-Age=3600; path=/; domain=magento; HttpOnly']
+      Transfer-Encoding: [chunked]
+      Vary: [Accept-Encoding]
+      X-Frame-Options: [SAMEORIGIN]
+      content-length: ['505']
+    status: {code: 200, message: OK}
+- request:
+    body: null
+    headers:
+      Accept: ['*/*']
+      Accept-Encoding: ['gzip, deflate']
+      Connection: [keep-alive]
+      User-Agent: [python-requests/2.19.1]
+    method: GET
+    uri: http://magento/index.php/rest/default/V1/categories/15
+  response:
+    body: {string: '{"id":15,"parent_id":12,"name":"Hoodies & Sweatshirts","is_active":true,"position":2,"level":4,"children":"","created_at":"2020-03-27
+        16:06:36","updated_at":"2020-03-27 16:06:36","path":"1\/2\/11\/12\/15","available_sort_by":[],"include_in_menu":true,"custom_attributes":[{"attribute_code":"is_anchor","value":"1"},{"attribute_code":"path","value":"1\/2\/11\/12\/15"},{"attribute_code":"children_count","value":"0"},{"attribute_code":"url_key","value":"hoodies-and-sweatshirts-men"},{"attribute_code":"url_path","value":"men\/tops-men\/hoodies-and-sweatshirts-men"}]}'}
+    headers:
+      Cache-Control: ['no-store, no-cache, must-revalidate']
+      Connection: [keep-alive]
+      Content-Type: [application/json; charset=utf-8]
+      Date: ['Fri, 01 May 2020 16:31:31 GMT']
+      Expires: ['Thu, 19 Nov 1981 08:52:00 GMT']
+      Pragma: [no-cache]
+      Server: [nginx/1.14.0 (Ubuntu)]
+      Set-Cookie: ['PHPSESSID=2q4372nhpv3cp6fcfsnj165cec; expires=Fri, 01-May-2020
+          17:31:31 GMT; Max-Age=3600; path=/; domain=magento; HttpOnly']
+      Transfer-Encoding: [chunked]
+      Vary: [Accept-Encoding]
+      X-Frame-Options: [SAMEORIGIN]
+      content-length: ['567']
+    status: {code: 200, message: OK}
+- request:
+    body: null
+    headers:
+      Accept: ['*/*']
+      Accept-Encoding: ['gzip, deflate']
+      Connection: [keep-alive]
+      User-Agent: [python-requests/2.19.1]
+    method: GET
+    uri: http://magento/index.php/rest/default/V1/products/MH09-L-Blue
+  response:
+    body: {string: '{"id":190,"sku":"MH09-L-Blue","name":"Abominable Hoodie-L-Blue","attribute_set_id":9,"price":69,"status":1,"visibility":1,"type_id":"simple","created_at":"2020-03-27
+        16:06:41","updated_at":"2020-03-27 16:06:41","weight":1,"extension_attributes":{"website_ids":[1],"category_links":[{"position":0,"category_id":"15"}],"stock_item":{"item_id":190,"product_id":190,"stock_id":1,"qty":100,"is_in_stock":true,"is_qty_decimal":false,"show_default_notification_message":false,"use_config_min_qty":true,"min_qty":0,"use_config_min_sale_qty":1,"min_sale_qty":1,"use_config_max_sale_qty":true,"max_sale_qty":10000,"use_config_backorders":true,"backorders":0,"use_config_notify_stock_qty":true,"notify_stock_qty":1,"use_config_qty_increments":true,"qty_increments":0,"use_config_enable_qty_inc":true,"enable_qty_increments":false,"use_config_manage_stock":true,"manage_stock":true,"low_stock_date":null,"is_decimal_divided":false,"stock_status_changed_auto":0}},"product_links":[],"options":[],"media_gallery_entries":[{"id":298,"media_type":"image","label":"","position":1,"disabled":false,"types":["image","small_image","thumbnail"],"file":"\/m\/h\/mh09-blue_main_1.jpg"},{"id":299,"media_type":"image","label":"","position":2,"disabled":false,"types":[],"file":"\/m\/h\/mh09-blue_alt1_1.jpg"},{"id":300,"media_type":"image","label":"","position":3,"disabled":false,"types":[],"file":"\/m\/h\/mh09-blue_back_1.jpg"}],"tier_prices":[],"custom_attributes":[{"attribute_code":"image","value":"\/m\/h\/mh09-blue_main_1.jpg"},{"attribute_code":"small_image","value":"\/m\/h\/mh09-blue_main_1.jpg"},{"attribute_code":"thumbnail","value":"\/m\/h\/mh09-blue_main_1.jpg"},{"attribute_code":"options_container","value":"container2"},{"attribute_code":"msrp_display_actual_price_type","value":"0"},{"attribute_code":"url_key","value":"abominable-hoodie-l-blue"},{"attribute_code":"required_options","value":"0"},{"attribute_code":"has_options","value":"0"},{"attribute_code":"tax_class_id","value":"2"},{"attribute_code":"category_ids","value":["15"]},{"attribute_code":"description","value":"<p>It
+        took CoolTech&trade; weather apparel know-how and lots of wind-resistant fabric
+        to get the Abominable Hoodie just right. It''s aggressively warm when it needs
+        to be, while maintaining your comfort in milder climes.<\/p>\n<p>&bull; Blue
+        heather hoodie.<br \/>&bull; Relaxed fit. <br \/>&bull; Moisture-wicking.
+        <br \/>&bull; Machine wash\/dry.<\/p>"},{"attribute_code":"size","value":"5596"},{"attribute_code":"color","value":"5477"}]}'}
+    headers:
+      Cache-Control: ['no-store, no-cache, must-revalidate']
+      Connection: [keep-alive]
+      Content-Type: [application/json; charset=utf-8]
+      Date: ['Fri, 01 May 2020 16:31:31 GMT']
+      Expires: ['Thu, 19 Nov 1981 08:52:00 GMT']
+      Pragma: [no-cache]
+      Server: [nginx/1.14.0 (Ubuntu)]
+      Set-Cookie: ['PHPSESSID=om1cchijtoi9mi5ud311kko3sf; expires=Fri, 01-May-2020
+          17:31:31 GMT; Max-Age=3600; path=/; domain=magento; HttpOnly']
+      Transfer-Encoding: [chunked]
+      Vary: [Accept-Encoding]
+      X-Frame-Options: [SAMEORIGIN]
+      content-length: ['2512']
+    status: {code: 200, message: OK}
+- request:
+    body: null
+    headers:
+      Accept: ['*/*']
+      Accept-Encoding: ['gzip, deflate']
+      Connection: [keep-alive]
+      User-Agent: [python-requests/2.19.1]
+    method: GET
+    uri: http://magento/media/catalog/product//m/h/mh09-blue_main_1.jpg
+  response:
+    body:
+      string: !!binary |
+        R0lGODlhAQABAIAAAP///wAAACH5BAEAAAAALAAAAAABAAEAAAICRAEAOw==
+    headers:
+      Accept-Ranges: [bytes]
+      Cache-Control: [max-age=31536000, public]
+      Connection: [keep-alive]
+      Content-Length: ['203443']
+      Content-Type: [image/jpeg]
+      Date: ['Fri, 01 May 2020 16:31:31 GMT']
+      ETag: ['"5e7e2491-31ab3"']
+      Expires: ['Sat, 01 May 2021 16:31:31 GMT']
+      Last-Modified: ['Fri, 27 Mar 2020 16:06:41 GMT']
+      Server: [nginx/1.14.0 (Ubuntu)]
+      X-Frame-Options: [SAMEORIGIN]
+    status: {code: 200, message: OK}
+version: 1

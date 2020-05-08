@@ -1,0 +1,30 @@
+interactions:
+- request:
+    body: '{"items": [{"order_item_id": "24", "qty": 1.0}]}'
+    headers:
+      Accept: ['*/*']
+      Accept-Encoding: ['gzip, deflate']
+      Connection: [keep-alive]
+      Content-Length: ['48']
+      Content-Type: [application/json]
+      User-Agent: [python-requests/2.19.1]
+    method: POST
+    uri: http://magento/index.php/rest/V1/order/12/ship
+  response:
+    body: {string: '"5"'}
+    headers:
+      Cache-Control: ['no-store, no-cache, must-revalidate']
+      Connection: [keep-alive]
+      Content-Type: [application/json; charset=utf-8]
+      Date: ['Fri, 01 May 2020 13:02:55 GMT']
+      Expires: ['Thu, 19 Nov 1981 08:52:00 GMT']
+      Pragma: [no-cache]
+      Server: [nginx/1.14.0 (Ubuntu)]
+      Set-Cookie: ['PHPSESSID=fhd3ms7g60rj32r1tfkromkmfa; expires=Fri, 01-May-2020
+          14:02:55 GMT; Max-Age=3600; path=/; domain=magento; HttpOnly']
+      Transfer-Encoding: [chunked]
+      Vary: [Accept-Encoding]
+      X-Frame-Options: [SAMEORIGIN]
+      content-length: ['3']
+    status: {code: 200, message: OK}
+version: 1

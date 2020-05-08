@@ -169,7 +169,7 @@ class MagentoImporter(AbstractComponent):
         """ Hook called at the end of the import """
         return
 
-    def run(self, external_id, force=False):
+    def run(self, external_id, force=False, data=None):
         """ Run the synchronization
 
         :param external_id: identifier of the record on Magento
@@ -182,10 +182,13 @@ class MagentoImporter(AbstractComponent):
             external_id,
         )
 
-        try:
-            self.magento_record = self._get_magento_data()
-        except IDMissingInBackend:
-            return _('Record does no longer exist in Magento')
+        if data:
+            self.magento_record = data
+        else:
+            try:
+                self.magento_record = self._get_magento_data()
+            except IDMissingInBackend:
+                return _('Record does no longer exist in Magento')
 
         skip = self._must_skip()    # pylint: disable=assignment-from-none
         if skip:
@@ -287,20 +290,26 @@ class TranslationImporter(Component):
     _inherit = 'magento.importer'
     _usage = 'translation.importer'
 
-    def _get_magento_data(self, storeview_id=None):
+    def _get_magento_data(self, storeview=None):
         """ Return the raw Magento data for ``self.external_id`` """
+        if storeview is None:
+            storeview_id = None
+        elif self.collection.version == '2.0':
+            storeview_id = storeview.code
+        else:
+            storeview_id = storeview.id
         return self.backend_adapter.read(self.external_id, storeview_id)
 
     def run(self, external_id, binding, mapper=None):
         self.external_id = external_id
-        storeviews = self.env['magento.storeview'].search(
-            [('backend_id', '=', self.backend_record.id)]
-        )
         default_lang = self.backend_record.default_lang_id
-        lang_storeviews = [sv for sv in storeviews
-                           if sv.lang_id and sv.lang_id != default_lang]
-        if not lang_storeviews:
+        storeviews = self.env['magento.storeview'].search(
+            [('backend_id', '=', self.backend_record.id),
+             ('lang_id', '!=', False), ('lang_id', '!=', default_lang.id)])
+        if not storeviews:
             return
+        lang2storeview = dict(
+            (storeview.lang_id, storeview) for storeview in storeviews)
 
         # find the translatable fields of the model
         fields = self.model.fields_get()
@@ -312,10 +321,10 @@ class TranslationImporter(Component):
         else:
             mapper = self.component_by_name(mapper)
 
-        for storeview in lang_storeviews:
-            lang_record = self._get_magento_data(storeview.external_id)
+        for storeview in lang2storeview.values():
+            lang_record = self._get_magento_data(storeview)
             map_record = mapper.map_record(lang_record)
-            record = list(map_record.values())
+            record = map_record.values()
 
             data = dict((field, value) for field, value in list(record.items())
                         if field in translatable_fields)

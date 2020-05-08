@@ -37,7 +37,12 @@ class PartnerCategoryAdapter(Component):
     _apply_on = 'magento.res.partner.category'
 
     _magento_model = 'ol_customer_groups'
+    _magento2_model = 'customerGroups'
+    _magento2_search = 'customerGroups/search'
+    _magento2_key = 'id'
     _admin_path = '/customer_group/edit/id/{id}'
+    # Not valid without security key
+    # _admin2_path = '/customer/group/edit/id/{id}'
 
     def search(self, filters=None):
         """ Search records according to some criterias
@@ -45,6 +50,8 @@ class PartnerCategoryAdapter(Component):
 
         :rtype: list
         """
-        return [int(row['customer_group_id']) for row
-                in self._call('%s.list' % self._magento_model,
-                              [filters] if filters else [{}])]
+        if self.collection.version == '1.7':
+            return [int(row['customer_group_id']) for row
+                    in self._call('%s.list' % self._magento_model,
+                                  [filters] if filters else [{}])]
+        return super(PartnerCategoryAdapter, self).search(filters=filters)

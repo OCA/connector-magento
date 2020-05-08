@@ -73,4 +73,8 @@ class WebsiteAdapter(Component):
     _apply_on = 'magento.website'
 
     _magento_model = 'ol_websites'
+    _magento2_model = 'store/websites'
     _admin_path = 'system_store/editWebsite/website_id/{id}'
+    # Magento2 url does not seem to be valid without session key
+    # and disabling it is not recommended due to security concerns
+    # _admin2_path = 'admin/system_store/editWebsite/website_id/{id}'

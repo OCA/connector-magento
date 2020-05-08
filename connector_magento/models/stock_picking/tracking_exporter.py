@@ -17,6 +17,19 @@ class MagentoTrackingExporter(Component):
     _usage = 'tracking.exporter'
 
     def _get_tracking_args(self, picking):
+        if self.collection.version == '2.0':
+            return [{
+                "entity": {
+                    "order_id": picking.magento_order_id.external_id,
+                    "parent_id": picking.external_id,
+                    "weight": 0,
+                    "qty": 1,
+                    "description": picking.name,
+                    "track_number": picking.carrier_tracking_ref,
+                    "title": picking.carrier_id.magento_tracking_title,
+                    "carrier_code": picking.carrier_id.magento_carrier_code,
+                }
+            }]
         return (picking.carrier_id.magento_carrier_code,
                 picking.carrier_id.magento_tracking_title or '',
                 picking.carrier_tracking_ref)
@@ -30,6 +43,10 @@ class MagentoTrackingExporter(Component):
                                  "defined in the picking.")
 
     def _check_allowed_carrier(self, binding, external_id):
+        """ Magento2 API does not allow to fetch the list of allowed carriers.
+        """
+        if self.collection.version == '2.0':
+            return
         allowed_carriers = self.backend_adapter.get_carriers(external_id)
         carrier = binding.carrier_id
         if carrier.magento_carrier_code not in allowed_carriers:

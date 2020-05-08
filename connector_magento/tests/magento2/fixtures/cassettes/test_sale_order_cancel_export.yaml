@@ -1,0 +1,118 @@
+interactions:
+- request:
+    body: null
+    headers:
+      Accept: ['*/*']
+      Accept-Encoding: ['gzip, deflate']
+      Connection: [keep-alive]
+      User-Agent: [python-requests/2.19.1]
+    method: GET
+    uri: http://magento/index.php/rest/V1/orders/12
+  response:
+    body: {string: '{"applied_rule_ids":"2,3","base_currency_code":"USD","base_discount_amount":-58.6,"base_grand_total":253.74,"base_discount_tax_compensation_amount":0,"base_shipping_amount":0,"base_shipping_discount_amount":0,"base_shipping_discount_tax_compensation_amnt":0,"base_shipping_incl_tax":0,"base_shipping_tax_amount":0,"base_subtotal":293,"base_subtotal_incl_tax":317.17,"base_tax_amount":19.34,"base_total_due":253.74,"base_to_global_rate":1,"base_to_order_rate":1,"billing_address_id":24,"created_at":"2020-04-25
+        07:23:37","customer_dob":"1973-12-15 00:00:00","customer_email":"roni_cost@example.com","customer_firstname":"Veronica","customer_gender":2,"customer_group_id":1,"customer_id":1,"customer_is_guest":0,"customer_lastname":"Costello","customer_note_notify":1,"discount_amount":-58.6,"entity_id":12,"global_currency_code":"USD","grand_total":253.74,"discount_tax_compensation_amount":0,"increment_id":"000000015","is_virtual":0,"order_currency_code":"USD","protect_code":"1917cc88c340d5465fb6df10b5bf56ef","quote_id":15,"shipping_amount":0,"shipping_description":"Best
+        Way - Table Rate","shipping_discount_amount":0,"shipping_discount_tax_compensation_amount":0,"shipping_incl_tax":0,"shipping_tax_amount":0,"state":"processing","status":"processing","store_currency_code":"USD","store_id":1,"store_name":"Main
+        Website\nMain Website Store\nDefault Store View","store_to_base_rate":0,"store_to_order_rate":0,"subtotal":293,"subtotal_incl_tax":317.17,"tax_amount":19.34,"total_due":253.74,"total_item_count":2,"total_qty_ordered":2,"updated_at":"2020-04-25
+        15:19:31","weight":1,"items":[{"amount_refunded":0,"applied_rule_ids":"2,3","base_amount_refunded":0,"base_discount_amount":13.8,"base_discount_invoiced":0,"base_discount_tax_compensation_amount":0,"base_original_price":69,"base_price":69,"base_price_incl_tax":74.69,"base_row_invoiced":0,"base_row_total":55.2,"base_row_total_incl_tax":59.75,"base_tax_amount":4.55,"base_tax_invoiced":0,"created_at":"2020-04-25
+        07:23:37","discount_amount":13.8,"discount_invoiced":0,"discount_percent":20,"free_shipping":0,"discount_tax_compensation_amount":0,"is_qty_decimal":0,"is_virtual":0,"item_id":24,"name":"Abominable
+        Hoodie-XS-Blue","no_discount":0,"order_id":12,"original_price":69,"price":69,"price_incl_tax":74.69,"product_id":181,"product_type":"simple","qty_canceled":0,"qty_invoiced":0,"qty_ordered":1,"qty_refunded":0,"qty_shipped":0,"quote_item_id":35,"row_invoiced":0,"row_total":55.2,"row_total_incl_tax":59.75,"row_weight":0,"sku":"MH09-XS-Blue","store_id":1,"tax_amount":4.55,"tax_invoiced":0,"tax_percent":8.25,"updated_at":"2020-04-25
+        07:23:37","weight":1},{"amount_refunded":0,"applied_rule_ids":"2,3","base_amount_refunded":0,"base_discount_amount":44.8,"base_discount_invoiced":0,"base_discount_tax_compensation_amount":0,"base_original_price":224,"base_price":224,"base_price_incl_tax":242.48,"base_row_invoiced":0,"base_row_total":179.2,"base_row_total_incl_tax":193.99,"base_tax_amount":14.79,"base_tax_invoiced":0,"created_at":"2020-04-25
+        07:23:37","discount_amount":44.8,"discount_invoiced":0,"discount_percent":20,"free_shipping":0,"discount_tax_compensation_amount":0,"is_qty_decimal":0,"is_virtual":0,"item_id":25,"name":"Racer
+        Back Maxi Dress","no_discount":0,"order_id":12,"original_price":224,"price":224,"price_incl_tax":242.48,"product_id":2051,"product_type":"simple","qty_canceled":0,"qty_invoiced":0,"qty_ordered":1,"qty_refunded":0,"qty_shipped":0,"quote_item_id":36,"row_invoiced":0,"row_total":179.2,"row_total_incl_tax":193.99,"row_weight":0,"sku":"RACER","store_id":1,"tax_amount":14.79,"tax_invoiced":0,"tax_percent":8.25,"updated_at":"2020-04-25
+        07:23:37"}],"billing_address":{"address_type":"billing","city":"Calder","country_id":"US","customer_address_id":23,"email":"roni_cost@example.com","entity_id":24,"firstname":"Veronica","lastname":"Costello","parent_id":12,"postcode":"49628-7978","region":"Michigan","region_code":"MI","region_id":33,"street":["6146
+        Honey Bluff Parkway"],"telephone":"(555) 229-3326"},"payment":{"account_status":null,"additional_information":["Check
+        \/ Money order"],"amount_ordered":253.74,"base_amount_ordered":253.74,"base_shipping_amount":0,"cc_exp_year":"0","cc_last4":null,"cc_ss_start_month":"0","cc_ss_start_year":"0","entity_id":12,"method":"checkmo","parent_id":12,"shipping_amount":0},"status_histories":[],"extension_attributes":{"shipping_assignments":[{"shipping":{"address":{"address_type":"shipping","city":"Calder","country_id":"US","customer_address_id":22,"email":"roni_cost@example.com","entity_id":23,"firstname":"Veronica","lastname":"Costello","parent_id":12,"postcode":"49628-7978","region":"Michigan","region_code":"MI","region_id":33,"street":["6146
+        Honey Bluff Parkway"],"telephone":"(555) 229-3326"},"method":"tablerate_bestway","total":{"base_shipping_amount":0,"base_shipping_discount_amount":0,"base_shipping_discount_tax_compensation_amnt":0,"base_shipping_incl_tax":0,"base_shipping_tax_amount":0,"shipping_amount":0,"shipping_discount_amount":0,"shipping_discount_tax_compensation_amount":0,"shipping_incl_tax":0,"shipping_tax_amount":0}},"items":[{"amount_refunded":0,"applied_rule_ids":"2,3","base_amount_refunded":0,"base_discount_amount":13.8,"base_discount_invoiced":0,"base_discount_tax_compensation_amount":0,"base_original_price":69,"base_price":69,"base_price_incl_tax":74.69,"base_row_invoiced":0,"base_row_total":55.2,"base_row_total_incl_tax":59.75,"base_tax_amount":4.55,"base_tax_invoiced":0,"created_at":"2020-04-25
+        07:23:37","discount_amount":13.8,"discount_invoiced":0,"discount_percent":20,"free_shipping":0,"discount_tax_compensation_amount":0,"is_qty_decimal":0,"is_virtual":0,"item_id":24,"name":"Abominable
+        Hoodie-XS-Blue","no_discount":0,"order_id":12,"original_price":69,"price":69,"price_incl_tax":74.69,"product_id":181,"product_type":"simple","qty_canceled":0,"qty_invoiced":0,"qty_ordered":1,"qty_refunded":0,"qty_shipped":0,"quote_item_id":35,"row_invoiced":0,"row_total":55.2,"row_total_incl_tax":59.75,"row_weight":0,"sku":"MH09-XS-Blue","store_id":1,"tax_amount":4.55,"tax_invoiced":0,"tax_percent":8.25,"updated_at":"2020-04-25
+        07:23:37","weight":1},{"amount_refunded":0,"applied_rule_ids":"2,3","base_amount_refunded":0,"base_discount_amount":44.8,"base_discount_invoiced":0,"base_discount_tax_compensation_amount":0,"base_original_price":224,"base_price":224,"base_price_incl_tax":242.48,"base_row_invoiced":0,"base_row_total":179.2,"base_row_total_incl_tax":193.99,"base_tax_amount":14.79,"base_tax_invoiced":0,"created_at":"2020-04-25
+        07:23:37","discount_amount":44.8,"discount_invoiced":0,"discount_percent":20,"free_shipping":0,"discount_tax_compensation_amount":0,"is_qty_decimal":0,"is_virtual":0,"item_id":25,"name":"Racer
+        Back Maxi Dress","no_discount":0,"order_id":12,"original_price":224,"price":224,"price_incl_tax":242.48,"product_id":2051,"product_type":"simple","qty_canceled":0,"qty_invoiced":0,"qty_ordered":1,"qty_refunded":0,"qty_shipped":0,"quote_item_id":36,"row_invoiced":0,"row_total":179.2,"row_total_incl_tax":193.99,"row_weight":0,"sku":"RACER","store_id":1,"tax_amount":14.79,"tax_invoiced":0,"tax_percent":8.25,"updated_at":"2020-04-25
+        07:23:37"}]}],"payment_additional_info":[{"key":"method_title","value":"Check
+        \/ Money order"}],"applied_taxes":[{"code":"US-MI-*-Rate 1","title":"US-MI-*-Rate
+        1","percent":8.25,"amount":19.34,"base_amount":19.34}],"item_applied_taxes":[{"type":"product","item_id":24,"applied_taxes":[{"code":"US-MI-*-Rate
+        1","title":"US-MI-*-Rate 1","percent":8.25,"amount":4.55,"base_amount":4.55}]},{"type":"product","item_id":25,"applied_taxes":[{"code":"US-MI-*-Rate
+        1","title":"US-MI-*-Rate 1","percent":8.25,"amount":14.79,"base_amount":14.79}]}],"converting_from_quote":true}}'}
+    headers:
+      Cache-Control: ['no-store, no-cache, must-revalidate']
+      Connection: [keep-alive]
+      Content-Type: [application/json; charset=utf-8]
+      Date: ['Sat, 25 Apr 2020 15:35:28 GMT']
+      Expires: ['Thu, 19 Nov 1981 08:52:00 GMT']
+      Pragma: [no-cache]
+      Server: [nginx/1.14.0 (Ubuntu)]
+      Set-Cookie: ['PHPSESSID=a9vcli3jkvp6atrtb4ul2vebn1; expires=Sat, 25-Apr-2020
+          16:35:28 GMT; Max-Age=3600; path=/; domain=magento; HttpOnly']
+      Transfer-Encoding: [chunked]
+      Vary: [Accept-Encoding]
+      X-Frame-Options: [SAMEORIGIN]
+      content-length: ['7725']
+    status: {code: 200, message: OK}
+- request:
+    body: '{"entity": {"entity_id": "12", "state": "canceled", "status": "canceled"}}'
+    headers:
+      Accept: ['*/*']
+      Accept-Encoding: ['gzip, deflate']
+      Connection: [keep-alive]
+      Content-Length: ['74']
+      Content-Type: [application/json]
+      User-Agent: [python-requests/2.19.1]
+    method: POST
+    uri: http://magento/index.php/rest/V1/orders
+  response:
+    body: {string: '{"base_grand_total":null,"base_total_due":0,"billing_address_id":24,"created_at":"2020-04-25
+        07:23:37","customer_email":null,"entity_id":12,"grand_total":null,"protect_code":"936bf8ba0041d1e41ce46686bf929b38","state":"canceled","status":"canceled","total_due":0,"updated_at":"2020-04-25
+        15:35:28","items":[{"amount_refunded":0,"applied_rule_ids":"2,3","base_amount_refunded":0,"base_discount_amount":13.8,"base_discount_invoiced":0,"base_discount_tax_compensation_amount":0,"base_original_price":69,"base_price":69,"base_price_incl_tax":74.69,"base_row_invoiced":0,"base_row_total":55.2,"base_row_total_incl_tax":59.75,"base_tax_amount":4.55,"base_tax_invoiced":0,"created_at":"2020-04-25
+        07:23:37","discount_amount":13.8,"discount_invoiced":0,"discount_percent":20,"free_shipping":0,"discount_tax_compensation_amount":0,"is_qty_decimal":0,"is_virtual":0,"item_id":24,"name":"Abominable
+        Hoodie-XS-Blue","no_discount":0,"order_id":12,"original_price":69,"price":69,"price_incl_tax":74.69,"product_id":181,"product_type":"simple","qty_canceled":0,"qty_invoiced":0,"qty_ordered":1,"qty_refunded":0,"qty_shipped":0,"quote_item_id":35,"row_invoiced":0,"row_total":55.2,"row_total_incl_tax":59.75,"row_weight":0,"sku":"MH09-XS-Blue","store_id":1,"tax_amount":4.55,"tax_invoiced":0,"tax_percent":8.25,"updated_at":"2020-04-25
+        07:23:37","weight":1},{"amount_refunded":0,"applied_rule_ids":"2,3","base_amount_refunded":0,"base_discount_amount":44.8,"base_discount_invoiced":0,"base_discount_tax_compensation_amount":0,"base_original_price":224,"base_price":224,"base_price_incl_tax":242.48,"base_row_invoiced":0,"base_row_total":179.2,"base_row_total_incl_tax":193.99,"base_tax_amount":14.79,"base_tax_invoiced":0,"created_at":"2020-04-25
+        07:23:37","discount_amount":44.8,"discount_invoiced":0,"discount_percent":20,"free_shipping":0,"discount_tax_compensation_amount":0,"is_qty_decimal":0,"is_virtual":0,"item_id":25,"name":"Racer
+        Back Maxi Dress","no_discount":0,"order_id":12,"original_price":224,"price":224,"price_incl_tax":242.48,"product_id":2051,"product_type":"simple","qty_canceled":0,"qty_invoiced":0,"qty_ordered":1,"qty_refunded":0,"qty_shipped":0,"quote_item_id":36,"row_invoiced":0,"row_total":179.2,"row_total_incl_tax":193.99,"row_weight":0,"sku":"RACER","store_id":1,"tax_amount":14.79,"tax_invoiced":0,"tax_percent":8.25,"updated_at":"2020-04-25
+        07:23:37"}],"billing_address":{"address_type":"billing","city":"Calder","country_id":"US","customer_address_id":23,"email":"roni_cost@example.com","entity_id":24,"firstname":"Veronica","lastname":"Costello","parent_id":12,"postcode":"49628-7978","region":"Michigan","region_code":"MI","region_id":33,"street":["6146
+        Honey Bluff Parkway"],"telephone":"(555) 229-3326"},"payment":{"account_status":null,"additional_information":["Check
+        \/ Money order"],"amount_ordered":253.74,"base_amount_ordered":253.74,"base_shipping_amount":0,"cc_exp_year":"0","cc_last4":null,"cc_ss_start_month":"0","cc_ss_start_year":"0","entity_id":12,"method":"checkmo","parent_id":12,"shipping_amount":0},"status_histories":[]}'}
+    headers:
+      Cache-Control: ['no-store, no-cache, must-revalidate']
+      Connection: [keep-alive]
+      Content-Type: [application/json; charset=utf-8]
+      Date: ['Sat, 25 Apr 2020 15:35:28 GMT']
+      Expires: ['Thu, 19 Nov 1981 08:52:00 GMT']
+      Pragma: [no-cache]
+      Server: [nginx/1.14.0 (Ubuntu)]
+      Set-Cookie: ['PHPSESSID=d2ppsuslo9bjc73lfljm1c9k4h; expires=Sat, 25-Apr-2020
+          16:35:28 GMT; Max-Age=3600; path=/; domain=magento; HttpOnly']
+      Transfer-Encoding: [chunked]
+      Vary: [Accept-Encoding]
+      X-Frame-Options: [SAMEORIGIN]
+      content-length: ['3058']
+    status: {code: 200, message: OK}
+- request:
+    body: '{"statusHistory": {"comment": "canceled", "is_customer_notified": 0, "is_visible_on_front":
+      0}}'
+    headers:
+      Accept: ['*/*']
+      Accept-Encoding: ['gzip, deflate']
+      Connection: [keep-alive]
+      Content-Length: ['95']
+      Content-Type: [application/json]
+      User-Agent: [python-requests/2.19.1]
+    method: POST
+    uri: http://magento/index.php/rest/V1/orders/12/comments
+  response:
+    body: {string: 'true'}
+    headers:
+      Cache-Control: ['no-store, no-cache, must-revalidate']
+      Connection: [keep-alive]
+      Content-Type: [application/json; charset=utf-8]
+      Date: ['Sat, 25 Apr 2020 15:35:28 GMT']
+      Expires: ['Thu, 19 Nov 1981 08:52:00 GMT']
+      Pragma: [no-cache]
+      Server: [nginx/1.14.0 (Ubuntu)]
+      Set-Cookie: ['PHPSESSID=5umhs3e6ti8bjrh48k9p0shamr; expires=Sat, 25-Apr-2020
+          16:35:28 GMT; Max-Age=3600; path=/; domain=magento; HttpOnly']
+      Transfer-Encoding: [chunked]
+      Vary: [Accept-Encoding]
+      X-Frame-Options: [SAMEORIGIN]
+      content-length: ['4']
+    status: {code: 200, message: OK}
+version: 1

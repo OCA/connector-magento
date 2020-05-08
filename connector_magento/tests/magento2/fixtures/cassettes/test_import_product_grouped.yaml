@@ -1,0 +1,249 @@
+interactions:
+- request:
+    body: null
+    headers:
+      Accept: ['*/*']
+      Accept-Encoding: ['gzip, deflate']
+      Connection: [keep-alive]
+      User-Agent: [python-requests/2.19.1]
+    method: GET
+    uri: http://magento/index.php/rest/V1/products/24-WG085_Group
+  response:
+    body: {string: '{"id":45,"sku":"24-WG085_Group","name":"Set of Sprite Yoga Straps","attribute_set_id":11,"status":1,"visibility":4,"type_id":"grouped","created_at":"2020-03-27
+        16:06:29","updated_at":"2020-03-27 16:06:29","extension_attributes":{"website_ids":[1],"category_links":[{"position":0,"category_id":"3"},{"position":0,"category_id":"5"}],"stock_item":{"item_id":45,"product_id":45,"stock_id":1,"qty":0,"is_in_stock":true,"is_qty_decimal":false,"show_default_notification_message":false,"use_config_min_qty":true,"min_qty":0,"use_config_min_sale_qty":1,"min_sale_qty":1,"use_config_max_sale_qty":true,"max_sale_qty":10000,"use_config_backorders":true,"backorders":0,"use_config_notify_stock_qty":true,"notify_stock_qty":1,"use_config_qty_increments":true,"qty_increments":0,"use_config_enable_qty_inc":true,"enable_qty_increments":false,"use_config_manage_stock":true,"manage_stock":true,"low_stock_date":null,"is_decimal_divided":false,"stock_status_changed_auto":0}},"product_links":[{"sku":"24-WG085_Group","link_type":"associated","linked_product_sku":"24-WG085","linked_product_type":"simple","position":0,"extension_attributes":{"qty":0}},{"sku":"24-WG085_Group","link_type":"associated","linked_product_sku":"24-WG086","linked_product_type":"simple","position":1,"extension_attributes":{"qty":0}},{"sku":"24-WG085_Group","link_type":"associated","linked_product_sku":"24-WG087","linked_product_type":"simple","position":2,"extension_attributes":{"qty":0}}],"options":[],"media_gallery_entries":[{"id":51,"media_type":"image","label":"Image","position":1,"disabled":false,"types":["image","small_image","thumbnail"],"file":"\/l\/u\/luma-yoga-strap-set.jpg"}],"tier_prices":[],"custom_attributes":[{"attribute_code":"image","value":"\/l\/u\/luma-yoga-strap-set.jpg"},{"attribute_code":"small_image","value":"\/l\/u\/luma-yoga-strap-set.jpg"},{"attribute_code":"thumbnail","value":"\/l\/u\/luma-yoga-strap-set.jpg"},{"attribute_code":"options_container","value":"container2"},{"attribute_code":"url_key","value":"set-of-sprite-yoga-straps"},{"attribute_code":"required_options","value":"0"},{"attribute_code":"has_options","value":"0"},{"attribute_code":"category_ids","value":["3","5"]},{"attribute_code":"description","value":"<p>Great
+        set of Sprite Yoga Straps for every stretch and hold you need. There are three
+        straps in this set: 6'', 8'' and 10''.<\/p>\n<ul>\n<li> 100% soft and durable
+        cotton.\n<li> Plastic cinch buckle is easy to use.\n<li> Choice of three natural
+        colors made from phthalate and heavy metal free dyes.\n<\/ul>"},{"attribute_code":"activity","value":"5435"},{"attribute_code":"material","value":"5459,5471"},{"attribute_code":"gender","value":"5507,5508,5511"},{"attribute_code":"category_gear","value":"5514"}]}'}
+    headers:
+      Cache-Control: ['no-store, no-cache, must-revalidate']
+      Connection: [keep-alive]
+      Content-Type: [application/json; charset=utf-8]
+      Date: ['Fri, 08 May 2020 06:38:33 GMT']
+      Expires: ['Thu, 19 Nov 1981 08:52:00 GMT']
+      Pragma: [no-cache]
+      Server: [nginx/1.14.0 (Ubuntu)]
+      Set-Cookie: ['PHPSESSID=3hg94b1fa3cgt5b9gv9n7etjn7; expires=Fri, 08-May-2020
+          07:38:33 GMT; Max-Age=3600; path=/; domain=magento; HttpOnly']
+      Transfer-Encoding: [chunked]
+      Vary: [Accept-Encoding]
+      X-Frame-Options: [SAMEORIGIN]
+      content-length: ['2733']
+    status: {code: 200, message: OK}
+- request:
+    body: null
+    headers:
+      Accept: ['*/*']
+      Accept-Encoding: ['gzip, deflate']
+      Connection: [keep-alive]
+      User-Agent: [python-requests/2.19.1]
+    method: GET
+    uri: http://magento/index.php/rest/V1/categories/3
+  response:
+    body: {string: '{"id":3,"parent_id":2,"name":"Gear","is_active":true,"position":4,"level":2,"children":"4,5,6","created_at":"2020-03-27
+        16:06:12","updated_at":"2020-03-27 16:06:12","path":"1\/2\/3","available_sort_by":[],"include_in_menu":true,"custom_attributes":[{"attribute_code":"display_mode","value":"PAGE"},{"attribute_code":"is_anchor","value":"0"},{"attribute_code":"path","value":"1\/2\/3"},{"attribute_code":"children_count","value":"3"},{"attribute_code":"url_key","value":"gear"},{"attribute_code":"url_path","value":"gear"}]}'}
+    headers:
+      Cache-Control: ['no-store, no-cache, must-revalidate']
+      Connection: [keep-alive]
+      Content-Type: [application/json; charset=utf-8]
+      Date: ['Fri, 08 May 2020 06:38:33 GMT']
+      Expires: ['Thu, 19 Nov 1981 08:52:00 GMT']
+      Pragma: [no-cache]
+      Server: [nginx/1.14.0 (Ubuntu)]
+      Set-Cookie: ['PHPSESSID=muub1outkkliruuodbpa1qbjh1; expires=Fri, 08-May-2020
+          07:38:33 GMT; Max-Age=3600; path=/; domain=magento; HttpOnly']
+      Transfer-Encoding: [chunked]
+      Vary: [Accept-Encoding]
+      X-Frame-Options: [SAMEORIGIN]
+      content-length: ['523']
+    status: {code: 200, message: OK}
+- request:
+    body: null
+    headers:
+      Accept: ['*/*']
+      Accept-Encoding: ['gzip, deflate']
+      Connection: [keep-alive]
+      User-Agent: [python-requests/2.19.1]
+    method: GET
+    uri: http://magento/index.php/rest/V1/categories/2
+  response:
+    body: {string: '{"id":2,"parent_id":1,"name":"Default Category","is_active":true,"position":1,"level":1,"children":"3,9,11,20,37,38","created_at":"2020-03-27
+        15:25:28","updated_at":"2020-04-24 10:01:36","path":"1\/2","available_sort_by":[],"include_in_menu":true,"custom_attributes":[{"attribute_code":"display_mode","value":"PRODUCTS"},{"attribute_code":"path","value":"1\/2"},{"attribute_code":"children_count","value":"39"}]}'}
+    headers:
+      Cache-Control: ['no-store, no-cache, must-revalidate']
+      Connection: [keep-alive]
+      Content-Type: [application/json; charset=utf-8]
+      Date: ['Fri, 08 May 2020 06:38:33 GMT']
+      Expires: ['Thu, 19 Nov 1981 08:52:00 GMT']
+      Pragma: [no-cache]
+      Server: [nginx/1.14.0 (Ubuntu)]
+      Set-Cookie: ['PHPSESSID=v186rmnh93v8dgtjmvtpb2g7sp; expires=Fri, 08-May-2020
+          07:38:33 GMT; Max-Age=3600; path=/; domain=magento; HttpOnly']
+      Transfer-Encoding: [chunked]
+      Vary: [Accept-Encoding]
+      X-Frame-Options: [SAMEORIGIN]
+      content-length: ['412']
+    status: {code: 200, message: OK}
+- request:
+    body: null
+    headers:
+      Accept: ['*/*']
+      Accept-Encoding: ['gzip, deflate']
+      Connection: [keep-alive]
+      User-Agent: [python-requests/2.19.1]
+    method: GET
+    uri: http://magento/index.php/rest/V1/categories/1
+  response:
+    body: {string: '{"id":1,"parent_id":0,"name":"Root Catalog","position":0,"level":0,"children":"2","created_at":"2020-03-27
+        15:25:28","updated_at":"2020-04-24 10:01:36","path":"1","available_sort_by":[],"include_in_menu":true,"custom_attributes":[{"attribute_code":"path","value":"1"},{"attribute_code":"children_count","value":"40"}]}'}
+    headers:
+      Cache-Control: ['no-store, no-cache, must-revalidate']
+      Connection: [keep-alive]
+      Content-Type: [application/json; charset=utf-8]
+      Date: ['Fri, 08 May 2020 06:38:33 GMT']
+      Expires: ['Thu, 19 Nov 1981 08:52:00 GMT']
+      Pragma: [no-cache]
+      Server: [nginx/1.14.0 (Ubuntu)]
+      Set-Cookie: ['PHPSESSID=b7vvn0tf60tjhvc8a00l4vfh2j; expires=Fri, 08-May-2020
+          07:38:33 GMT; Max-Age=3600; path=/; domain=magento; HttpOnly']
+      Transfer-Encoding: [chunked]
+      Vary: [Accept-Encoding]
+      X-Frame-Options: [SAMEORIGIN]
+      content-length: ['318']
+    status: {code: 200, message: OK}
+- request:
+    body: null
+    headers:
+      Accept: ['*/*']
+      Accept-Encoding: ['gzip, deflate']
+      Connection: [keep-alive]
+      User-Agent: [python-requests/2.19.1]
+    method: GET
+    uri: http://magento/index.php/rest/default/V1/categories/1
+  response:
+    body: {string: '{"id":1,"parent_id":0,"name":"Root Catalog","position":0,"level":0,"children":"2","created_at":"2020-03-27
+        15:25:28","updated_at":"2020-04-24 10:01:36","path":"1","available_sort_by":[],"include_in_menu":true,"custom_attributes":[{"attribute_code":"path","value":"1"},{"attribute_code":"children_count","value":"40"}]}'}
+    headers:
+      Cache-Control: ['no-store, no-cache, must-revalidate']
+      Connection: [keep-alive]
+      Content-Type: [application/json; charset=utf-8]
+      Date: ['Fri, 08 May 2020 06:38:34 GMT']
+      Expires: ['Thu, 19 Nov 1981 08:52:00 GMT']
+      Pragma: [no-cache]
+      Server: [nginx/1.14.0 (Ubuntu)]
+      Set-Cookie: ['PHPSESSID=j52ut262768se5c2dm1mspotb4; expires=Fri, 08-May-2020
+          07:38:34 GMT; Max-Age=3600; path=/; domain=magento; HttpOnly']
+      Transfer-Encoding: [chunked]
+      Vary: [Accept-Encoding]
+      X-Frame-Options: [SAMEORIGIN]
+      content-length: ['318']
+    status: {code: 200, message: OK}
+- request:
+    body: null
+    headers:
+      Accept: ['*/*']
+      Accept-Encoding: ['gzip, deflate']
+      Connection: [keep-alive]
+      User-Agent: [python-requests/2.19.1]
+    method: GET
+    uri: http://magento/index.php/rest/default/V1/categories/2
+  response:
+    body: {string: '{"id":2,"parent_id":1,"name":"Default Category","is_active":true,"position":1,"level":1,"children":"3,9,11,20,37,38","created_at":"2020-03-27
+        15:25:28","updated_at":"2020-04-24 10:01:36","path":"1\/2","available_sort_by":[],"include_in_menu":true,"custom_attributes":[{"attribute_code":"display_mode","value":"PRODUCTS"},{"attribute_code":"path","value":"1\/2"},{"attribute_code":"children_count","value":"39"}]}'}
+    headers:
+      Cache-Control: ['no-store, no-cache, must-revalidate']
+      Connection: [keep-alive]
+      Content-Type: [application/json; charset=utf-8]
+      Date: ['Fri, 08 May 2020 06:38:34 GMT']
+      Expires: ['Thu, 19 Nov 1981 08:52:00 GMT']
+      Pragma: [no-cache]
+      Server: [nginx/1.14.0 (Ubuntu)]
+      Set-Cookie: ['PHPSESSID=4tj7sgir2cls73dff9urkbsmnn; expires=Fri, 08-May-2020
+          07:38:34 GMT; Max-Age=3600; path=/; domain=magento; HttpOnly']
+      Transfer-Encoding: [chunked]
+      Vary: [Accept-Encoding]
+      X-Frame-Options: [SAMEORIGIN]
+      content-length: ['412']
+    status: {code: 200, message: OK}
+- request:
+    body: null
+    headers:
+      Accept: ['*/*']
+      Accept-Encoding: ['gzip, deflate']
+      Connection: [keep-alive]
+      User-Agent: [python-requests/2.19.1]
+    method: GET
+    uri: http://magento/index.php/rest/default/V1/categories/3
+  response:
+    body: {string: '{"id":3,"parent_id":2,"name":"Gear","is_active":true,"position":4,"level":2,"children":"4,5,6","created_at":"2020-03-27
+        16:06:12","updated_at":"2020-03-27 16:06:12","path":"1\/2\/3","available_sort_by":[],"include_in_menu":true,"custom_attributes":[{"attribute_code":"display_mode","value":"PAGE"},{"attribute_code":"is_anchor","value":"0"},{"attribute_code":"path","value":"1\/2\/3"},{"attribute_code":"children_count","value":"3"},{"attribute_code":"url_key","value":"gear"},{"attribute_code":"url_path","value":"gear"}]}'}
+    headers:
+      Cache-Control: ['no-store, no-cache, must-revalidate']
+      Connection: [keep-alive]
+      Content-Type: [application/json; charset=utf-8]
+      Date: ['Fri, 08 May 2020 06:38:34 GMT']
+      Expires: ['Thu, 19 Nov 1981 08:52:00 GMT']
+      Pragma: [no-cache]
+      Server: [nginx/1.14.0 (Ubuntu)]
+      Set-Cookie: ['PHPSESSID=bcjuon1vu69ovtdfbtkirv976h; expires=Fri, 08-May-2020
+          07:38:34 GMT; Max-Age=3600; path=/; domain=magento; HttpOnly']
+      Transfer-Encoding: [chunked]
+      Vary: [Accept-Encoding]
+      X-Frame-Options: [SAMEORIGIN]
+      content-length: ['523']
+    status: {code: 200, message: OK}
+- request:
+    body: null
+    headers:
+      Accept: ['*/*']
+      Accept-Encoding: ['gzip, deflate']
+      Connection: [keep-alive]
+      User-Agent: [python-requests/2.19.1]
+    method: GET
+    uri: http://magento/index.php/rest/V1/categories/5
+  response:
+    body: {string: '{"id":5,"parent_id":3,"name":"Fitness Equipment","is_active":true,"position":2,"level":3,"children":"","created_at":"2020-03-27
+        16:06:12","updated_at":"2020-03-27 16:06:12","path":"1\/2\/3\/5","available_sort_by":[],"include_in_menu":true,"custom_attributes":[{"attribute_code":"is_anchor","value":"1"},{"attribute_code":"path","value":"1\/2\/3\/5"},{"attribute_code":"children_count","value":"0"},{"attribute_code":"url_key","value":"fitness-equipment"},{"attribute_code":"url_path","value":"gear\/fitness-equipment"}]}'}
+    headers:
+      Cache-Control: ['no-store, no-cache, must-revalidate']
+      Connection: [keep-alive]
+      Content-Type: [application/json; charset=utf-8]
+      Date: ['Fri, 08 May 2020 06:38:34 GMT']
+      Expires: ['Thu, 19 Nov 1981 08:52:00 GMT']
+      Pragma: [no-cache]
+      Server: [nginx/1.14.0 (Ubuntu)]
+      Set-Cookie: ['PHPSESSID=r63qspejgfsl8qrg4qo25rjapa; expires=Fri, 08-May-2020
+          07:38:34 GMT; Max-Age=3600; path=/; domain=magento; HttpOnly']
+      Transfer-Encoding: [chunked]
+      Vary: [Accept-Encoding]
+      X-Frame-Options: [SAMEORIGIN]
+      content-length: ['520']
+    status: {code: 200, message: OK}
+- request:
+    body: null
+    headers:
+      Accept: ['*/*']
+      Accept-Encoding: ['gzip, deflate']
+      Connection: [keep-alive]
+      User-Agent: [python-requests/2.19.1]
+    method: GET
+    uri: http://magento/index.php/rest/default/V1/categories/5
+  response:
+    body: {string: '{"id":5,"parent_id":3,"name":"Fitness Equipment","is_active":true,"position":2,"level":3,"children":"","created_at":"2020-03-27
+        16:06:12","updated_at":"2020-03-27 16:06:12","path":"1\/2\/3\/5","available_sort_by":[],"include_in_menu":true,"custom_attributes":[{"attribute_code":"is_anchor","value":"1"},{"attribute_code":"path","value":"1\/2\/3\/5"},{"attribute_code":"children_count","value":"0"},{"attribute_code":"url_key","value":"fitness-equipment"},{"attribute_code":"url_path","value":"gear\/fitness-equipment"}]}'}
+    headers:
+      Cache-Control: ['no-store, no-cache, must-revalidate']
+      Connection: [keep-alive]
+      Content-Type: [application/json; charset=utf-8]
+      Date: ['Fri, 08 May 2020 06:38:34 GMT']
+      Expires: ['Thu, 19 Nov 1981 08:52:00 GMT']
+      Pragma: [no-cache]
+      Server: [nginx/1.14.0 (Ubuntu)]
+      Set-Cookie: ['PHPSESSID=ql8lori881cvsl1m04rh9vhjbl; expires=Fri, 08-May-2020
+          07:38:34 GMT; Max-Age=3600; path=/; domain=magento; HttpOnly']
+      Transfer-Encoding: [chunked]
+      Vary: [Accept-Encoding]
+      X-Frame-Options: [SAMEORIGIN]
+      content-length: ['520']
+    status: {code: 200, message: OK}
+version: 1

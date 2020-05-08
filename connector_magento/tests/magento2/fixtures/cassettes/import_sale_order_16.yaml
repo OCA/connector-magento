@@ -1,0 +1,630 @@
+interactions:
+- request:
+    body: null
+    headers:
+      Accept: ['*/*']
+      Accept-Encoding: ['gzip, deflate']
+      Connection: [keep-alive]
+      User-Agent: [python-requests/2.19.1]
+    method: GET
+    uri: http://magento/index.php/rest/V1/orders/16
+  response:
+    body: {string: '{"base_currency_code":"USD","base_discount_amount":0,"base_grand_total":54,"base_discount_tax_compensation_amount":0,"base_shipping_amount":5,"base_shipping_discount_amount":0,"base_shipping_discount_tax_compensation_amnt":0,"base_shipping_incl_tax":5,"base_shipping_tax_amount":0,"base_subtotal":49,"base_subtotal_incl_tax":49,"base_tax_amount":0,"base_total_due":54,"base_to_global_rate":1,"base_to_order_rate":1,"billing_address_id":32,"created_at":"2020-05-08
+        06:57:20","customer_email":"guest@guest.com","customer_group_id":0,"customer_is_guest":1,"customer_note_notify":1,"discount_amount":0,"entity_id":16,"global_currency_code":"USD","grand_total":54,"discount_tax_compensation_amount":0,"increment_id":"000000019","is_virtual":0,"order_currency_code":"USD","protect_code":"428f2a274a469a0e61a6f4f4e7113633","quote_id":19,"shipping_amount":5,"shipping_description":"Flat
+        Rate - Fixed","shipping_discount_amount":0,"shipping_discount_tax_compensation_amount":0,"shipping_incl_tax":5,"shipping_tax_amount":0,"state":"new","status":"pending","store_currency_code":"USD","store_id":1,"store_name":"Main
+        Website\nMain Website Store\nDefault Store View","store_to_base_rate":0,"store_to_order_rate":0,"subtotal":49,"subtotal_incl_tax":49,"tax_amount":0,"total_due":54,"total_item_count":1,"total_qty_ordered":1,"updated_at":"2020-05-08
+        06:57:20","weight":1,"items":[{"amount_refunded":0,"base_amount_refunded":0,"base_discount_amount":0,"base_discount_invoiced":0,"base_discount_tax_compensation_amount":0,"base_original_price":49,"base_price":49,"base_price_incl_tax":49,"base_row_invoiced":0,"base_row_total":49,"base_row_total_incl_tax":49,"base_tax_amount":0,"base_tax_invoiced":0,"created_at":"2020-05-08
+        06:57:20","discount_amount":0,"discount_invoiced":0,"discount_percent":0,"free_shipping":0,"discount_tax_compensation_amount":0,"is_qty_decimal":0,"is_virtual":0,"item_id":32,"name":"Portia
+        Capri","no_discount":0,"order_id":16,"original_price":49,"price":49,"price_incl_tax":49,"product_id":1909,"product_type":"configurable","qty_canceled":0,"qty_invoiced":0,"qty_ordered":1,"qty_refunded":0,"qty_shipped":0,"quote_item_id":43,"row_invoiced":0,"row_total":49,"row_total_incl_tax":49,"row_weight":1,"sku":"WP13-28-Blue","store_id":1,"tax_amount":0,"tax_invoiced":0,"tax_percent":0,"updated_at":"2020-05-08
+        06:57:20","weight":1,"product_option":{"extension_attributes":{"configurable_item_options":[{"option_id":"152","option_value":5598},{"option_id":"93","option_value":5477}]}}},{"amount_refunded":0,"base_amount_refunded":0,"base_discount_amount":0,"base_discount_invoiced":0,"base_price":0,"base_row_invoiced":0,"base_row_total":0,"base_tax_amount":0,"base_tax_invoiced":0,"created_at":"2020-05-08
+        06:57:20","discount_amount":0,"discount_invoiced":0,"discount_percent":0,"free_shipping":0,"is_qty_decimal":0,"is_virtual":0,"item_id":33,"name":"Portia
+        Capri-28-Blue","no_discount":0,"order_id":16,"original_price":0,"parent_item_id":32,"price":49,"product_id":1903,"product_type":"simple","qty_canceled":0,"qty_invoiced":0,"qty_ordered":1,"qty_refunded":0,"qty_shipped":0,"quote_item_id":44,"row_invoiced":0,"row_total":0,"row_weight":0,"sku":"WP13-28-Blue","store_id":1,"tax_amount":0,"tax_invoiced":0,"tax_percent":0,"updated_at":"2020-05-08
+        06:57:20","weight":1,"parent_item":{"amount_refunded":0,"base_amount_refunded":0,"base_discount_amount":0,"base_discount_invoiced":0,"base_discount_tax_compensation_amount":0,"base_original_price":49,"base_price":49,"base_price_incl_tax":49,"base_row_invoiced":0,"base_row_total":49,"base_row_total_incl_tax":49,"base_tax_amount":0,"base_tax_invoiced":0,"created_at":"2020-05-08
+        06:57:20","discount_amount":0,"discount_invoiced":0,"discount_percent":0,"free_shipping":0,"discount_tax_compensation_amount":0,"is_qty_decimal":0,"is_virtual":0,"item_id":32,"name":"Portia
+        Capri","no_discount":0,"order_id":16,"original_price":49,"price":49,"price_incl_tax":49,"product_id":1909,"product_type":"configurable","qty_canceled":0,"qty_invoiced":0,"qty_ordered":1,"qty_refunded":0,"qty_shipped":0,"quote_item_id":43,"row_invoiced":0,"row_total":49,"row_total_incl_tax":49,"row_weight":1,"sku":"WP13-28-Blue","store_id":1,"tax_amount":0,"tax_invoiced":0,"tax_percent":0,"updated_at":"2020-05-08
+        06:57:20","weight":1,"product_option":{"extension_attributes":{"configurable_item_options":[{"option_id":"152","option_value":5598},{"option_id":"93","option_value":5477}]}}},"row_total_incl_tax":0,"base_row_total_incl_tax":0}],"billing_address":{"address_type":"billing","city":"City","country_id":"AF","email":"guest@guest.com","entity_id":32,"firstname":"Guest","lastname":"Guester","parent_id":16,"postcode":"1111","street":["Street"],"telephone":"1111"},"payment":{"account_status":null,"additional_information":["Check
+        \/ Money order"],"amount_ordered":54,"base_amount_ordered":54,"base_shipping_amount":5,"cc_exp_year":"0","cc_last4":null,"cc_ss_start_month":"0","cc_ss_start_year":"0","entity_id":16,"method":"checkmo","parent_id":16,"shipping_amount":5},"status_histories":[],"extension_attributes":{"shipping_assignments":[{"shipping":{"address":{"address_type":"shipping","city":"City","country_id":"AF","customer_address_id":0,"email":"guest@guest.com","entity_id":31,"firstname":"Guest","lastname":"Guester","parent_id":16,"postcode":"1111","street":["Street"],"telephone":"1111"},"method":"flatrate_flatrate","total":{"base_shipping_amount":5,"base_shipping_discount_amount":0,"base_shipping_discount_tax_compensation_amnt":0,"base_shipping_incl_tax":5,"base_shipping_tax_amount":0,"shipping_amount":5,"shipping_discount_amount":0,"shipping_discount_tax_compensation_amount":0,"shipping_incl_tax":5,"shipping_tax_amount":0}},"items":[{"amount_refunded":0,"base_amount_refunded":0,"base_discount_amount":0,"base_discount_invoiced":0,"base_discount_tax_compensation_amount":0,"base_original_price":49,"base_price":49,"base_price_incl_tax":49,"base_row_invoiced":0,"base_row_total":49,"base_row_total_incl_tax":49,"base_tax_amount":0,"base_tax_invoiced":0,"created_at":"2020-05-08
+        06:57:20","discount_amount":0,"discount_invoiced":0,"discount_percent":0,"free_shipping":0,"discount_tax_compensation_amount":0,"is_qty_decimal":0,"is_virtual":0,"item_id":32,"name":"Portia
+        Capri","no_discount":0,"order_id":16,"original_price":49,"price":49,"price_incl_tax":49,"product_id":1909,"product_type":"configurable","qty_canceled":0,"qty_invoiced":0,"qty_ordered":1,"qty_refunded":0,"qty_shipped":0,"quote_item_id":43,"row_invoiced":0,"row_total":49,"row_total_incl_tax":49,"row_weight":1,"sku":"WP13-28-Blue","store_id":1,"tax_amount":0,"tax_invoiced":0,"tax_percent":0,"updated_at":"2020-05-08
+        06:57:20","weight":1,"product_option":{"extension_attributes":{"configurable_item_options":[{"option_id":"152","option_value":5598},{"option_id":"93","option_value":5477}]}}},{"amount_refunded":0,"base_amount_refunded":0,"base_discount_amount":0,"base_discount_invoiced":0,"base_price":0,"base_row_invoiced":0,"base_row_total":0,"base_tax_amount":0,"base_tax_invoiced":0,"created_at":"2020-05-08
+        06:57:20","discount_amount":0,"discount_invoiced":0,"discount_percent":0,"free_shipping":0,"is_qty_decimal":0,"is_virtual":0,"item_id":33,"name":"Portia
+        Capri-28-Blue","no_discount":0,"order_id":16,"original_price":0,"parent_item_id":32,"price":49,"product_id":1903,"product_type":"simple","qty_canceled":0,"qty_invoiced":0,"qty_ordered":1,"qty_refunded":0,"qty_shipped":0,"quote_item_id":44,"row_invoiced":0,"row_total":0,"row_weight":0,"sku":"WP13-28-Blue","store_id":1,"tax_amount":0,"tax_invoiced":0,"tax_percent":0,"updated_at":"2020-05-08
+        06:57:20","weight":1,"parent_item":{"amount_refunded":0,"base_amount_refunded":0,"base_discount_amount":0,"base_discount_invoiced":0,"base_discount_tax_compensation_amount":0,"base_original_price":49,"base_price":49,"base_price_incl_tax":49,"base_row_invoiced":0,"base_row_total":49,"base_row_total_incl_tax":49,"base_tax_amount":0,"base_tax_invoiced":0,"created_at":"2020-05-08
+        06:57:20","discount_amount":0,"discount_invoiced":0,"discount_percent":0,"free_shipping":0,"discount_tax_compensation_amount":0,"is_qty_decimal":0,"is_virtual":0,"item_id":32,"name":"Portia
+        Capri","no_discount":0,"order_id":16,"original_price":49,"price":49,"price_incl_tax":49,"product_id":1909,"product_type":"configurable","qty_canceled":0,"qty_invoiced":0,"qty_ordered":1,"qty_refunded":0,"qty_shipped":0,"quote_item_id":43,"row_invoiced":0,"row_total":49,"row_total_incl_tax":49,"row_weight":1,"sku":"WP13-28-Blue","store_id":1,"tax_amount":0,"tax_invoiced":0,"tax_percent":0,"updated_at":"2020-05-08
+        06:57:20","weight":1,"product_option":{"extension_attributes":{"configurable_item_options":[{"option_id":"152","option_value":5598},{"option_id":"93","option_value":5477}]}}},"row_total_incl_tax":0,"base_row_total_incl_tax":0}]}],"payment_additional_info":[{"key":"method_title","value":"Check
+        \/ Money order"}],"applied_taxes":[],"item_applied_taxes":[]}}'}
+    headers:
+      Cache-Control: ['no-store, no-cache, must-revalidate']
+      Connection: [keep-alive]
+      Content-Type: [application/json; charset=utf-8]
+      Date: ['Fri, 08 May 2020 06:59:16 GMT']
+      Expires: ['Thu, 19 Nov 1981 08:52:00 GMT']
+      Pragma: [no-cache]
+      Server: [nginx/1.14.0 (Ubuntu)]
+      Set-Cookie: ['PHPSESSID=gq2m40pqn0g755o8etdhukcvcv; expires=Fri, 08-May-2020
+          07:59:16 GMT; Max-Age=3600; path=/; domain=magento; HttpOnly']
+      Transfer-Encoding: [chunked]
+      Vary: [Accept-Encoding]
+      X-Frame-Options: [SAMEORIGIN]
+      content-length: ['8924']
+    status: {code: 200, message: OK}
+- request:
+    body: null
+    headers:
+      Accept: ['*/*']
+      Accept-Encoding: ['gzip, deflate']
+      Connection: [keep-alive]
+      User-Agent: [python-requests/2.19.1]
+    method: GET
+    uri: http://magento/index.php/rest/V1/products/WP13-28-Blue
+  response:
+    body: {string: '{"id":1903,"sku":"WP13-28-Blue","name":"Portia Capri-28-Blue","attribute_set_id":10,"price":49,"status":1,"visibility":1,"type_id":"simple","created_at":"2020-03-27
+        16:07:11","updated_at":"2020-03-27 16:07:11","weight":1,"extension_attributes":{"website_ids":[1],"category_links":[{"position":0,"category_id":"27"},{"position":0,"category_id":"32"},{"position":0,"category_id":"34"},{"position":0,"category_id":"2"}],"stock_item":{"item_id":1903,"product_id":1903,"stock_id":1,"qty":100,"is_in_stock":true,"is_qty_decimal":false,"show_default_notification_message":false,"use_config_min_qty":true,"min_qty":0,"use_config_min_sale_qty":1,"min_sale_qty":1,"use_config_max_sale_qty":true,"max_sale_qty":10000,"use_config_backorders":true,"backorders":0,"use_config_notify_stock_qty":true,"notify_stock_qty":1,"use_config_qty_increments":true,"qty_increments":0,"use_config_enable_qty_inc":true,"enable_qty_increments":false,"use_config_manage_stock":true,"manage_stock":true,"low_stock_date":null,"is_decimal_divided":false,"stock_status_changed_auto":0}},"product_links":[],"options":[],"media_gallery_entries":[{"id":3192,"media_type":"image","label":"","position":1,"disabled":false,"types":["image","small_image","thumbnail"],"file":"\/w\/p\/wp13-blue_main_1.jpg"}],"tier_prices":[],"custom_attributes":[{"attribute_code":"image","value":"\/w\/p\/wp13-blue_main_1.jpg"},{"attribute_code":"small_image","value":"\/w\/p\/wp13-blue_main_1.jpg"},{"attribute_code":"thumbnail","value":"\/w\/p\/wp13-blue_main_1.jpg"},{"attribute_code":"options_container","value":"container2"},{"attribute_code":"msrp_display_actual_price_type","value":"0"},{"attribute_code":"url_key","value":"portia-capri-28-blue"},{"attribute_code":"required_options","value":"0"},{"attribute_code":"has_options","value":"0"},{"attribute_code":"tax_class_id","value":"2"},{"attribute_code":"category_ids","value":["27","32","34","2"]},{"attribute_code":"description","value":"<p>From
+        yoga at dawn to evenings curled up with a book, our Portia Capri gives you
+        the comfort and freedom to cruise through the day. The high-waisted design
+        keeps you covered while you''re bending and stretching, while contrast stripes
+        promise a dash of sporty style.<\/p>\n<p>&bull; Salmon heather capri sweats.<br
+        \/>&bull; Relaxed fit, high waist. <br \/>&bull; Inseam: 21\". <br \/>&bull;
+        Wide elastic waistband. <br \/>&bull; Machine wash\/dry.<\/p>"},{"attribute_code":"size","value":"5598"},{"attribute_code":"color","value":"5477"}]}'}
+    headers:
+      Cache-Control: ['no-store, no-cache, must-revalidate']
+      Connection: [keep-alive]
+      Content-Type: [application/json; charset=utf-8]
+      Date: ['Fri, 08 May 2020 06:59:16 GMT']
+      Expires: ['Thu, 19 Nov 1981 08:52:00 GMT']
+      Pragma: [no-cache]
+      Server: [nginx/1.14.0 (Ubuntu)]
+      Set-Cookie: ['PHPSESSID=b4fuqn4ks1aotreaeuvnpuu4pp; expires=Fri, 08-May-2020
+          07:59:16 GMT; Max-Age=3600; path=/; domain=magento; HttpOnly']
+      Transfer-Encoding: [chunked]
+      Vary: [Accept-Encoding]
+      X-Frame-Options: [SAMEORIGIN]
+      content-length: ['2483']
+    status: {code: 200, message: OK}
+- request:
+    body: null
+    headers:
+      Accept: ['*/*']
+      Accept-Encoding: ['gzip, deflate']
+      Connection: [keep-alive]
+      User-Agent: [python-requests/2.19.1]
+    method: GET
+    uri: http://magento/index.php/rest/V1/categories/27
+  response:
+    body: {string: '{"id":27,"parent_id":22,"name":"Pants","is_active":true,"position":1,"level":4,"children":"","created_at":"2020-03-27
+        16:06:36","updated_at":"2020-03-27 16:06:36","path":"1\/2\/20\/22\/27","available_sort_by":[],"include_in_menu":true,"custom_attributes":[{"attribute_code":"is_anchor","value":"1"},{"attribute_code":"path","value":"1\/2\/20\/22\/27"},{"attribute_code":"children_count","value":"0"},{"attribute_code":"url_key","value":"pants-women"},{"attribute_code":"url_path","value":"women\/bottoms-women\/pants-women"}]}'}
+    headers:
+      Cache-Control: ['no-store, no-cache, must-revalidate']
+      Connection: [keep-alive]
+      Content-Type: [application/json; charset=utf-8]
+      Date: ['Fri, 08 May 2020 06:59:16 GMT']
+      Expires: ['Thu, 19 Nov 1981 08:52:00 GMT']
+      Pragma: [no-cache]
+      Server: [nginx/1.14.0 (Ubuntu)]
+      Set-Cookie: ['PHPSESSID=2tl30snqbs1qlqg9r9nm37bonu; expires=Fri, 08-May-2020
+          07:59:16 GMT; Max-Age=3600; path=/; domain=magento; HttpOnly']
+      Transfer-Encoding: [chunked]
+      Vary: [Accept-Encoding]
+      X-Frame-Options: [SAMEORIGIN]
+      content-length: ['526']
+    status: {code: 200, message: OK}
+- request:
+    body: null
+    headers:
+      Accept: ['*/*']
+      Accept-Encoding: ['gzip, deflate']
+      Connection: [keep-alive]
+      User-Agent: [python-requests/2.19.1]
+    method: GET
+    uri: http://magento/index.php/rest/V1/categories/22
+  response:
+    body: {string: '{"id":22,"parent_id":20,"name":"Bottoms","is_active":true,"position":2,"level":3,"children":"27,28","created_at":"2020-03-27
+        16:06:36","updated_at":"2020-04-24 10:01:36","path":"1\/2\/20\/22","available_sort_by":[],"include_in_menu":true,"custom_attributes":[{"attribute_code":"is_anchor","value":"1"},{"attribute_code":"path","value":"1\/2\/20\/22"},{"attribute_code":"children_count","value":"3"},{"attribute_code":"url_key","value":"bottoms-women"},{"attribute_code":"url_path","value":"women\/bottoms-women"}]}'}
+    headers:
+      Cache-Control: ['no-store, no-cache, must-revalidate']
+      Connection: [keep-alive]
+      Content-Type: [application/json; charset=utf-8]
+      Date: ['Fri, 08 May 2020 06:59:17 GMT']
+      Expires: ['Thu, 19 Nov 1981 08:52:00 GMT']
+      Pragma: [no-cache]
+      Server: [nginx/1.14.0 (Ubuntu)]
+      Set-Cookie: ['PHPSESSID=2hegdapoh8rua1ns001ugliplo; expires=Fri, 08-May-2020
+          07:59:16 GMT; Max-Age=3600; path=/; domain=magento; HttpOnly']
+      Transfer-Encoding: [chunked]
+      Vary: [Accept-Encoding]
+      X-Frame-Options: [SAMEORIGIN]
+      content-length: ['514']
+    status: {code: 200, message: OK}
+- request:
+    body: null
+    headers:
+      Accept: ['*/*']
+      Accept-Encoding: ['gzip, deflate']
+      Connection: [keep-alive]
+      User-Agent: [python-requests/2.19.1]
+    method: GET
+    uri: http://magento/index.php/rest/V1/categories/20
+  response:
+    body: {string: '{"id":20,"parent_id":2,"name":"Women","is_active":true,"position":2,"level":2,"children":"21,22","created_at":"2020-03-27
+        16:06:36","updated_at":"2020-04-24 10:01:36","path":"1\/2\/20","available_sort_by":[],"include_in_menu":true,"custom_attributes":[{"attribute_code":"display_mode","value":"PAGE"},{"attribute_code":"is_anchor","value":"0"},{"attribute_code":"path","value":"1\/2\/20"},{"attribute_code":"children_count","value":"9"},{"attribute_code":"url_key","value":"women"},{"attribute_code":"url_path","value":"women"}]}'}
+    headers:
+      Cache-Control: ['no-store, no-cache, must-revalidate']
+      Connection: [keep-alive]
+      Content-Type: [application/json; charset=utf-8]
+      Date: ['Fri, 08 May 2020 06:59:17 GMT']
+      Expires: ['Thu, 19 Nov 1981 08:52:00 GMT']
+      Pragma: [no-cache]
+      Server: [nginx/1.14.0 (Ubuntu)]
+      Set-Cookie: ['PHPSESSID=vnj1db8ec79jo7knmshm9t645d; expires=Fri, 08-May-2020
+          07:59:17 GMT; Max-Age=3600; path=/; domain=magento; HttpOnly']
+      Transfer-Encoding: [chunked]
+      Vary: [Accept-Encoding]
+      X-Frame-Options: [SAMEORIGIN]
+      content-length: ['529']
+    status: {code: 200, message: OK}
+- request:
+    body: null
+    headers:
+      Accept: ['*/*']
+      Accept-Encoding: ['gzip, deflate']
+      Connection: [keep-alive]
+      User-Agent: [python-requests/2.19.1]
+    method: GET
+    uri: http://magento/index.php/rest/V1/categories/2
+  response:
+    body: {string: '{"id":2,"parent_id":1,"name":"Default Category","is_active":true,"position":1,"level":1,"children":"3,9,11,20,37,38","created_at":"2020-03-27
+        15:25:28","updated_at":"2020-04-24 10:01:36","path":"1\/2","available_sort_by":[],"include_in_menu":true,"custom_attributes":[{"attribute_code":"display_mode","value":"PRODUCTS"},{"attribute_code":"path","value":"1\/2"},{"attribute_code":"children_count","value":"39"}]}'}
+    headers:
+      Cache-Control: ['no-store, no-cache, must-revalidate']
+      Connection: [keep-alive]
+      Content-Type: [application/json; charset=utf-8]
+      Date: ['Fri, 08 May 2020 06:59:17 GMT']
+      Expires: ['Thu, 19 Nov 1981 08:52:00 GMT']
+      Pragma: [no-cache]
+      Server: [nginx/1.14.0 (Ubuntu)]
+      Set-Cookie: ['PHPSESSID=8sf1d237brgpstpo1o5b4jm9m3; expires=Fri, 08-May-2020
+          07:59:17 GMT; Max-Age=3600; path=/; domain=magento; HttpOnly']
+      Transfer-Encoding: [chunked]
+      Vary: [Accept-Encoding]
+      X-Frame-Options: [SAMEORIGIN]
+      content-length: ['412']
+    status: {code: 200, message: OK}
+- request:
+    body: null
+    headers:
+      Accept: ['*/*']
+      Accept-Encoding: ['gzip, deflate']
+      Connection: [keep-alive]
+      User-Agent: [python-requests/2.19.1]
+    method: GET
+    uri: http://magento/index.php/rest/V1/categories/1
+  response:
+    body: {string: '{"id":1,"parent_id":0,"name":"Root Catalog","position":0,"level":0,"children":"2","created_at":"2020-03-27
+        15:25:28","updated_at":"2020-04-24 10:01:36","path":"1","available_sort_by":[],"include_in_menu":true,"custom_attributes":[{"attribute_code":"path","value":"1"},{"attribute_code":"children_count","value":"40"}]}'}
+    headers:
+      Cache-Control: ['no-store, no-cache, must-revalidate']
+      Connection: [keep-alive]
+      Content-Type: [application/json; charset=utf-8]
+      Date: ['Fri, 08 May 2020 06:59:17 GMT']
+      Expires: ['Thu, 19 Nov 1981 08:52:00 GMT']
+      Pragma: [no-cache]
+      Server: [nginx/1.14.0 (Ubuntu)]
+      Set-Cookie: ['PHPSESSID=liebunr6q3npbi42b072iap7qf; expires=Fri, 08-May-2020
+          07:59:17 GMT; Max-Age=3600; path=/; domain=magento; HttpOnly']
+      Transfer-Encoding: [chunked]
+      Vary: [Accept-Encoding]
+      X-Frame-Options: [SAMEORIGIN]
+      content-length: ['318']
+    status: {code: 200, message: OK}
+- request:
+    body: null
+    headers:
+      Accept: ['*/*']
+      Accept-Encoding: ['gzip, deflate']
+      Connection: [keep-alive]
+      User-Agent: [python-requests/2.19.1]
+    method: GET
+    uri: http://magento/index.php/rest/default/V1/categories/1
+  response:
+    body: {string: '{"id":1,"parent_id":0,"name":"Root Catalog","position":0,"level":0,"children":"2","created_at":"2020-03-27
+        15:25:28","updated_at":"2020-04-24 10:01:36","path":"1","available_sort_by":[],"include_in_menu":true,"custom_attributes":[{"attribute_code":"path","value":"1"},{"attribute_code":"children_count","value":"40"}]}'}
+    headers:
+      Cache-Control: ['no-store, no-cache, must-revalidate']
+      Connection: [keep-alive]
+      Content-Type: [application/json; charset=utf-8]
+      Date: ['Fri, 08 May 2020 06:59:17 GMT']
+      Expires: ['Thu, 19 Nov 1981 08:52:00 GMT']
+      Pragma: [no-cache]
+      Server: [nginx/1.14.0 (Ubuntu)]
+      Set-Cookie: ['PHPSESSID=vs0ujqklgriu071lsgiphiip9t; expires=Fri, 08-May-2020
+          07:59:17 GMT; Max-Age=3600; path=/; domain=magento; HttpOnly']
+      Transfer-Encoding: [chunked]
+      Vary: [Accept-Encoding]
+      X-Frame-Options: [SAMEORIGIN]
+      content-length: ['318']
+    status: {code: 200, message: OK}
+- request:
+    body: null
+    headers:
+      Accept: ['*/*']
+      Accept-Encoding: ['gzip, deflate']
+      Connection: [keep-alive]
+      User-Agent: [python-requests/2.19.1]
+    method: GET
+    uri: http://magento/index.php/rest/default/V1/categories/2
+  response:
+    body: {string: '{"id":2,"parent_id":1,"name":"Default Category","is_active":true,"position":1,"level":1,"children":"3,9,11,20,37,38","created_at":"2020-03-27
+        15:25:28","updated_at":"2020-04-24 10:01:36","path":"1\/2","available_sort_by":[],"include_in_menu":true,"custom_attributes":[{"attribute_code":"display_mode","value":"PRODUCTS"},{"attribute_code":"path","value":"1\/2"},{"attribute_code":"children_count","value":"39"}]}'}
+    headers:
+      Cache-Control: ['no-store, no-cache, must-revalidate']
+      Connection: [keep-alive]
+      Content-Type: [application/json; charset=utf-8]
+      Date: ['Fri, 08 May 2020 06:59:17 GMT']
+      Expires: ['Thu, 19 Nov 1981 08:52:00 GMT']
+      Pragma: [no-cache]
+      Server: [nginx/1.14.0 (Ubuntu)]
+      Set-Cookie: ['PHPSESSID=2j40t0miadum8h0cafnan90rv5; expires=Fri, 08-May-2020
+          07:59:17 GMT; Max-Age=3600; path=/; domain=magento; HttpOnly']
+      Transfer-Encoding: [chunked]
+      Vary: [Accept-Encoding]
+      X-Frame-Options: [SAMEORIGIN]
+      content-length: ['412']
+    status: {code: 200, message: OK}
+- request:
+    body: null
+    headers:
+      Accept: ['*/*']
+      Accept-Encoding: ['gzip, deflate']
+      Connection: [keep-alive]
+      User-Agent: [python-requests/2.19.1]
+    method: GET
+    uri: http://magento/index.php/rest/default/V1/categories/20
+  response:
+    body: {string: '{"id":20,"parent_id":2,"name":"Women","is_active":true,"position":2,"level":2,"children":"21,22","created_at":"2020-03-27
+        16:06:36","updated_at":"2020-04-24 10:01:36","path":"1\/2\/20","available_sort_by":[],"include_in_menu":true,"custom_attributes":[{"attribute_code":"display_mode","value":"PAGE"},{"attribute_code":"is_anchor","value":"0"},{"attribute_code":"path","value":"1\/2\/20"},{"attribute_code":"children_count","value":"9"},{"attribute_code":"url_key","value":"women"},{"attribute_code":"url_path","value":"women"}]}'}
+    headers:
+      Cache-Control: ['no-store, no-cache, must-revalidate']
+      Connection: [keep-alive]
+      Content-Type: [application/json; charset=utf-8]
+      Date: ['Fri, 08 May 2020 06:59:17 GMT']
+      Expires: ['Thu, 19 Nov 1981 08:52:00 GMT']
+      Pragma: [no-cache]
+      Server: [nginx/1.14.0 (Ubuntu)]
+      Set-Cookie: ['PHPSESSID=q10ck8304ed498kvr50hjbqjcr; expires=Fri, 08-May-2020
+          07:59:17 GMT; Max-Age=3600; path=/; domain=magento; HttpOnly']
+      Transfer-Encoding: [chunked]
+      Vary: [Accept-Encoding]
+      X-Frame-Options: [SAMEORIGIN]
+      content-length: ['529']
+    status: {code: 200, message: OK}
+- request:
+    body: null
+    headers:
+      Accept: ['*/*']
+      Accept-Encoding: ['gzip, deflate']
+      Connection: [keep-alive]
+      User-Agent: [python-requests/2.19.1]
+    method: GET
+    uri: http://magento/index.php/rest/default/V1/categories/22
+  response:
+    body: {string: '{"id":22,"parent_id":20,"name":"Bottoms","is_active":true,"position":2,"level":3,"children":"27,28","created_at":"2020-03-27
+        16:06:36","updated_at":"2020-04-24 10:01:36","path":"1\/2\/20\/22","available_sort_by":[],"include_in_menu":true,"custom_attributes":[{"attribute_code":"is_anchor","value":"1"},{"attribute_code":"path","value":"1\/2\/20\/22"},{"attribute_code":"children_count","value":"3"},{"attribute_code":"url_key","value":"bottoms-women"},{"attribute_code":"url_path","value":"women\/bottoms-women"}]}'}
+    headers:
+      Cache-Control: ['no-store, no-cache, must-revalidate']
+      Connection: [keep-alive]
+      Content-Type: [application/json; charset=utf-8]
+      Date: ['Fri, 08 May 2020 06:59:17 GMT']
+      Expires: ['Thu, 19 Nov 1981 08:52:00 GMT']
+      Pragma: [no-cache]
+      Server: [nginx/1.14.0 (Ubuntu)]
+      Set-Cookie: ['PHPSESSID=rsr67m24340eciilhkpaks3eq0; expires=Fri, 08-May-2020
+          07:59:17 GMT; Max-Age=3600; path=/; domain=magento; HttpOnly']
+      Transfer-Encoding: [chunked]
+      Vary: [Accept-Encoding]
+      X-Frame-Options: [SAMEORIGIN]
+      content-length: ['514']
+    status: {code: 200, message: OK}
+- request:
+    body: null
+    headers:
+      Accept: ['*/*']
+      Accept-Encoding: ['gzip, deflate']
+      Connection: [keep-alive]
+      User-Agent: [python-requests/2.19.1]
+    method: GET
+    uri: http://magento/index.php/rest/default/V1/categories/27
+  response:
+    body: {string: '{"id":27,"parent_id":22,"name":"Pants","is_active":true,"position":1,"level":4,"children":"","created_at":"2020-03-27
+        16:06:36","updated_at":"2020-03-27 16:06:36","path":"1\/2\/20\/22\/27","available_sort_by":[],"include_in_menu":true,"custom_attributes":[{"attribute_code":"is_anchor","value":"1"},{"attribute_code":"path","value":"1\/2\/20\/22\/27"},{"attribute_code":"children_count","value":"0"},{"attribute_code":"url_key","value":"pants-women"},{"attribute_code":"url_path","value":"women\/bottoms-women\/pants-women"}]}'}
+    headers:
+      Cache-Control: ['no-store, no-cache, must-revalidate']
+      Connection: [keep-alive]
+      Content-Type: [application/json; charset=utf-8]
+      Date: ['Fri, 08 May 2020 06:59:18 GMT']
+      Expires: ['Thu, 19 Nov 1981 08:52:00 GMT']
+      Pragma: [no-cache]
+      Server: [nginx/1.14.0 (Ubuntu)]
+      Set-Cookie: ['PHPSESSID=4dndvd8hdbi8vdcp4m6mko861v; expires=Fri, 08-May-2020
+          07:59:18 GMT; Max-Age=3600; path=/; domain=magento; HttpOnly']
+      Transfer-Encoding: [chunked]
+      Vary: [Accept-Encoding]
+      X-Frame-Options: [SAMEORIGIN]
+      content-length: ['526']
+    status: {code: 200, message: OK}
+- request:
+    body: null
+    headers:
+      Accept: ['*/*']
+      Accept-Encoding: ['gzip, deflate']
+      Connection: [keep-alive]
+      User-Agent: [python-requests/2.19.1]
+    method: GET
+    uri: http://magento/index.php/rest/V1/categories/32
+  response:
+    body: {string: '{"id":32,"parent_id":29,"name":"Pants","is_active":true,"position":3,"level":3,"children":"","created_at":"2020-03-27
+        16:06:36","updated_at":"2020-03-27 16:06:36","path":"1\/2\/29\/32","available_sort_by":[],"include_in_menu":false,"custom_attributes":[{"attribute_code":"is_anchor","value":"1"},{"attribute_code":"path","value":"1\/2\/29\/32"},{"attribute_code":"children_count","value":"0"},{"attribute_code":"url_key","value":"pants-all"},{"attribute_code":"url_path","value":"promotions\/pants-all"}]}'}
+    headers:
+      Cache-Control: ['no-store, no-cache, must-revalidate']
+      Connection: [keep-alive]
+      Content-Type: [application/json; charset=utf-8]
+      Date: ['Fri, 08 May 2020 06:59:18 GMT']
+      Expires: ['Thu, 19 Nov 1981 08:52:00 GMT']
+      Pragma: [no-cache]
+      Server: [nginx/1.14.0 (Ubuntu)]
+      Set-Cookie: ['PHPSESSID=n7jug9uchckdara1smq8hc597b; expires=Fri, 08-May-2020
+          07:59:18 GMT; Max-Age=3600; path=/; domain=magento; HttpOnly']
+      Transfer-Encoding: [chunked]
+      Vary: [Accept-Encoding]
+      X-Frame-Options: [SAMEORIGIN]
+      content-length: ['505']
+    status: {code: 200, message: OK}
+- request:
+    body: null
+    headers:
+      Accept: ['*/*']
+      Accept-Encoding: ['gzip, deflate']
+      Connection: [keep-alive]
+      User-Agent: [python-requests/2.19.1]
+    method: GET
+    uri: http://magento/index.php/rest/V1/categories/29
+  response:
+    body: {string: '{"id":29,"parent_id":2,"name":"Promotions","is_active":false,"position":6,"level":2,"children":"30,31,32,33","created_at":"2020-03-27
+        16:06:36","updated_at":"2020-03-27 16:06:37","path":"1\/2\/29","available_sort_by":[],"include_in_menu":false,"custom_attributes":[{"attribute_code":"display_mode","value":"PAGE"},{"attribute_code":"is_anchor","value":"0"},{"attribute_code":"path","value":"1\/2\/29"},{"attribute_code":"children_count","value":"4"},{"attribute_code":"url_key","value":"promotions"},{"attribute_code":"url_path","value":"promotions"}]}'}
+    headers:
+      Cache-Control: ['no-store, no-cache, must-revalidate']
+      Connection: [keep-alive]
+      Content-Type: [application/json; charset=utf-8]
+      Date: ['Fri, 08 May 2020 06:59:18 GMT']
+      Expires: ['Thu, 19 Nov 1981 08:52:00 GMT']
+      Pragma: [no-cache]
+      Server: [nginx/1.14.0 (Ubuntu)]
+      Set-Cookie: ['PHPSESSID=klcaitc0nu2c6grl4dmq421hk2; expires=Fri, 08-May-2020
+          07:59:18 GMT; Max-Age=3600; path=/; domain=magento; HttpOnly']
+      Transfer-Encoding: [chunked]
+      Vary: [Accept-Encoding]
+      X-Frame-Options: [SAMEORIGIN]
+      content-length: ['552']
+    status: {code: 200, message: OK}
+- request:
+    body: null
+    headers:
+      Accept: ['*/*']
+      Accept-Encoding: ['gzip, deflate']
+      Connection: [keep-alive]
+      User-Agent: [python-requests/2.19.1]
+    method: GET
+    uri: http://magento/index.php/rest/default/V1/categories/29
+  response:
+    body: {string: '{"id":29,"parent_id":2,"name":"Promotions","is_active":false,"position":6,"level":2,"children":"30,31,32,33","created_at":"2020-03-27
+        16:06:36","updated_at":"2020-03-27 16:06:37","path":"1\/2\/29","available_sort_by":[],"include_in_menu":false,"custom_attributes":[{"attribute_code":"display_mode","value":"PAGE"},{"attribute_code":"is_anchor","value":"0"},{"attribute_code":"path","value":"1\/2\/29"},{"attribute_code":"children_count","value":"4"},{"attribute_code":"url_key","value":"promotions"},{"attribute_code":"url_path","value":"promotions"}]}'}
+    headers:
+      Cache-Control: ['no-store, no-cache, must-revalidate']
+      Connection: [keep-alive]
+      Content-Type: [application/json; charset=utf-8]
+      Date: ['Fri, 08 May 2020 06:59:18 GMT']
+      Expires: ['Thu, 19 Nov 1981 08:52:00 GMT']
+      Pragma: [no-cache]
+      Server: [nginx/1.14.0 (Ubuntu)]
+      Set-Cookie: ['PHPSESSID=4a58rc63nthah9uqc7g0344snm; expires=Fri, 08-May-2020
+          07:59:18 GMT; Max-Age=3600; path=/; domain=magento; HttpOnly']
+      Transfer-Encoding: [chunked]
+      Vary: [Accept-Encoding]
+      X-Frame-Options: [SAMEORIGIN]
+      content-length: ['552']
+    status: {code: 200, message: OK}
+- request:
+    body: null
+    headers:
+      Accept: ['*/*']
+      Accept-Encoding: ['gzip, deflate']
+      Connection: [keep-alive]
+      User-Agent: [python-requests/2.19.1]
+    method: GET
+    uri: http://magento/index.php/rest/default/V1/categories/32
+  response:
+    body: {string: '{"id":32,"parent_id":29,"name":"Pants","is_active":true,"position":3,"level":3,"children":"","created_at":"2020-03-27
+        16:06:36","updated_at":"2020-03-27 16:06:36","path":"1\/2\/29\/32","available_sort_by":[],"include_in_menu":false,"custom_attributes":[{"attribute_code":"is_anchor","value":"1"},{"attribute_code":"path","value":"1\/2\/29\/32"},{"attribute_code":"children_count","value":"0"},{"attribute_code":"url_key","value":"pants-all"},{"attribute_code":"url_path","value":"promotions\/pants-all"}]}'}
+    headers:
+      Cache-Control: ['no-store, no-cache, must-revalidate']
+      Connection: [keep-alive]
+      Content-Type: [application/json; charset=utf-8]
+      Date: ['Fri, 08 May 2020 06:59:18 GMT']
+      Expires: ['Thu, 19 Nov 1981 08:52:00 GMT']
+      Pragma: [no-cache]
+      Server: [nginx/1.14.0 (Ubuntu)]
+      Set-Cookie: ['PHPSESSID=md24a2ot2ebie91kn2lsqv0g7s; expires=Fri, 08-May-2020
+          07:59:18 GMT; Max-Age=3600; path=/; domain=magento; HttpOnly']
+      Transfer-Encoding: [chunked]
+      Vary: [Accept-Encoding]
+      X-Frame-Options: [SAMEORIGIN]
+      content-length: ['505']
+    status: {code: 200, message: OK}
+- request:
+    body: null
+    headers:
+      Accept: ['*/*']
+      Accept-Encoding: ['gzip, deflate']
+      Connection: [keep-alive]
+      User-Agent: [python-requests/2.19.1]
+    method: GET
+    uri: http://magento/index.php/rest/V1/categories/34
+  response:
+    body: {string: '{"id":34,"parent_id":7,"name":"Erin Recommends","is_active":true,"position":2,"level":3,"children":"","created_at":"2020-03-27
+        16:06:37","updated_at":"2020-03-27 16:06:37","path":"1\/2\/7\/34","available_sort_by":[],"include_in_menu":false,"custom_attributes":[{"attribute_code":"is_anchor","value":"1"},{"attribute_code":"path","value":"1\/2\/7\/34"},{"attribute_code":"children_count","value":"0"},{"attribute_code":"url_key","value":"erin-recommends"},{"attribute_code":"url_path","value":"collections\/erin-recommends"}]}'}
+    headers:
+      Cache-Control: ['no-store, no-cache, must-revalidate']
+      Connection: [keep-alive]
+      Content-Type: [application/json; charset=utf-8]
+      Date: ['Fri, 08 May 2020 06:59:18 GMT']
+      Expires: ['Thu, 19 Nov 1981 08:52:00 GMT']
+      Pragma: [no-cache]
+      Server: [nginx/1.14.0 (Ubuntu)]
+      Set-Cookie: ['PHPSESSID=3fluggtoc6a39fpbh6nhm5fhi1; expires=Fri, 08-May-2020
+          07:59:18 GMT; Max-Age=3600; path=/; domain=magento; HttpOnly']
+      Transfer-Encoding: [chunked]
+      Vary: [Accept-Encoding]
+      X-Frame-Options: [SAMEORIGIN]
+      content-length: ['525']
+    status: {code: 200, message: OK}
+- request:
+    body: null
+    headers:
+      Accept: ['*/*']
+      Accept-Encoding: ['gzip, deflate']
+      Connection: [keep-alive]
+      User-Agent: [python-requests/2.19.1]
+    method: GET
+    uri: http://magento/index.php/rest/V1/categories/7
+  response:
+    body: {string: '{"id":7,"parent_id":2,"name":"Collections","is_active":false,"position":5,"level":2,"children":"34,35,36,39,40,8","created_at":"2020-03-27
+        16:06:12","updated_at":"2020-03-27 16:12:21","path":"1\/2\/7","available_sort_by":[],"include_in_menu":false,"custom_attributes":[{"attribute_code":"display_mode","value":"PAGE"},{"attribute_code":"is_anchor","value":"0"},{"attribute_code":"path","value":"1\/2\/7"},{"attribute_code":"children_count","value":"6"},{"attribute_code":"url_key","value":"collections"},{"attribute_code":"url_path","value":"collections"}]}'}
+    headers:
+      Cache-Control: ['no-store, no-cache, must-revalidate']
+      Connection: [keep-alive]
+      Content-Type: [application/json; charset=utf-8]
+      Date: ['Fri, 08 May 2020 06:59:18 GMT']
+      Expires: ['Thu, 19 Nov 1981 08:52:00 GMT']
+      Pragma: [no-cache]
+      Server: [nginx/1.14.0 (Ubuntu)]
+      Set-Cookie: ['PHPSESSID=72044jhb0r5q5p0dhehrv23t51; expires=Fri, 08-May-2020
+          07:59:18 GMT; Max-Age=3600; path=/; domain=magento; HttpOnly']
+      Transfer-Encoding: [chunked]
+      Vary: [Accept-Encoding]
+      X-Frame-Options: [SAMEORIGIN]
+      content-length: ['557']
+    status: {code: 200, message: OK}
+- request:
+    body: null
+    headers:
+      Accept: ['*/*']
+      Accept-Encoding: ['gzip, deflate']
+      Connection: [keep-alive]
+      User-Agent: [python-requests/2.19.1]
+    method: GET
+    uri: http://magento/index.php/rest/default/V1/categories/7
+  response:
+    body: {string: '{"id":7,"parent_id":2,"name":"Collections","is_active":false,"position":5,"level":2,"children":"34,35,36,39,40,8","created_at":"2020-03-27
+        16:06:12","updated_at":"2020-03-27 16:12:21","path":"1\/2\/7","available_sort_by":[],"include_in_menu":false,"custom_attributes":[{"attribute_code":"display_mode","value":"PAGE"},{"attribute_code":"is_anchor","value":"0"},{"attribute_code":"path","value":"1\/2\/7"},{"attribute_code":"children_count","value":"6"},{"attribute_code":"url_key","value":"collections"},{"attribute_code":"url_path","value":"collections"}]}'}
+    headers:
+      Cache-Control: ['no-store, no-cache, must-revalidate']
+      Connection: [keep-alive]
+      Content-Type: [application/json; charset=utf-8]
+      Date: ['Fri, 08 May 2020 06:59:18 GMT']
+      Expires: ['Thu, 19 Nov 1981 08:52:00 GMT']
+      Pragma: [no-cache]
+      Server: [nginx/1.14.0 (Ubuntu)]
+      Set-Cookie: ['PHPSESSID=65h8e7n9iehc9be5no4v0kksb8; expires=Fri, 08-May-2020
+          07:59:18 GMT; Max-Age=3600; path=/; domain=magento; HttpOnly']
+      Transfer-Encoding: [chunked]
+      Vary: [Accept-Encoding]
+      X-Frame-Options: [SAMEORIGIN]
+      content-length: ['557']
+    status: {code: 200, message: OK}
+- request:
+    body: null
+    headers:
+      Accept: ['*/*']
+      Accept-Encoding: ['gzip, deflate']
+      Connection: [keep-alive]
+      User-Agent: [python-requests/2.19.1]
+    method: GET
+    uri: http://magento/index.php/rest/default/V1/categories/34
+  response:
+    body: {string: '{"id":34,"parent_id":7,"name":"Erin Recommends","is_active":true,"position":2,"level":3,"children":"","created_at":"2020-03-27
+        16:06:37","updated_at":"2020-03-27 16:06:37","path":"1\/2\/7\/34","available_sort_by":[],"include_in_menu":false,"custom_attributes":[{"attribute_code":"is_anchor","value":"1"},{"attribute_code":"path","value":"1\/2\/7\/34"},{"attribute_code":"children_count","value":"0"},{"attribute_code":"url_key","value":"erin-recommends"},{"attribute_code":"url_path","value":"collections\/erin-recommends"}]}'}
+    headers:
+      Cache-Control: ['no-store, no-cache, must-revalidate']
+      Connection: [keep-alive]
+      Content-Type: [application/json; charset=utf-8]
+      Date: ['Fri, 08 May 2020 06:59:19 GMT']
+      Expires: ['Thu, 19 Nov 1981 08:52:00 GMT']
+      Pragma: [no-cache]
+      Server: [nginx/1.14.0 (Ubuntu)]
+      Set-Cookie: ['PHPSESSID=tllivomkcqhioq0h91ib6hth55; expires=Fri, 08-May-2020
+          07:59:19 GMT; Max-Age=3600; path=/; domain=magento; HttpOnly']
+      Transfer-Encoding: [chunked]
+      Vary: [Accept-Encoding]
+      X-Frame-Options: [SAMEORIGIN]
+      content-length: ['525']
+    status: {code: 200, message: OK}
+- request:
+    body: null
+    headers:
+      Accept: ['*/*']
+      Accept-Encoding: ['gzip, deflate']
+      Connection: [keep-alive]
+      User-Agent: [python-requests/2.19.1]
+    method: GET
+    uri: http://magento/index.php/rest/default/V1/products/WP13-28-Blue
+  response:
+    body: {string: '{"id":1903,"sku":"WP13-28-Blue","name":"Portia Capri-28-Blue","attribute_set_id":10,"price":49,"status":1,"visibility":1,"type_id":"simple","created_at":"2020-03-27
+        16:07:11","updated_at":"2020-03-27 16:07:11","weight":1,"extension_attributes":{"website_ids":[1],"category_links":[{"position":0,"category_id":"27"},{"position":0,"category_id":"32"},{"position":0,"category_id":"34"},{"position":0,"category_id":"2"}],"stock_item":{"item_id":1903,"product_id":1903,"stock_id":1,"qty":100,"is_in_stock":true,"is_qty_decimal":false,"show_default_notification_message":false,"use_config_min_qty":true,"min_qty":0,"use_config_min_sale_qty":1,"min_sale_qty":1,"use_config_max_sale_qty":true,"max_sale_qty":10000,"use_config_backorders":true,"backorders":0,"use_config_notify_stock_qty":true,"notify_stock_qty":1,"use_config_qty_increments":true,"qty_increments":0,"use_config_enable_qty_inc":true,"enable_qty_increments":false,"use_config_manage_stock":true,"manage_stock":true,"low_stock_date":null,"is_decimal_divided":false,"stock_status_changed_auto":0}},"product_links":[],"options":[],"media_gallery_entries":[{"id":3192,"media_type":"image","label":"","position":1,"disabled":false,"types":["image","small_image","thumbnail"],"file":"\/w\/p\/wp13-blue_main_1.jpg"}],"tier_prices":[],"custom_attributes":[{"attribute_code":"image","value":"\/w\/p\/wp13-blue_main_1.jpg"},{"attribute_code":"small_image","value":"\/w\/p\/wp13-blue_main_1.jpg"},{"attribute_code":"thumbnail","value":"\/w\/p\/wp13-blue_main_1.jpg"},{"attribute_code":"options_container","value":"container2"},{"attribute_code":"msrp_display_actual_price_type","value":"0"},{"attribute_code":"url_key","value":"portia-capri-28-blue"},{"attribute_code":"required_options","value":"0"},{"attribute_code":"has_options","value":"0"},{"attribute_code":"tax_class_id","value":"2"},{"attribute_code":"category_ids","value":["27","32","34","2"]},{"attribute_code":"description","value":"<p>From
+        yoga at dawn to evenings curled up with a book, our Portia Capri gives you
+        the comfort and freedom to cruise through the day. The high-waisted design
+        keeps you covered while you''re bending and stretching, while contrast stripes
+        promise a dash of sporty style.<\/p>\n<p>&bull; Salmon heather capri sweats.<br
+        \/>&bull; Relaxed fit, high waist. <br \/>&bull; Inseam: 21\". <br \/>&bull;
+        Wide elastic waistband. <br \/>&bull; Machine wash\/dry.<\/p>"},{"attribute_code":"size","value":"5598"},{"attribute_code":"color","value":"5477"}]}'}
+    headers:
+      Cache-Control: ['no-store, no-cache, must-revalidate']
+      Connection: [keep-alive]
+      Content-Type: [application/json; charset=utf-8]
+      Date: ['Fri, 08 May 2020 06:59:19 GMT']
+      Expires: ['Thu, 19 Nov 1981 08:52:00 GMT']
+      Pragma: [no-cache]
+      Server: [nginx/1.14.0 (Ubuntu)]
+      Set-Cookie: ['PHPSESSID=to6t8h8510kdhhjg76mlhqteeh; expires=Fri, 08-May-2020
+          07:59:19 GMT; Max-Age=3600; path=/; domain=magento; HttpOnly']
+      Transfer-Encoding: [chunked]
+      Vary: [Accept-Encoding]
+      X-Frame-Options: [SAMEORIGIN]
+      content-length: ['2483']
+    status: {code: 200, message: OK}
+- request:
+    body: null
+    headers:
+      Accept: ['*/*']
+      Accept-Encoding: ['gzip, deflate']
+      Connection: [keep-alive]
+      User-Agent: [python-requests/2.19.1]
+    method: GET
+    uri: http://magento/media/catalog/product//w/p/wp13-blue_main_1.jpg
+  response:
+    body:
+      string: !!binary |
+        R0lGODlhAQABAIAAAP///wAAACH5BAEAAAAALAAAAAABAAEAAAICRAEAOw==
+    headers:
+      Accept-Ranges: [bytes]
+      Cache-Control: [max-age=31536000, public]
+      Connection: [keep-alive]
+      Content-Length: ['61756']
+      Content-Type: [image/jpeg]
+      Date: ['Fri, 08 May 2020 06:59:19 GMT']
+      ETag: ['"5e7e24af-f13c"']
+      Expires: ['Sat, 08 May 2021 06:59:19 GMT']
+      Last-Modified: ['Fri, 27 Mar 2020 16:07:11 GMT']
+      Server: [nginx/1.14.0 (Ubuntu)]
+      X-Frame-Options: [SAMEORIGIN]
+    status: {code: 200, message: OK}
+version: 1

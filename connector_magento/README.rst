@@ -57,7 +57,7 @@ Technical points:
   with other e-commerce addons
 * Use the jobs system of the `connector`_ framework
 * Create `connector`_ checkpoints when new records to verify are imported
-* Support Magento 1.7+ (not 2.x), the support of earlier versions should be easy to
+* Support Magento 1.7+ and 2.x, the support of earlier versions should be easy to
   add, the `connector`_ framework being designed to handle multiple
   versions with ease.
 * Licensed under AGPL version 3

@@ -1,0 +1,33 @@
+interactions:
+- request:
+    body: null
+    headers:
+      Accept: ['*/*']
+      Accept-Encoding: ['gzip, deflate']
+      Connection: [keep-alive]
+      User-Agent: [python-requests/2.19.1]
+    method: GET
+    uri: http://magento/index.php/rest/V1/products/MH01
+  response:
+    body: {string: '{"id":68,"sku":"MH01","name":"Chaz Kangeroo Hoodie","attribute_set_id":9,"price":0,"status":1,"visibility":4,"type_id":"configurable","created_at":"2020-03-27
+        16:06:38","updated_at":"2020-03-27 16:06:38","extension_attributes":{"website_ids":[1],"category_links":[{"position":0,"category_id":"15"},{"position":0,"category_id":"36"},{"position":0,"category_id":"2"}],"stock_item":{"item_id":68,"product_id":68,"stock_id":1,"qty":0,"is_in_stock":true,"is_qty_decimal":false,"show_default_notification_message":false,"use_config_min_qty":true,"min_qty":0,"use_config_min_sale_qty":1,"min_sale_qty":1,"use_config_max_sale_qty":true,"max_sale_qty":10000,"use_config_backorders":true,"backorders":0,"use_config_notify_stock_qty":true,"notify_stock_qty":1,"use_config_qty_increments":true,"qty_increments":0,"use_config_enable_qty_inc":true,"enable_qty_increments":false,"use_config_manage_stock":true,"manage_stock":true,"low_stock_date":null,"is_decimal_divided":false,"stock_status_changed_auto":0},"configurable_product_options":[{"id":3,"attribute_id":"93","label":"Color","position":1,"values":[{"value_index":5476},{"value_index":5479},{"value_index":5483}],"product_id":68},{"id":2,"attribute_id":"152","label":"Size","position":0,"values":[{"value_index":5593},{"value_index":5594},{"value_index":5595},{"value_index":5596},{"value_index":5597}],"product_id":68}],"configurable_product_links":[53,54,55,56,57,58,59,60,61,62,63,64,65,66,67]},"product_links":[{"sku":"MH01","link_type":"related","linked_product_sku":"MS12","linked_product_type":"configurable","position":4},{"sku":"MH01","link_type":"related","linked_product_sku":"MS06","linked_product_type":"configurable","position":3},{"sku":"MH01","link_type":"related","linked_product_sku":"MP06","linked_product_type":"configurable","position":1},{"sku":"MH01","link_type":"related","linked_product_sku":"MP11","linked_product_type":"configurable","position":2},{"sku":"MH01","link_type":"crosssell","linked_product_sku":"24-UG06","linked_product_type":"simple","position":4},{"sku":"MH01","link_type":"crosssell","linked_product_sku":"24-WG081-gray","linked_product_type":"simple","position":1},{"sku":"MH01","link_type":"crosssell","linked_product_sku":"24-WG085_Group","linked_product_type":"grouped","position":2},{"sku":"MH01","link_type":"crosssell","linked_product_sku":"24-WG080","linked_product_type":"bundle","position":3}],"options":[],"media_gallery_entries":[{"id":84,"media_type":"image","label":"","position":1,"disabled":false,"types":["image","small_image","thumbnail"],"file":"\/m\/h\/mh01-gray_main_1.jpg"},{"id":85,"media_type":"image","label":"","position":2,"disabled":false,"types":[],"file":"\/m\/h\/mh01-gray_alt1_1.jpg"},{"id":86,"media_type":"image","label":"","position":3,"disabled":false,"types":[],"file":"\/m\/h\/mh01-gray_back_1.jpg"}],"tier_prices":[],"custom_attributes":[{"attribute_code":"image","value":"\/m\/h\/mh01-gray_main_1.jpg"},{"attribute_code":"small_image","value":"\/m\/h\/mh01-gray_main_1.jpg"},{"attribute_code":"thumbnail","value":"\/m\/h\/mh01-gray_main_1.jpg"},{"attribute_code":"options_container","value":"container2"},{"attribute_code":"msrp_display_actual_price_type","value":"0"},{"attribute_code":"url_key","value":"chaz-kangeroo-hoodie"},{"attribute_code":"required_options","value":"0"},{"attribute_code":"has_options","value":"1"},{"attribute_code":"tax_class_id","value":"2"},{"attribute_code":"category_ids","value":["15","36","2"]},{"attribute_code":"description","value":"<p>Ideal
+        for cold-weather training or work outdoors, the Chaz Hoodie promises superior
+        warmth with every wear. Thick material blocks out the wind as ribbed cuffs
+        and bottom band seal in body heat.<\/p>\n<p>&bull; Two-tone gray heather hoodie.<br
+        \/>&bull; Drawstring-adjustable hood. <br \/>&bull; Machine wash\/dry.<\/p>"},{"attribute_code":"material","value":"5585"},{"attribute_code":"pattern","value":"5621"},{"attribute_code":"climate","value":"5628,5630,5631,5634,5636"},{"attribute_code":"eco_collection","value":"1"},{"attribute_code":"performance_fabric","value":"0"},{"attribute_code":"erin_recommends","value":"0"},{"attribute_code":"new","value":"0"},{"attribute_code":"sale","value":"1"}]}'}
+    headers:
+      Cache-Control: ['no-store, no-cache, must-revalidate']
+      Connection: [keep-alive]
+      Content-Type: [application/json; charset=utf-8]
+      Date: ['Fri, 08 May 2020 06:38:33 GMT']
+      Expires: ['Thu, 19 Nov 1981 08:52:00 GMT']
+      Pragma: [no-cache]
+      Server: [nginx/1.14.0 (Ubuntu)]
+      Set-Cookie: ['PHPSESSID=4gh745n6sc26l9a9fasjrhtk5j; expires=Fri, 08-May-2020
+          07:38:33 GMT; Max-Age=3600; path=/; domain=magento; HttpOnly']
+      Transfer-Encoding: [chunked]
+      Vary: [Accept-Encoding]
+      X-Frame-Options: [SAMEORIGIN]
+      content-length: ['4199']
+    status: {code: 200, message: OK}
+version: 1

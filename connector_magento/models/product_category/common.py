@@ -51,11 +51,17 @@ class ProductCategoryAdapter(Component):
     _apply_on = 'magento.product.category'
 
     _magento_model = 'catalog_category'
+    _magento2_model = 'categories'
+    _magento2_key = 'id'
     _admin_path = '/{model}/index/'
+    # Not valid without security key
+    # _admin2_path = '/catalog/category/index/'
 
-    def _call(self, method, arguments):
+    def _call(self, method, arguments, http_method=None, storeview=None):
         try:
-            return super(ProductCategoryAdapter, self)._call(method, arguments)
+            return super(ProductCategoryAdapter, self)._call(
+                method, arguments, http_method=http_method,
+                storeview=storeview)
         except xmlrpc.client.Fault as err:
             # 101 is the error in the Magento API
             # when the category does not exist
@@ -81,9 +87,10 @@ class ProductCategoryAdapter(Component):
         if to_date is not None:
             filters.setdefault('updated_at', {})
             filters['updated_at']['to'] = to_date.strftime(dt_fmt)
-
-        return self._call('oerp_catalog_category.search',
-                          [filters] if filters else [{}])
+        if self.collection.version == '1.7':
+            return self._call('oerp_catalog_category.search',
+                              [filters] if filters else [{}])
+        return super(ProductCategoryAdapter, self).search(filters=filters)
 
     def read(self, external_id, storeview_id=None, attributes=None):
         """ Returns the information of a record
@@ -91,8 +98,11 @@ class ProductCategoryAdapter(Component):
         :rtype: dict
         """
         # pylint: disable=method-required-super
-        return self._call('%s.info' % self._magento_model,
-                          [int(external_id), storeview_id, attributes])
+        if self.collection.version == '1.7':
+            return self._call('%s.info' % self._magento_model,
+                              [int(external_id), storeview_id, attributes])
+        return super(ProductCategoryAdapter, self).read(
+            external_id, attributes, storeview=storeview_id)
 
     def tree(self, parent_id=None, storeview_id=None):
         """ Returns a tree of product categories
@@ -106,28 +116,45 @@ class ProductCategoryAdapter(Component):
                     children.update(filter_ids(node))
             category_id = {tree['category_id']: children}
             return category_id
-        if parent_id:
-            parent_id = int(parent_id)
-        tree = self._call('%s.tree' % self._magento_model,
-                          [parent_id, storeview_id])
-        return filter_ids(tree)
+
+        if self.collection.version == '1.7':
+            if parent_id:
+                parent_id = int(parent_id)
+                tree = self._call('%s.tree' % self._magento_model,
+                                  [parent_id, storeview_id])
+            return filter_ids(tree)
+        raise NotImplementedError  # TODO
 
     def move(self, categ_id, parent_id, after_categ_id=None):
-        return self._call('%s.move' % self._magento_model,
-                          [categ_id, parent_id, after_categ_id])
+        if self.collection.version == '1.7':
+            return self._call('%s.move' % self._magento_model,
+                              [categ_id, parent_id, after_categ_id])
+        return self._call(
+            '%s/%s/move' % (self._magento2_model, categ_id), {
+                'parent_id': parent_id,
+                'after_id': after_categ_id,
+            })
 
     def get_assigned_product(self, categ_id):
-        return self._call('%s.assignedProducts' % self._magento_model,
-                          [categ_id])
+        if self.collection.version == '1.7':
+            return self._call('%s.assignedProducts' % self._magento_model,
+                              [categ_id])
+        raise NotImplementedError  # TODO
 
     def assign_product(self, categ_id, product_id, position=0):
-        return self._call('%s.assignProduct' % self._magento_model,
-                          [categ_id, product_id, position, 'id'])
+        if self.collection.version == '1.7':
+            return self._call('%s.assignProduct' % self._magento_model,
+                              [categ_id, product_id, position, 'id'])
+        raise NotImplementedError  # TODO
 
     def update_product(self, categ_id, product_id, position=0):
-        return self._call('%s.updateProduct' % self._magento_model,
-                          [categ_id, product_id, position, 'id'])
+        if self.collection.version == '1.7':
+            return self._call('%s.updateProduct' % self._magento_model,
+                              [categ_id, product_id, position, 'id'])
+        raise NotImplementedError  # TODO
 
     def remove_product(self, categ_id, product_id):
-        return self._call('%s.removeProduct' % self._magento_model,
-                          [categ_id, product_id, 'id'])
+        if self.collection.version == '1.7':
+            return self._call('%s.removeProduct' % self._magento_model,
+                              [categ_id, product_id, 'id'])
+        raise NotImplementedError  # TODO

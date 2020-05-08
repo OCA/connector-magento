@@ -21,12 +21,18 @@
                         <notebook>
                             <page string="API" name="api">
                                 <group colspan="4" col="4">
-                                    <field name="version" colspan="4"/>
+                                    <field name="version" colspan="2"/>
                                     <field name="location" placeholder="e.g. http://my.magento.com"
                                         colspan="2"/>
                                     <field name="use_custom_api_path" colspan="2"/>
-                                    <field name="username" colspan="2"/>
-                                    <field name="password" password="1" colspan="2"/>
+                                    <field name="verify_ssl" colspan="2"
+                                           attrs="{'invisible': [('version', '=', '1.7')]}"/>
+                                    <field name="username" colspan="2"
+                                           attrs="{'invisible': [('version', '!=', '1.7')], 'required': [('version', '=', '1.7')]}"/>
+                                    <field name="password" password="1" colspan="2"
+                                           attrs="{'invisible': [('version', '!=', '1.7')], 'required': [('version', '=', '1.7')]}"/>
+                                    <field name="token" password="1" colspan="2"
+                                           attrs="{'invisible': [('version', '=', '1.7')], 'required': [('version', '!=', '1.7')]}"/>
                                 </group>
                             </page>
                             <page string="HTTP Authentication" name="auth" colspan="4" col="4">
@@ -343,6 +349,7 @@
                         <field name="specific_warehouse_id" class="oe_edit_only" attrs="{'invisible': [('is_multi_company', '=', False)]}"/>
                         <field name="team_id" options="{'no_create': True}"/>
                         <field name="lang_id" widget="selection"/>
+                        <field name="base_media_url"/>
                         <field name="catalog_price_tax_included"/>
                         <p attrs="{'invisible': [('catalog_price_tax_included', '=', False)]}">
                           This option should respect the same

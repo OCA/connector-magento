@@ -1,0 +1,998 @@
+interactions:
+- request:
+    body: null
+    headers:
+      Accept: ['*/*']
+      Accept-Encoding: ['gzip, deflate']
+      Connection: [keep-alive]
+      User-Agent: [python-requests/2.19.1]
+    method: GET
+    uri: http://magento/index.php/rest/V1/products/24-WG080
+  response:
+    body: {string: '{"id":46,"sku":"24-WG080","name":"Sprite Yoga Companion Kit","attribute_set_id":11,"price":0,"status":1,"visibility":4,"type_id":"bundle","created_at":"2020-03-27
+        16:06:30","updated_at":"2020-03-27 16:06:30","weight":0,"extension_attributes":{"website_ids":[1],"category_links":[{"position":0,"category_id":"3"},{"position":0,"category_id":"5"}],"stock_item":{"item_id":46,"product_id":46,"stock_id":1,"qty":0,"is_in_stock":true,"is_qty_decimal":false,"show_default_notification_message":false,"use_config_min_qty":true,"min_qty":0,"use_config_min_sale_qty":1,"min_sale_qty":1,"use_config_max_sale_qty":true,"max_sale_qty":10000,"use_config_backorders":true,"backorders":0,"use_config_notify_stock_qty":true,"notify_stock_qty":1,"use_config_qty_increments":true,"qty_increments":0,"use_config_enable_qty_inc":true,"enable_qty_increments":false,"use_config_manage_stock":true,"manage_stock":true,"low_stock_date":null,"is_decimal_divided":false,"stock_status_changed_auto":0},"bundle_product_options":[{"option_id":1,"title":"Sprite
+        Stasis Ball","required":true,"type":"radio","position":1,"sku":"24-WG080","product_links":[{"id":"1","sku":"24-WG081-blue","option_id":1,"qty":1,"position":1,"is_default":true,"price":null,"price_type":null,"can_change_quantity":1},{"id":"2","sku":"24-WG082-blue","option_id":1,"qty":1,"position":2,"is_default":false,"price":null,"price_type":null,"can_change_quantity":1},{"id":"3","sku":"24-WG083-blue","option_id":1,"qty":1,"position":3,"is_default":false,"price":null,"price_type":null,"can_change_quantity":1}]},{"option_id":2,"title":"Sprite
+        Foam Yoga Brick","required":true,"type":"radio","position":2,"sku":"24-WG080","product_links":[{"id":"4","sku":"24-WG084","option_id":2,"qty":1,"position":1,"is_default":true,"price":null,"price_type":null,"can_change_quantity":1}]},{"option_id":3,"title":"Sprite
+        Yoga Strap","required":true,"type":"radio","position":3,"sku":"24-WG080","product_links":[{"id":"5","sku":"24-WG085","option_id":3,"qty":1,"position":1,"is_default":true,"price":null,"price_type":null,"can_change_quantity":1},{"id":"6","sku":"24-WG086","option_id":3,"qty":1,"position":2,"is_default":false,"price":null,"price_type":null,"can_change_quantity":1},{"id":"7","sku":"24-WG087","option_id":3,"qty":1,"position":3,"is_default":false,"price":null,"price_type":null,"can_change_quantity":1}]},{"option_id":4,"title":"Sprite
+        Foam Roller","required":true,"type":"radio","position":4,"sku":"24-WG080","product_links":[{"id":"8","sku":"24-WG088","option_id":4,"qty":1,"position":1,"is_default":true,"price":null,"price_type":null,"can_change_quantity":1}]}]},"product_links":[],"options":[],"media_gallery_entries":[{"id":52,"media_type":"image","label":"Image","position":1,"disabled":false,"types":["image","small_image","thumbnail"],"file":"\/l\/u\/luma-yoga-kit-2.jpg"}],"tier_prices":[],"custom_attributes":[{"attribute_code":"image","value":"\/l\/u\/luma-yoga-kit-2.jpg"},{"attribute_code":"shipment_type","value":"0"},{"attribute_code":"small_image","value":"\/l\/u\/luma-yoga-kit-2.jpg"},{"attribute_code":"thumbnail","value":"\/l\/u\/luma-yoga-kit-2.jpg"},{"attribute_code":"options_container","value":"container2"},{"attribute_code":"msrp_display_actual_price_type","value":"0"},{"attribute_code":"url_key","value":"sprite-yoga-companion-kit"},{"attribute_code":"price_view","value":"0"},{"attribute_code":"required_options","value":"1"},{"attribute_code":"has_options","value":"1"},{"attribute_code":"sku_type","value":"0"},{"attribute_code":"price_type","value":"0"},{"attribute_code":"tax_class_id","value":"2"},{"attribute_code":"weight_type","value":"0"},{"attribute_code":"category_ids","value":["3","5"]},{"attribute_code":"description","value":"<p>A
+        well-rounded yoga workout takes more than a mat. The Sprite Yoga Companion
+        Kit helps stock your studio with the basics you need for a full-range workout.
+        The kit is composed of four best-selling Luma Sprite accessories in one easy
+        bundle: statis ball, foam block, yoga strap, and foam roller. Choose sizes
+        and colors and leave the rest to us. The kit includes:<\/p>\n<ul>\n<li> Sprite
+        Statis Ball\n<li> Sprite Foam Yoga Brick\n<li> Sprite Yoga Strap\n<li> Sprite
+        Foam Roller\n<\/ul>"},{"attribute_code":"activity","value":"5435,5438"},{"attribute_code":"gender","value":"5507,5508,5511"},{"attribute_code":"category_gear","value":"5514"}]}'}
+    headers:
+      Cache-Control: ['no-store, no-cache, must-revalidate']
+      Connection: [keep-alive]
+      Content-Type: [application/json; charset=utf-8]
+      Date: ['Fri, 08 May 2020 06:38:20 GMT']
+      Expires: ['Thu, 19 Nov 1981 08:52:00 GMT']
+      Pragma: [no-cache]
+      Server: [nginx/1.14.0 (Ubuntu)]
+      Set-Cookie: ['PHPSESSID=tu11045etm37qm33koac7dhbhf; expires=Fri, 08-May-2020
+          07:38:20 GMT; Max-Age=3600; path=/; domain=magento; HttpOnly']
+      Transfer-Encoding: [chunked]
+      Vary: [Accept-Encoding]
+      X-Frame-Options: [SAMEORIGIN]
+      content-length: ['4357']
+    status: {code: 200, message: OK}
+- request:
+    body: null
+    headers:
+      Accept: ['*/*']
+      Accept-Encoding: ['gzip, deflate']
+      Connection: [keep-alive]
+      User-Agent: [python-requests/2.19.1]
+    method: GET
+    uri: http://magento/index.php/rest/V1/categories/3
+  response:
+    body: {string: '{"id":3,"parent_id":2,"name":"Gear","is_active":true,"position":4,"level":2,"children":"4,5,6","created_at":"2020-03-27
+        16:06:12","updated_at":"2020-03-27 16:06:12","path":"1\/2\/3","available_sort_by":[],"include_in_menu":true,"custom_attributes":[{"attribute_code":"display_mode","value":"PAGE"},{"attribute_code":"is_anchor","value":"0"},{"attribute_code":"path","value":"1\/2\/3"},{"attribute_code":"children_count","value":"3"},{"attribute_code":"url_key","value":"gear"},{"attribute_code":"url_path","value":"gear"}]}'}
+    headers:
+      Cache-Control: ['no-store, no-cache, must-revalidate']
+      Connection: [keep-alive]
+      Content-Type: [application/json; charset=utf-8]
+      Date: ['Fri, 08 May 2020 06:38:20 GMT']
+      Expires: ['Thu, 19 Nov 1981 08:52:00 GMT']
+      Pragma: [no-cache]
+      Server: [nginx/1.14.0 (Ubuntu)]
+      Set-Cookie: ['PHPSESSID=kaals766qo69pduse863ipmmnr; expires=Fri, 08-May-2020
+          07:38:20 GMT; Max-Age=3600; path=/; domain=magento; HttpOnly']
+      Transfer-Encoding: [chunked]
+      Vary: [Accept-Encoding]
+      X-Frame-Options: [SAMEORIGIN]
+      content-length: ['523']
+    status: {code: 200, message: OK}
+- request:
+    body: null
+    headers:
+      Accept: ['*/*']
+      Accept-Encoding: ['gzip, deflate']
+      Connection: [keep-alive]
+      User-Agent: [python-requests/2.19.1]
+    method: GET
+    uri: http://magento/index.php/rest/V1/categories/2
+  response:
+    body: {string: '{"id":2,"parent_id":1,"name":"Default Category","is_active":true,"position":1,"level":1,"children":"3,9,11,20,37,38","created_at":"2020-03-27
+        15:25:28","updated_at":"2020-04-24 10:01:36","path":"1\/2","available_sort_by":[],"include_in_menu":true,"custom_attributes":[{"attribute_code":"display_mode","value":"PRODUCTS"},{"attribute_code":"path","value":"1\/2"},{"attribute_code":"children_count","value":"39"}]}'}
+    headers:
+      Cache-Control: ['no-store, no-cache, must-revalidate']
+      Connection: [keep-alive]
+      Content-Type: [application/json; charset=utf-8]
+      Date: ['Fri, 08 May 2020 06:38:20 GMT']
+      Expires: ['Thu, 19 Nov 1981 08:52:00 GMT']
+      Pragma: [no-cache]
+      Server: [nginx/1.14.0 (Ubuntu)]
+      Set-Cookie: ['PHPSESSID=naqln22hlj03h06emehpruuufa; expires=Fri, 08-May-2020
+          07:38:20 GMT; Max-Age=3600; path=/; domain=magento; HttpOnly']
+      Transfer-Encoding: [chunked]
+      Vary: [Accept-Encoding]
+      X-Frame-Options: [SAMEORIGIN]
+      content-length: ['412']
+    status: {code: 200, message: OK}
+- request:
+    body: null
+    headers:
+      Accept: ['*/*']
+      Accept-Encoding: ['gzip, deflate']
+      Connection: [keep-alive]
+      User-Agent: [python-requests/2.19.1]
+    method: GET
+    uri: http://magento/index.php/rest/V1/categories/1
+  response:
+    body: {string: '{"id":1,"parent_id":0,"name":"Root Catalog","position":0,"level":0,"children":"2","created_at":"2020-03-27
+        15:25:28","updated_at":"2020-04-24 10:01:36","path":"1","available_sort_by":[],"include_in_menu":true,"custom_attributes":[{"attribute_code":"path","value":"1"},{"attribute_code":"children_count","value":"40"}]}'}
+    headers:
+      Cache-Control: ['no-store, no-cache, must-revalidate']
+      Connection: [keep-alive]
+      Content-Type: [application/json; charset=utf-8]
+      Date: ['Fri, 08 May 2020 06:38:20 GMT']
+      Expires: ['Thu, 19 Nov 1981 08:52:00 GMT']
+      Pragma: [no-cache]
+      Server: [nginx/1.14.0 (Ubuntu)]
+      Set-Cookie: ['PHPSESSID=49b007l0t7sv0g2fi2500q2a8u; expires=Fri, 08-May-2020
+          07:38:20 GMT; Max-Age=3600; path=/; domain=magento; HttpOnly']
+      Transfer-Encoding: [chunked]
+      Vary: [Accept-Encoding]
+      X-Frame-Options: [SAMEORIGIN]
+      content-length: ['318']
+    status: {code: 200, message: OK}
+- request:
+    body: null
+    headers:
+      Accept: ['*/*']
+      Accept-Encoding: ['gzip, deflate']
+      Connection: [keep-alive]
+      User-Agent: [python-requests/2.19.1]
+    method: GET
+    uri: http://magento/index.php/rest/default/V1/categories/1
+  response:
+    body: {string: '{"id":1,"parent_id":0,"name":"Root Catalog","position":0,"level":0,"children":"2","created_at":"2020-03-27
+        15:25:28","updated_at":"2020-04-24 10:01:36","path":"1","available_sort_by":[],"include_in_menu":true,"custom_attributes":[{"attribute_code":"path","value":"1"},{"attribute_code":"children_count","value":"40"}]}'}
+    headers:
+      Cache-Control: ['no-store, no-cache, must-revalidate']
+      Connection: [keep-alive]
+      Content-Type: [application/json; charset=utf-8]
+      Date: ['Fri, 08 May 2020 06:38:20 GMT']
+      Expires: ['Thu, 19 Nov 1981 08:52:00 GMT']
+      Pragma: [no-cache]
+      Server: [nginx/1.14.0 (Ubuntu)]
+      Set-Cookie: ['PHPSESSID=a7idqn55sirq4sk8ju1oj1i6si; expires=Fri, 08-May-2020
+          07:38:20 GMT; Max-Age=3600; path=/; domain=magento; HttpOnly']
+      Transfer-Encoding: [chunked]
+      Vary: [Accept-Encoding]
+      X-Frame-Options: [SAMEORIGIN]
+      content-length: ['318']
+    status: {code: 200, message: OK}
+- request:
+    body: null
+    headers:
+      Accept: ['*/*']
+      Accept-Encoding: ['gzip, deflate']
+      Connection: [keep-alive]
+      User-Agent: [python-requests/2.19.1]
+    method: GET
+    uri: http://magento/index.php/rest/default/V1/categories/2
+  response:
+    body: {string: '{"id":2,"parent_id":1,"name":"Default Category","is_active":true,"position":1,"level":1,"children":"3,9,11,20,37,38","created_at":"2020-03-27
+        15:25:28","updated_at":"2020-04-24 10:01:36","path":"1\/2","available_sort_by":[],"include_in_menu":true,"custom_attributes":[{"attribute_code":"display_mode","value":"PRODUCTS"},{"attribute_code":"path","value":"1\/2"},{"attribute_code":"children_count","value":"39"}]}'}
+    headers:
+      Cache-Control: ['no-store, no-cache, must-revalidate']
+      Connection: [keep-alive]
+      Content-Type: [application/json; charset=utf-8]
+      Date: ['Fri, 08 May 2020 06:38:20 GMT']
+      Expires: ['Thu, 19 Nov 1981 08:52:00 GMT']
+      Pragma: [no-cache]
+      Server: [nginx/1.14.0 (Ubuntu)]
+      Set-Cookie: ['PHPSESSID=d71htjmdgq39aot1hm09545hdm; expires=Fri, 08-May-2020
+          07:38:20 GMT; Max-Age=3600; path=/; domain=magento; HttpOnly']
+      Transfer-Encoding: [chunked]
+      Vary: [Accept-Encoding]
+      X-Frame-Options: [SAMEORIGIN]
+      content-length: ['412']
+    status: {code: 200, message: OK}
+- request:
+    body: null
+    headers:
+      Accept: ['*/*']
+      Accept-Encoding: ['gzip, deflate']
+      Connection: [keep-alive]
+      User-Agent: [python-requests/2.19.1]
+    method: GET
+    uri: http://magento/index.php/rest/default/V1/categories/3
+  response:
+    body: {string: '{"id":3,"parent_id":2,"name":"Gear","is_active":true,"position":4,"level":2,"children":"4,5,6","created_at":"2020-03-27
+        16:06:12","updated_at":"2020-03-27 16:06:12","path":"1\/2\/3","available_sort_by":[],"include_in_menu":true,"custom_attributes":[{"attribute_code":"display_mode","value":"PAGE"},{"attribute_code":"is_anchor","value":"0"},{"attribute_code":"path","value":"1\/2\/3"},{"attribute_code":"children_count","value":"3"},{"attribute_code":"url_key","value":"gear"},{"attribute_code":"url_path","value":"gear"}]}'}
+    headers:
+      Cache-Control: ['no-store, no-cache, must-revalidate']
+      Connection: [keep-alive]
+      Content-Type: [application/json; charset=utf-8]
+      Date: ['Fri, 08 May 2020 06:38:21 GMT']
+      Expires: ['Thu, 19 Nov 1981 08:52:00 GMT']
+      Pragma: [no-cache]
+      Server: [nginx/1.14.0 (Ubuntu)]
+      Set-Cookie: ['PHPSESSID=d2tgksbhvg63r2ktu68ftn3e6c; expires=Fri, 08-May-2020
+          07:38:21 GMT; Max-Age=3600; path=/; domain=magento; HttpOnly']
+      Transfer-Encoding: [chunked]
+      Vary: [Accept-Encoding]
+      X-Frame-Options: [SAMEORIGIN]
+      content-length: ['523']
+    status: {code: 200, message: OK}
+- request:
+    body: null
+    headers:
+      Accept: ['*/*']
+      Accept-Encoding: ['gzip, deflate']
+      Connection: [keep-alive]
+      User-Agent: [python-requests/2.19.1]
+    method: GET
+    uri: http://magento/index.php/rest/V1/categories/5
+  response:
+    body: {string: '{"id":5,"parent_id":3,"name":"Fitness Equipment","is_active":true,"position":2,"level":3,"children":"","created_at":"2020-03-27
+        16:06:12","updated_at":"2020-03-27 16:06:12","path":"1\/2\/3\/5","available_sort_by":[],"include_in_menu":true,"custom_attributes":[{"attribute_code":"is_anchor","value":"1"},{"attribute_code":"path","value":"1\/2\/3\/5"},{"attribute_code":"children_count","value":"0"},{"attribute_code":"url_key","value":"fitness-equipment"},{"attribute_code":"url_path","value":"gear\/fitness-equipment"}]}'}
+    headers:
+      Cache-Control: ['no-store, no-cache, must-revalidate']
+      Connection: [keep-alive]
+      Content-Type: [application/json; charset=utf-8]
+      Date: ['Fri, 08 May 2020 06:38:21 GMT']
+      Expires: ['Thu, 19 Nov 1981 08:52:00 GMT']
+      Pragma: [no-cache]
+      Server: [nginx/1.14.0 (Ubuntu)]
+      Set-Cookie: ['PHPSESSID=0kskshqh2ujhlgr6c6j76g5ieu; expires=Fri, 08-May-2020
+          07:38:21 GMT; Max-Age=3600; path=/; domain=magento; HttpOnly']
+      Transfer-Encoding: [chunked]
+      Vary: [Accept-Encoding]
+      X-Frame-Options: [SAMEORIGIN]
+      content-length: ['520']
+    status: {code: 200, message: OK}
+- request:
+    body: null
+    headers:
+      Accept: ['*/*']
+      Accept-Encoding: ['gzip, deflate']
+      Connection: [keep-alive]
+      User-Agent: [python-requests/2.19.1]
+    method: GET
+    uri: http://magento/index.php/rest/default/V1/categories/5
+  response:
+    body: {string: '{"id":5,"parent_id":3,"name":"Fitness Equipment","is_active":true,"position":2,"level":3,"children":"","created_at":"2020-03-27
+        16:06:12","updated_at":"2020-03-27 16:06:12","path":"1\/2\/3\/5","available_sort_by":[],"include_in_menu":true,"custom_attributes":[{"attribute_code":"is_anchor","value":"1"},{"attribute_code":"path","value":"1\/2\/3\/5"},{"attribute_code":"children_count","value":"0"},{"attribute_code":"url_key","value":"fitness-equipment"},{"attribute_code":"url_path","value":"gear\/fitness-equipment"}]}'}
+    headers:
+      Cache-Control: ['no-store, no-cache, must-revalidate']
+      Connection: [keep-alive]
+      Content-Type: [application/json; charset=utf-8]
+      Date: ['Fri, 08 May 2020 06:38:21 GMT']
+      Expires: ['Thu, 19 Nov 1981 08:52:00 GMT']
+      Pragma: [no-cache]
+      Server: [nginx/1.14.0 (Ubuntu)]
+      Set-Cookie: ['PHPSESSID=ud1pn5h4jjrv820u8gbeeagmle; expires=Fri, 08-May-2020
+          07:38:21 GMT; Max-Age=3600; path=/; domain=magento; HttpOnly']
+      Transfer-Encoding: [chunked]
+      Vary: [Accept-Encoding]
+      X-Frame-Options: [SAMEORIGIN]
+      content-length: ['520']
+    status: {code: 200, message: OK}
+- request:
+    body: null
+    headers:
+      Accept: ['*/*']
+      Accept-Encoding: ['gzip, deflate']
+      Connection: [keep-alive]
+      User-Agent: [python-requests/2.19.1]
+    method: GET
+    uri: http://magento/index.php/rest/V1/products/24-WG081-blue
+  response:
+    body: {string: '{"id":26,"sku":"24-WG081-blue","name":"Sprite Stasis Ball 55 cm","attribute_set_id":12,"price":23,"status":1,"visibility":1,"type_id":"simple","created_at":"2020-03-27
+        16:06:15","updated_at":"2020-03-27 16:06:15","extension_attributes":{"website_ids":[1],"category_links":[{"position":0,"category_id":"3"},{"position":0,"category_id":"5"}],"stock_item":{"item_id":26,"product_id":26,"stock_id":1,"qty":100,"is_in_stock":true,"is_qty_decimal":false,"show_default_notification_message":false,"use_config_min_qty":true,"min_qty":0,"use_config_min_sale_qty":1,"min_sale_qty":1,"use_config_max_sale_qty":true,"max_sale_qty":10000,"use_config_backorders":true,"backorders":0,"use_config_notify_stock_qty":true,"notify_stock_qty":1,"use_config_qty_increments":true,"qty_increments":0,"use_config_enable_qty_inc":true,"enable_qty_increments":false,"use_config_manage_stock":true,"manage_stock":true,"low_stock_date":null,"is_decimal_divided":false,"stock_status_changed_auto":0}},"product_links":[],"options":[],"media_gallery_entries":[{"id":31,"media_type":"image","label":"Image","position":1,"disabled":false,"types":["image","small_image","thumbnail"],"file":"\/l\/u\/luma-stability-ball.jpg"}],"tier_prices":[],"custom_attributes":[{"attribute_code":"image","value":"\/l\/u\/luma-stability-ball.jpg"},{"attribute_code":"small_image","value":"\/l\/u\/luma-stability-ball.jpg"},{"attribute_code":"thumbnail","value":"\/l\/u\/luma-stability-ball.jpg"},{"attribute_code":"options_container","value":"container2"},{"attribute_code":"msrp_display_actual_price_type","value":"0"},{"attribute_code":"url_key","value":"sprite
+        stasis ball 55 cm blue"},{"attribute_code":"required_options","value":"0"},{"attribute_code":"has_options","value":"0"},{"attribute_code":"tax_class_id","value":"2"},{"attribute_code":"category_ids","value":["3","5"]},{"attribute_code":"description","value":"<p>The
+        Sprite Stasis Ball gives you the toned abs, sides, and back you want by amping
+        up your core workout. With bright colors and a burst-resistant design, it''s
+        a must-have for every hard-core exercise addict. Use for abdominal conditioning,
+        balance training, yoga, or even physical therapy.<\/p>\n<ul>\n<li>Durable,
+        burst-resistant design.<\/li>\n<li>Hand pump included.<\/li>\n<\/ul>"},{"attribute_code":"activity","value":"5435,5438"},{"attribute_code":"material","value":"5471"},{"attribute_code":"color","value":"5477"},{"attribute_code":"gender","value":"5507,5508,5509,5510,5511"},{"attribute_code":"category_gear","value":"5514"},{"attribute_code":"size","value":"5518"}]}'}
+    headers:
+      Cache-Control: ['no-store, no-cache, must-revalidate']
+      Connection: [keep-alive]
+      Content-Type: [application/json; charset=utf-8]
+      Date: ['Fri, 08 May 2020 06:38:21 GMT']
+      Expires: ['Thu, 19 Nov 1981 08:52:00 GMT']
+      Pragma: [no-cache]
+      Server: [nginx/1.14.0 (Ubuntu)]
+      Set-Cookie: ['PHPSESSID=9vgcc6q41bo01p7rqir82ngue1; expires=Fri, 08-May-2020
+          07:38:21 GMT; Max-Age=3600; path=/; domain=magento; HttpOnly']
+      Transfer-Encoding: [chunked]
+      Vary: [Accept-Encoding]
+      X-Frame-Options: [SAMEORIGIN]
+      content-length: ['2555']
+    status: {code: 200, message: OK}
+- request:
+    body: null
+    headers:
+      Accept: ['*/*']
+      Accept-Encoding: ['gzip, deflate']
+      Connection: [keep-alive]
+      User-Agent: [python-requests/2.19.1]
+    method: GET
+    uri: http://magento/index.php/rest/default/V1/products/24-WG081-blue
+  response:
+    body: {string: '{"id":26,"sku":"24-WG081-blue","name":"Sprite Stasis Ball 55 cm","attribute_set_id":12,"price":23,"status":1,"visibility":1,"type_id":"simple","created_at":"2020-03-27
+        16:06:15","updated_at":"2020-03-27 16:06:15","extension_attributes":{"website_ids":[1],"category_links":[{"position":0,"category_id":"3"},{"position":0,"category_id":"5"}],"stock_item":{"item_id":26,"product_id":26,"stock_id":1,"qty":100,"is_in_stock":true,"is_qty_decimal":false,"show_default_notification_message":false,"use_config_min_qty":true,"min_qty":0,"use_config_min_sale_qty":1,"min_sale_qty":1,"use_config_max_sale_qty":true,"max_sale_qty":10000,"use_config_backorders":true,"backorders":0,"use_config_notify_stock_qty":true,"notify_stock_qty":1,"use_config_qty_increments":true,"qty_increments":0,"use_config_enable_qty_inc":true,"enable_qty_increments":false,"use_config_manage_stock":true,"manage_stock":true,"low_stock_date":null,"is_decimal_divided":false,"stock_status_changed_auto":0}},"product_links":[],"options":[],"media_gallery_entries":[{"id":31,"media_type":"image","label":"Image","position":1,"disabled":false,"types":["image","small_image","thumbnail"],"file":"\/l\/u\/luma-stability-ball.jpg"}],"tier_prices":[],"custom_attributes":[{"attribute_code":"image","value":"\/l\/u\/luma-stability-ball.jpg"},{"attribute_code":"small_image","value":"\/l\/u\/luma-stability-ball.jpg"},{"attribute_code":"thumbnail","value":"\/l\/u\/luma-stability-ball.jpg"},{"attribute_code":"options_container","value":"container2"},{"attribute_code":"msrp_display_actual_price_type","value":"0"},{"attribute_code":"url_key","value":"sprite
+        stasis ball 55 cm blue"},{"attribute_code":"required_options","value":"0"},{"attribute_code":"has_options","value":"0"},{"attribute_code":"tax_class_id","value":"2"},{"attribute_code":"category_ids","value":["3","5"]},{"attribute_code":"description","value":"<p>The
+        Sprite Stasis Ball gives you the toned abs, sides, and back you want by amping
+        up your core workout. With bright colors and a burst-resistant design, it''s
+        a must-have for every hard-core exercise addict. Use for abdominal conditioning,
+        balance training, yoga, or even physical therapy.<\/p>\n<ul>\n<li>Durable,
+        burst-resistant design.<\/li>\n<li>Hand pump included.<\/li>\n<\/ul>"},{"attribute_code":"activity","value":"5435,5438"},{"attribute_code":"material","value":"5471"},{"attribute_code":"color","value":"5477"},{"attribute_code":"gender","value":"5507,5508,5509,5510,5511"},{"attribute_code":"category_gear","value":"5514"},{"attribute_code":"size","value":"5518"}]}'}
+    headers:
+      Cache-Control: ['no-store, no-cache, must-revalidate']
+      Connection: [keep-alive]
+      Content-Type: [application/json; charset=utf-8]
+      Date: ['Fri, 08 May 2020 06:38:21 GMT']
+      Expires: ['Thu, 19 Nov 1981 08:52:00 GMT']
+      Pragma: [no-cache]
+      Server: [nginx/1.14.0 (Ubuntu)]
+      Set-Cookie: ['PHPSESSID=vh4bmdrpvo44jak36aolmmds53; expires=Fri, 08-May-2020
+          07:38:21 GMT; Max-Age=3600; path=/; domain=magento; HttpOnly']
+      Transfer-Encoding: [chunked]
+      Vary: [Accept-Encoding]
+      X-Frame-Options: [SAMEORIGIN]
+      content-length: ['2555']
+    status: {code: 200, message: OK}
+- request:
+    body: null
+    headers:
+      Accept: ['*/*']
+      Accept-Encoding: ['gzip, deflate']
+      Connection: [keep-alive]
+      User-Agent: [python-requests/2.19.1]
+    method: GET
+    uri: http://magento/media/catalog/product//l/u/luma-stability-ball.jpg
+  response:
+    body:
+      string: !!binary |
+        R0lGODlhAQABAIAAAP///wAAACH5BAEAAAAALAAAAAABAAEAAAICRAEAOw==
+    headers:
+      Accept-Ranges: [bytes]
+      Cache-Control: [max-age=31536000, public]
+      Connection: [keep-alive]
+      Content-Length: ['171989']
+      Content-Type: [image/jpeg]
+      Date: ['Fri, 08 May 2020 06:38:21 GMT']
+      ETag: ['"5e7e1eb8-29fd5"']
+      Expires: ['Sat, 08 May 2021 06:38:21 GMT']
+      Last-Modified: ['Fri, 27 Mar 2020 15:41:44 GMT']
+      Server: [nginx/1.14.0 (Ubuntu)]
+      X-Frame-Options: [SAMEORIGIN]
+    status: {code: 200, message: OK}
+- request:
+    body: null
+    headers:
+      Accept: ['*/*']
+      Accept-Encoding: ['gzip, deflate']
+      Connection: [keep-alive]
+      User-Agent: [python-requests/2.19.1]
+    method: GET
+    uri: http://magento/index.php/rest/V1/products/24-WG082-blue
+  response:
+    body: {string: '{"id":29,"sku":"24-WG082-blue","name":"Sprite Stasis Ball 65 cm","attribute_set_id":12,"price":27,"status":1,"visibility":1,"type_id":"simple","created_at":"2020-03-27
+        16:06:15","updated_at":"2020-03-27 16:06:15","extension_attributes":{"website_ids":[1],"category_links":[{"position":0,"category_id":"3"},{"position":0,"category_id":"5"}],"stock_item":{"item_id":29,"product_id":29,"stock_id":1,"qty":100,"is_in_stock":true,"is_qty_decimal":false,"show_default_notification_message":false,"use_config_min_qty":true,"min_qty":0,"use_config_min_sale_qty":1,"min_sale_qty":1,"use_config_max_sale_qty":true,"max_sale_qty":10000,"use_config_backorders":true,"backorders":0,"use_config_notify_stock_qty":true,"notify_stock_qty":1,"use_config_qty_increments":true,"qty_increments":0,"use_config_enable_qty_inc":true,"enable_qty_increments":false,"use_config_manage_stock":true,"manage_stock":true,"low_stock_date":null,"is_decimal_divided":false,"stock_status_changed_auto":0}},"product_links":[],"options":[],"media_gallery_entries":[{"id":34,"media_type":"image","label":"Image","position":1,"disabled":false,"types":["image","small_image","thumbnail"],"file":"\/l\/u\/luma-stability-ball.jpg"}],"tier_prices":[],"custom_attributes":[{"attribute_code":"image","value":"\/l\/u\/luma-stability-ball.jpg"},{"attribute_code":"small_image","value":"\/l\/u\/luma-stability-ball.jpg"},{"attribute_code":"thumbnail","value":"\/l\/u\/luma-stability-ball.jpg"},{"attribute_code":"options_container","value":"container2"},{"attribute_code":"msrp_display_actual_price_type","value":"0"},{"attribute_code":"url_key","value":"sprite
+        stasis ball 65 cm blue"},{"attribute_code":"required_options","value":"0"},{"attribute_code":"has_options","value":"0"},{"attribute_code":"tax_class_id","value":"2"},{"attribute_code":"category_ids","value":["3","5"]},{"attribute_code":"description","value":"<p>The
+        Sprite Stasis Ball gives you the toned abs, sides, and back you want by amping
+        up your core workout. With bright colors and a burst-resistant design, it''s
+        a must-have for every hard-core exercise addict. Use for abdominal conditioning,
+        balance training, yoga, or even physical therapy.<\/p>\n<ul>\n<li>65 cm plastic
+        shell.<\/li>\n<li>Durable, burst-resistant design.<\/li>\n<li>Hand pump included.<\/li>\n<\/ul>"},{"attribute_code":"activity","value":"5435,5438"},{"attribute_code":"material","value":"5471"},{"attribute_code":"color","value":"5477"},{"attribute_code":"gender","value":"5507,5508,5509,5510,5511"},{"attribute_code":"category_gear","value":"5514"},{"attribute_code":"size","value":"5519"}]}'}
+    headers:
+      Cache-Control: ['no-store, no-cache, must-revalidate']
+      Connection: [keep-alive]
+      Content-Type: [application/json; charset=utf-8]
+      Date: ['Fri, 08 May 2020 06:38:22 GMT']
+      Expires: ['Thu, 19 Nov 1981 08:52:00 GMT']
+      Pragma: [no-cache]
+      Server: [nginx/1.14.0 (Ubuntu)]
+      Set-Cookie: ['PHPSESSID=2bngf5u3slr49qlv6evbtp8h5s; expires=Fri, 08-May-2020
+          07:38:22 GMT; Max-Age=3600; path=/; domain=magento; HttpOnly']
+      Transfer-Encoding: [chunked]
+      Vary: [Accept-Encoding]
+      X-Frame-Options: [SAMEORIGIN]
+      content-length: ['2587']
+    status: {code: 200, message: OK}
+- request:
+    body: null
+    headers:
+      Accept: ['*/*']
+      Accept-Encoding: ['gzip, deflate']
+      Connection: [keep-alive]
+      User-Agent: [python-requests/2.19.1]
+    method: GET
+    uri: http://magento/index.php/rest/default/V1/products/24-WG082-blue
+  response:
+    body: {string: '{"id":29,"sku":"24-WG082-blue","name":"Sprite Stasis Ball 65 cm","attribute_set_id":12,"price":27,"status":1,"visibility":1,"type_id":"simple","created_at":"2020-03-27
+        16:06:15","updated_at":"2020-03-27 16:06:15","extension_attributes":{"website_ids":[1],"category_links":[{"position":0,"category_id":"3"},{"position":0,"category_id":"5"}],"stock_item":{"item_id":29,"product_id":29,"stock_id":1,"qty":100,"is_in_stock":true,"is_qty_decimal":false,"show_default_notification_message":false,"use_config_min_qty":true,"min_qty":0,"use_config_min_sale_qty":1,"min_sale_qty":1,"use_config_max_sale_qty":true,"max_sale_qty":10000,"use_config_backorders":true,"backorders":0,"use_config_notify_stock_qty":true,"notify_stock_qty":1,"use_config_qty_increments":true,"qty_increments":0,"use_config_enable_qty_inc":true,"enable_qty_increments":false,"use_config_manage_stock":true,"manage_stock":true,"low_stock_date":null,"is_decimal_divided":false,"stock_status_changed_auto":0}},"product_links":[],"options":[],"media_gallery_entries":[{"id":34,"media_type":"image","label":"Image","position":1,"disabled":false,"types":["image","small_image","thumbnail"],"file":"\/l\/u\/luma-stability-ball.jpg"}],"tier_prices":[],"custom_attributes":[{"attribute_code":"image","value":"\/l\/u\/luma-stability-ball.jpg"},{"attribute_code":"small_image","value":"\/l\/u\/luma-stability-ball.jpg"},{"attribute_code":"thumbnail","value":"\/l\/u\/luma-stability-ball.jpg"},{"attribute_code":"options_container","value":"container2"},{"attribute_code":"msrp_display_actual_price_type","value":"0"},{"attribute_code":"url_key","value":"sprite
+        stasis ball 65 cm blue"},{"attribute_code":"required_options","value":"0"},{"attribute_code":"has_options","value":"0"},{"attribute_code":"tax_class_id","value":"2"},{"attribute_code":"category_ids","value":["3","5"]},{"attribute_code":"description","value":"<p>The
+        Sprite Stasis Ball gives you the toned abs, sides, and back you want by amping
+        up your core workout. With bright colors and a burst-resistant design, it''s
+        a must-have for every hard-core exercise addict. Use for abdominal conditioning,
+        balance training, yoga, or even physical therapy.<\/p>\n<ul>\n<li>65 cm plastic
+        shell.<\/li>\n<li>Durable, burst-resistant design.<\/li>\n<li>Hand pump included.<\/li>\n<\/ul>"},{"attribute_code":"activity","value":"5435,5438"},{"attribute_code":"material","value":"5471"},{"attribute_code":"color","value":"5477"},{"attribute_code":"gender","value":"5507,5508,5509,5510,5511"},{"attribute_code":"category_gear","value":"5514"},{"attribute_code":"size","value":"5519"}]}'}
+    headers:
+      Cache-Control: ['no-store, no-cache, must-revalidate']
+      Connection: [keep-alive]
+      Content-Type: [application/json; charset=utf-8]
+      Date: ['Fri, 08 May 2020 06:38:22 GMT']
+      Expires: ['Thu, 19 Nov 1981 08:52:00 GMT']
+      Pragma: [no-cache]
+      Server: [nginx/1.14.0 (Ubuntu)]
+      Set-Cookie: ['PHPSESSID=j2qqmj6r2dg46s6pl8aqaikpf5; expires=Fri, 08-May-2020
+          07:38:22 GMT; Max-Age=3600; path=/; domain=magento; HttpOnly']
+      Transfer-Encoding: [chunked]
+      Vary: [Accept-Encoding]
+      X-Frame-Options: [SAMEORIGIN]
+      content-length: ['2587']
+    status: {code: 200, message: OK}
+- request:
+    body: null
+    headers:
+      Accept: ['*/*']
+      Accept-Encoding: ['gzip, deflate']
+      Connection: [keep-alive]
+      User-Agent: [python-requests/2.19.1]
+    method: GET
+    uri: http://magento/media/catalog/product//l/u/luma-stability-ball.jpg
+  response:
+    body:
+      string: !!binary |
+        R0lGODlhAQABAIAAAP///wAAACH5BAEAAAAALAAAAAABAAEAAAICRAEAOw==
+    headers:
+      Accept-Ranges: [bytes]
+      Cache-Control: [max-age=31536000, public]
+      Connection: [keep-alive]
+      Content-Length: ['171989']
+      Content-Type: [image/jpeg]
+      Date: ['Fri, 08 May 2020 06:38:22 GMT']
+      ETag: ['"5e7e1eb8-29fd5"']
+      Expires: ['Sat, 08 May 2021 06:38:22 GMT']
+      Last-Modified: ['Fri, 27 Mar 2020 15:41:44 GMT']
+      Server: [nginx/1.14.0 (Ubuntu)]
+      X-Frame-Options: [SAMEORIGIN]
+    status: {code: 200, message: OK}
+- request:
+    body: null
+    headers:
+      Accept: ['*/*']
+      Accept-Encoding: ['gzip, deflate']
+      Connection: [keep-alive]
+      User-Agent: [python-requests/2.19.1]
+    method: GET
+    uri: http://magento/index.php/rest/V1/products/24-WG083-blue
+  response:
+    body: {string: '{"id":32,"sku":"24-WG083-blue","name":"Sprite Stasis Ball 75 cm","attribute_set_id":12,"price":32,"status":1,"visibility":1,"type_id":"simple","created_at":"2020-03-27
+        16:06:15","updated_at":"2020-03-27 16:06:15","extension_attributes":{"website_ids":[1],"category_links":[{"position":0,"category_id":"3"},{"position":0,"category_id":"5"}],"stock_item":{"item_id":32,"product_id":32,"stock_id":1,"qty":100,"is_in_stock":true,"is_qty_decimal":false,"show_default_notification_message":false,"use_config_min_qty":true,"min_qty":0,"use_config_min_sale_qty":1,"min_sale_qty":1,"use_config_max_sale_qty":true,"max_sale_qty":10000,"use_config_backorders":true,"backorders":0,"use_config_notify_stock_qty":true,"notify_stock_qty":1,"use_config_qty_increments":true,"qty_increments":0,"use_config_enable_qty_inc":true,"enable_qty_increments":false,"use_config_manage_stock":true,"manage_stock":true,"low_stock_date":null,"is_decimal_divided":false,"stock_status_changed_auto":0}},"product_links":[{"sku":"24-WG083-blue","link_type":"related","linked_product_sku":"24-WG084","linked_product_type":"simple","position":3},{"sku":"24-WG083-blue","link_type":"related","linked_product_sku":"24-WG088","linked_product_type":"simple","position":1},{"sku":"24-WG083-blue","link_type":"related","linked_product_sku":"24-WG082-pink","linked_product_type":"simple","position":2},{"sku":"24-WG083-blue","link_type":"related","linked_product_sku":"24-WG086","linked_product_type":"simple","position":4},{"sku":"24-WG083-blue","link_type":"crosssell","linked_product_sku":"24-WG084","linked_product_type":"simple","position":4},{"sku":"24-WG083-blue","link_type":"crosssell","linked_product_sku":"24-WG088","linked_product_type":"simple","position":1},{"sku":"24-WG083-blue","link_type":"crosssell","linked_product_sku":"24-WG082-pink","linked_product_type":"simple","position":2},{"sku":"24-WG083-blue","link_type":"crosssell","linked_product_sku":"24-WG086","linked_product_type":"simple","position":3}],"options":[],"media_gallery_entries":[{"id":37,"media_type":"image","label":"Image","position":1,"disabled":false,"types":["image","small_image","thumbnail"],"file":"\/l\/u\/luma-stability-ball.jpg"}],"tier_prices":[],"custom_attributes":[{"attribute_code":"image","value":"\/l\/u\/luma-stability-ball.jpg"},{"attribute_code":"small_image","value":"\/l\/u\/luma-stability-ball.jpg"},{"attribute_code":"thumbnail","value":"\/l\/u\/luma-stability-ball.jpg"},{"attribute_code":"options_container","value":"container2"},{"attribute_code":"msrp_display_actual_price_type","value":"0"},{"attribute_code":"url_key","value":"sprite
+        stasis ball 75 cm blue"},{"attribute_code":"required_options","value":"0"},{"attribute_code":"has_options","value":"0"},{"attribute_code":"tax_class_id","value":"2"},{"attribute_code":"category_ids","value":["3","5"]},{"attribute_code":"description","value":"<p>The
+        Sprite Stasis Ball gives you the toned abs, sides, and back you want by amping
+        up your core workout. With bright colors and a burst-resistant design, it''s
+        a must-have for every hard-core exercise addict. Use for abdominal conditioning,
+        balance training, yoga, or even physical therapy.<\/p>\n<ul>\n<li>75 cm plastic
+        shell.<\/li>\n<li>Durable, burst-resistant design.<\/li>\n<li>Hand pump included.<\/li>\n<\/ul>"},{"attribute_code":"activity","value":"5435,5438"},{"attribute_code":"material","value":"5471"},{"attribute_code":"color","value":"5477"},{"attribute_code":"gender","value":"5507,5508,5509,5510,5511"},{"attribute_code":"category_gear","value":"5514"},{"attribute_code":"size","value":"5520"}]}'}
+    headers:
+      Cache-Control: ['no-store, no-cache, must-revalidate']
+      Connection: [keep-alive]
+      Content-Type: [application/json; charset=utf-8]
+      Date: ['Fri, 08 May 2020 06:38:22 GMT']
+      Expires: ['Thu, 19 Nov 1981 08:52:00 GMT']
+      Pragma: [no-cache]
+      Server: [nginx/1.14.0 (Ubuntu)]
+      Set-Cookie: ['PHPSESSID=fls1lug83dq9f33r2trql7navo; expires=Fri, 08-May-2020
+          07:38:22 GMT; Max-Age=3600; path=/; domain=magento; HttpOnly']
+      Transfer-Encoding: [chunked]
+      Vary: [Accept-Encoding]
+      X-Frame-Options: [SAMEORIGIN]
+      content-length: ['3580']
+    status: {code: 200, message: OK}
+- request:
+    body: null
+    headers:
+      Accept: ['*/*']
+      Accept-Encoding: ['gzip, deflate']
+      Connection: [keep-alive]
+      User-Agent: [python-requests/2.19.1]
+    method: GET
+    uri: http://magento/index.php/rest/default/V1/products/24-WG083-blue
+  response:
+    body: {string: '{"id":32,"sku":"24-WG083-blue","name":"Sprite Stasis Ball 75 cm","attribute_set_id":12,"price":32,"status":1,"visibility":1,"type_id":"simple","created_at":"2020-03-27
+        16:06:15","updated_at":"2020-03-27 16:06:15","extension_attributes":{"website_ids":[1],"category_links":[{"position":0,"category_id":"3"},{"position":0,"category_id":"5"}],"stock_item":{"item_id":32,"product_id":32,"stock_id":1,"qty":100,"is_in_stock":true,"is_qty_decimal":false,"show_default_notification_message":false,"use_config_min_qty":true,"min_qty":0,"use_config_min_sale_qty":1,"min_sale_qty":1,"use_config_max_sale_qty":true,"max_sale_qty":10000,"use_config_backorders":true,"backorders":0,"use_config_notify_stock_qty":true,"notify_stock_qty":1,"use_config_qty_increments":true,"qty_increments":0,"use_config_enable_qty_inc":true,"enable_qty_increments":false,"use_config_manage_stock":true,"manage_stock":true,"low_stock_date":null,"is_decimal_divided":false,"stock_status_changed_auto":0}},"product_links":[{"sku":"24-WG083-blue","link_type":"related","linked_product_sku":"24-WG084","linked_product_type":"simple","position":3},{"sku":"24-WG083-blue","link_type":"related","linked_product_sku":"24-WG088","linked_product_type":"simple","position":1},{"sku":"24-WG083-blue","link_type":"related","linked_product_sku":"24-WG082-pink","linked_product_type":"simple","position":2},{"sku":"24-WG083-blue","link_type":"related","linked_product_sku":"24-WG086","linked_product_type":"simple","position":4},{"sku":"24-WG083-blue","link_type":"crosssell","linked_product_sku":"24-WG084","linked_product_type":"simple","position":4},{"sku":"24-WG083-blue","link_type":"crosssell","linked_product_sku":"24-WG088","linked_product_type":"simple","position":1},{"sku":"24-WG083-blue","link_type":"crosssell","linked_product_sku":"24-WG082-pink","linked_product_type":"simple","position":2},{"sku":"24-WG083-blue","link_type":"crosssell","linked_product_sku":"24-WG086","linked_product_type":"simple","position":3}],"options":[],"media_gallery_entries":[{"id":37,"media_type":"image","label":"Image","position":1,"disabled":false,"types":["image","small_image","thumbnail"],"file":"\/l\/u\/luma-stability-ball.jpg"}],"tier_prices":[],"custom_attributes":[{"attribute_code":"image","value":"\/l\/u\/luma-stability-ball.jpg"},{"attribute_code":"small_image","value":"\/l\/u\/luma-stability-ball.jpg"},{"attribute_code":"thumbnail","value":"\/l\/u\/luma-stability-ball.jpg"},{"attribute_code":"options_container","value":"container2"},{"attribute_code":"msrp_display_actual_price_type","value":"0"},{"attribute_code":"url_key","value":"sprite
+        stasis ball 75 cm blue"},{"attribute_code":"required_options","value":"0"},{"attribute_code":"has_options","value":"0"},{"attribute_code":"tax_class_id","value":"2"},{"attribute_code":"category_ids","value":["3","5"]},{"attribute_code":"description","value":"<p>The
+        Sprite Stasis Ball gives you the toned abs, sides, and back you want by amping
+        up your core workout. With bright colors and a burst-resistant design, it''s
+        a must-have for every hard-core exercise addict. Use for abdominal conditioning,
+        balance training, yoga, or even physical therapy.<\/p>\n<ul>\n<li>75 cm plastic
+        shell.<\/li>\n<li>Durable, burst-resistant design.<\/li>\n<li>Hand pump included.<\/li>\n<\/ul>"},{"attribute_code":"activity","value":"5435,5438"},{"attribute_code":"material","value":"5471"},{"attribute_code":"color","value":"5477"},{"attribute_code":"gender","value":"5507,5508,5509,5510,5511"},{"attribute_code":"category_gear","value":"5514"},{"attribute_code":"size","value":"5520"}]}'}
+    headers:
+      Cache-Control: ['no-store, no-cache, must-revalidate']
+      Connection: [keep-alive]
+      Content-Type: [application/json; charset=utf-8]
+      Date: ['Fri, 08 May 2020 06:38:23 GMT']
+      Expires: ['Thu, 19 Nov 1981 08:52:00 GMT']
+      Pragma: [no-cache]
+      Server: [nginx/1.14.0 (Ubuntu)]
+      Set-Cookie: ['PHPSESSID=m7rmhsd7ff3nkl4fhpdi0ekg8d; expires=Fri, 08-May-2020
+          07:38:23 GMT; Max-Age=3600; path=/; domain=magento; HttpOnly']
+      Transfer-Encoding: [chunked]
+      Vary: [Accept-Encoding]
+      X-Frame-Options: [SAMEORIGIN]
+      content-length: ['3580']
+    status: {code: 200, message: OK}
+- request:
+    body: null
+    headers:
+      Accept: ['*/*']
+      Accept-Encoding: ['gzip, deflate']
+      Connection: [keep-alive]
+      User-Agent: [python-requests/2.19.1]
+    method: GET
+    uri: http://magento/media/catalog/product//l/u/luma-stability-ball.jpg
+  response:
+    body:
+      string: !!binary |
+        R0lGODlhAQABAIAAAP///wAAACH5BAEAAAAALAAAAAABAAEAAAICRAEAOw==
+    headers:
+      Accept-Ranges: [bytes]
+      Cache-Control: [max-age=31536000, public]
+      Connection: [keep-alive]
+      Content-Length: ['171989']
+      Content-Type: [image/jpeg]
+      Date: ['Fri, 08 May 2020 06:38:23 GMT']
+      ETag: ['"5e7e1eb8-29fd5"']
+      Expires: ['Sat, 08 May 2021 06:38:23 GMT']
+      Last-Modified: ['Fri, 27 Mar 2020 15:41:44 GMT']
+      Server: [nginx/1.14.0 (Ubuntu)]
+      X-Frame-Options: [SAMEORIGIN]
+    status: {code: 200, message: OK}
+- request:
+    body: null
+    headers:
+      Accept: ['*/*']
+      Accept-Encoding: ['gzip, deflate']
+      Connection: [keep-alive]
+      User-Agent: [python-requests/2.19.1]
+    method: GET
+    uri: http://magento/index.php/rest/V1/products/24-WG084
+  response:
+    body: {string: '{"id":21,"sku":"24-WG084","name":"Sprite Foam Yoga Brick","attribute_set_id":11,"price":5,"status":1,"visibility":4,"type_id":"simple","created_at":"2020-03-27
+        16:06:14","updated_at":"2020-03-27 16:06:14","extension_attributes":{"website_ids":[1],"category_links":[{"position":0,"category_id":"3"},{"position":0,"category_id":"5"}],"stock_item":{"item_id":21,"product_id":21,"stock_id":1,"qty":100,"is_in_stock":true,"is_qty_decimal":false,"show_default_notification_message":false,"use_config_min_qty":true,"min_qty":0,"use_config_min_sale_qty":1,"min_sale_qty":1,"use_config_max_sale_qty":true,"max_sale_qty":10000,"use_config_backorders":true,"backorders":0,"use_config_notify_stock_qty":true,"notify_stock_qty":1,"use_config_qty_increments":true,"qty_increments":0,"use_config_enable_qty_inc":true,"enable_qty_increments":false,"use_config_manage_stock":true,"manage_stock":true,"low_stock_date":null,"is_decimal_divided":false,"stock_status_changed_auto":0}},"product_links":[{"sku":"24-WG084","link_type":"related","linked_product_sku":"24-UG06","linked_product_type":"simple","position":1},{"sku":"24-WG084","link_type":"related","linked_product_sku":"24-UG07","linked_product_type":"simple","position":4},{"sku":"24-WG084","link_type":"related","linked_product_sku":"24-UG03","linked_product_type":"simple","position":3},{"sku":"24-WG084","link_type":"related","linked_product_sku":"24-WG085_Group","linked_product_type":"grouped","position":2},{"sku":"24-WG084","link_type":"crosssell","linked_product_sku":"24-UG03","linked_product_type":"simple","position":4},{"sku":"24-WG084","link_type":"crosssell","linked_product_sku":"24-WG081-gray","linked_product_type":"simple","position":2},{"sku":"24-WG084","link_type":"crosssell","linked_product_sku":"24-WG083-blue","linked_product_type":"simple","position":1},{"sku":"24-WG084","link_type":"crosssell","linked_product_sku":"24-WG080","linked_product_type":"bundle","position":3}],"options":[],"media_gallery_entries":[{"id":26,"media_type":"image","label":"Image","position":1,"disabled":false,"types":["image","small_image","thumbnail"],"file":"\/l\/u\/luma-yoga-brick.jpg"}],"tier_prices":[],"custom_attributes":[{"attribute_code":"image","value":"\/l\/u\/luma-yoga-brick.jpg"},{"attribute_code":"small_image","value":"\/l\/u\/luma-yoga-brick.jpg"},{"attribute_code":"thumbnail","value":"\/l\/u\/luma-yoga-brick.jpg"},{"attribute_code":"options_container","value":"container2"},{"attribute_code":"msrp_display_actual_price_type","value":"0"},{"attribute_code":"url_key","value":"sprite-foam-yoga-brick"},{"attribute_code":"required_options","value":"0"},{"attribute_code":"has_options","value":"0"},{"attribute_code":"tax_class_id","value":"2"},{"attribute_code":"category_ids","value":["3","5"]},{"attribute_code":"description","value":"<p>Our
+        top-selling yoga prop, the 4-inch, high-quality Sprite Foam Yoga Brick is
+        popular among yoga novices and studio professionals alike. An essential yoga
+        accessory, the yoga brick is a critical tool for finding balance and alignment
+        in many common yoga poses. Choose from 5 color options.<\/p>\n<ul>\n<li>Standard
+        Large Size: 4\" x 6\" x 9\".\n<li>Beveled edges for ideal contour grip.\n<li>Durable
+        and soft, scratch-proof foam.\n<li>Individually wrapped.\n<li>Ten color choices.\n<\/ul>
+        "},{"attribute_code":"activity","value":"5435,5436,5444,5438"},{"attribute_code":"material","value":"5469"},{"attribute_code":"gender","value":"5507,5508,5511"},{"attribute_code":"category_gear","value":"5514"}]}'}
+    headers:
+      Cache-Control: ['no-store, no-cache, must-revalidate']
+      Connection: [keep-alive]
+      Content-Type: [application/json; charset=utf-8]
+      Date: ['Fri, 08 May 2020 06:38:23 GMT']
+      Expires: ['Thu, 19 Nov 1981 08:52:00 GMT']
+      Pragma: [no-cache]
+      Server: [nginx/1.14.0 (Ubuntu)]
+      Set-Cookie: ['PHPSESSID=dkolt1hvqvr2kt8smsitpjjmnr; expires=Fri, 08-May-2020
+          07:38:23 GMT; Max-Age=3600; path=/; domain=magento; HttpOnly']
+      Transfer-Encoding: [chunked]
+      Vary: [Accept-Encoding]
+      X-Frame-Options: [SAMEORIGIN]
+      content-length: ['3503']
+    status: {code: 200, message: OK}
+- request:
+    body: null
+    headers:
+      Accept: ['*/*']
+      Accept-Encoding: ['gzip, deflate']
+      Connection: [keep-alive]
+      User-Agent: [python-requests/2.19.1]
+    method: GET
+    uri: http://magento/index.php/rest/default/V1/products/24-WG084
+  response:
+    body: {string: '{"id":21,"sku":"24-WG084","name":"Sprite Foam Yoga Brick","attribute_set_id":11,"price":5,"status":1,"visibility":4,"type_id":"simple","created_at":"2020-03-27
+        16:06:14","updated_at":"2020-03-27 16:06:14","extension_attributes":{"website_ids":[1],"category_links":[{"position":0,"category_id":"3"},{"position":0,"category_id":"5"}],"stock_item":{"item_id":21,"product_id":21,"stock_id":1,"qty":100,"is_in_stock":true,"is_qty_decimal":false,"show_default_notification_message":false,"use_config_min_qty":true,"min_qty":0,"use_config_min_sale_qty":1,"min_sale_qty":1,"use_config_max_sale_qty":true,"max_sale_qty":10000,"use_config_backorders":true,"backorders":0,"use_config_notify_stock_qty":true,"notify_stock_qty":1,"use_config_qty_increments":true,"qty_increments":0,"use_config_enable_qty_inc":true,"enable_qty_increments":false,"use_config_manage_stock":true,"manage_stock":true,"low_stock_date":null,"is_decimal_divided":false,"stock_status_changed_auto":0}},"product_links":[{"sku":"24-WG084","link_type":"related","linked_product_sku":"24-UG06","linked_product_type":"simple","position":1},{"sku":"24-WG084","link_type":"related","linked_product_sku":"24-UG07","linked_product_type":"simple","position":4},{"sku":"24-WG084","link_type":"related","linked_product_sku":"24-UG03","linked_product_type":"simple","position":3},{"sku":"24-WG084","link_type":"related","linked_product_sku":"24-WG085_Group","linked_product_type":"grouped","position":2},{"sku":"24-WG084","link_type":"crosssell","linked_product_sku":"24-UG03","linked_product_type":"simple","position":4},{"sku":"24-WG084","link_type":"crosssell","linked_product_sku":"24-WG081-gray","linked_product_type":"simple","position":2},{"sku":"24-WG084","link_type":"crosssell","linked_product_sku":"24-WG083-blue","linked_product_type":"simple","position":1},{"sku":"24-WG084","link_type":"crosssell","linked_product_sku":"24-WG080","linked_product_type":"bundle","position":3}],"options":[],"media_gallery_entries":[{"id":26,"media_type":"image","label":"Image","position":1,"disabled":false,"types":["image","small_image","thumbnail"],"file":"\/l\/u\/luma-yoga-brick.jpg"}],"tier_prices":[],"custom_attributes":[{"attribute_code":"image","value":"\/l\/u\/luma-yoga-brick.jpg"},{"attribute_code":"small_image","value":"\/l\/u\/luma-yoga-brick.jpg"},{"attribute_code":"thumbnail","value":"\/l\/u\/luma-yoga-brick.jpg"},{"attribute_code":"options_container","value":"container2"},{"attribute_code":"msrp_display_actual_price_type","value":"0"},{"attribute_code":"url_key","value":"sprite-foam-yoga-brick"},{"attribute_code":"required_options","value":"0"},{"attribute_code":"has_options","value":"0"},{"attribute_code":"tax_class_id","value":"2"},{"attribute_code":"category_ids","value":["3","5"]},{"attribute_code":"description","value":"<p>Our
+        top-selling yoga prop, the 4-inch, high-quality Sprite Foam Yoga Brick is
+        popular among yoga novices and studio professionals alike. An essential yoga
+        accessory, the yoga brick is a critical tool for finding balance and alignment
+        in many common yoga poses. Choose from 5 color options.<\/p>\n<ul>\n<li>Standard
+        Large Size: 4\" x 6\" x 9\".\n<li>Beveled edges for ideal contour grip.\n<li>Durable
+        and soft, scratch-proof foam.\n<li>Individually wrapped.\n<li>Ten color choices.\n<\/ul>
+        "},{"attribute_code":"activity","value":"5435,5436,5444,5438"},{"attribute_code":"material","value":"5469"},{"attribute_code":"gender","value":"5507,5508,5511"},{"attribute_code":"category_gear","value":"5514"}]}'}
+    headers:
+      Cache-Control: ['no-store, no-cache, must-revalidate']
+      Connection: [keep-alive]
+      Content-Type: [application/json; charset=utf-8]
+      Date: ['Fri, 08 May 2020 06:38:24 GMT']
+      Expires: ['Thu, 19 Nov 1981 08:52:00 GMT']
+      Pragma: [no-cache]
+      Server: [nginx/1.14.0 (Ubuntu)]
+      Set-Cookie: ['PHPSESSID=q91rdb8rf0vcma0ff9q6lpq2ip; expires=Fri, 08-May-2020
+          07:38:24 GMT; Max-Age=3600; path=/; domain=magento; HttpOnly']
+      Transfer-Encoding: [chunked]
+      Vary: [Accept-Encoding]
+      X-Frame-Options: [SAMEORIGIN]
+      content-length: ['3503']
+    status: {code: 200, message: OK}
+- request:
+    body: null
+    headers:
+      Accept: ['*/*']
+      Accept-Encoding: ['gzip, deflate']
+      Connection: [keep-alive]
+      User-Agent: [python-requests/2.19.1]
+    method: GET
+    uri: http://magento/media/catalog/product//l/u/luma-yoga-brick.jpg
+  response:
+    body:
+      string: !!binary |
+        R0lGODlhAQABAIAAAP///wAAACH5BAEAAAAALAAAAAABAAEAAAICRAEAOw==
+    headers:
+      Accept-Ranges: [bytes]
+      Cache-Control: [max-age=31536000, public]
+      Connection: [keep-alive]
+      Content-Length: ['38422']
+      Content-Type: [image/jpeg]
+      Date: ['Fri, 08 May 2020 06:38:24 GMT']
+      ETag: ['"5e7e1eb8-9616"']
+      Expires: ['Sat, 08 May 2021 06:38:24 GMT']
+      Last-Modified: ['Fri, 27 Mar 2020 15:41:44 GMT']
+      Server: [nginx/1.14.0 (Ubuntu)]
+      X-Frame-Options: [SAMEORIGIN]
+    status: {code: 200, message: OK}
+- request:
+    body: null
+    headers:
+      Accept: ['*/*']
+      Accept-Encoding: ['gzip, deflate']
+      Connection: [keep-alive]
+      User-Agent: [python-requests/2.19.1]
+    method: GET
+    uri: http://magento/index.php/rest/V1/products/24-WG085
+  response:
+    body: {string: '{"id":33,"sku":"24-WG085","name":"Sprite Yoga Strap 6 foot","attribute_set_id":13,"price":14,"status":1,"visibility":1,"type_id":"simple","created_at":"2020-03-27
+        16:06:16","updated_at":"2020-03-27 16:06:16","extension_attributes":{"website_ids":[1],"category_links":[{"position":0,"category_id":"3"},{"position":0,"category_id":"5"}],"stock_item":{"item_id":33,"product_id":33,"stock_id":1,"qty":100,"is_in_stock":true,"is_qty_decimal":false,"show_default_notification_message":false,"use_config_min_qty":true,"min_qty":0,"use_config_min_sale_qty":1,"min_sale_qty":1,"use_config_max_sale_qty":true,"max_sale_qty":10000,"use_config_backorders":true,"backorders":0,"use_config_notify_stock_qty":true,"notify_stock_qty":1,"use_config_qty_increments":true,"qty_increments":0,"use_config_enable_qty_inc":true,"enable_qty_increments":false,"use_config_manage_stock":true,"manage_stock":true,"low_stock_date":null,"is_decimal_divided":false,"stock_status_changed_auto":0}},"product_links":[{"sku":"24-WG085","link_type":"related","linked_product_sku":"24-UG06","linked_product_type":"simple","position":4},{"sku":"24-WG085","link_type":"related","linked_product_sku":"24-UG04","linked_product_type":"simple","position":1},{"sku":"24-WG085","link_type":"related","linked_product_sku":"24-WG088","linked_product_type":"simple","position":3},{"sku":"24-WG085","link_type":"related","linked_product_sku":"24-WG086","linked_product_type":"simple","position":2},{"sku":"24-WG085","link_type":"crosssell","linked_product_sku":"24-UG06","linked_product_type":"simple","position":3},{"sku":"24-WG085","link_type":"crosssell","linked_product_sku":"24-UG07","linked_product_type":"simple","position":4},{"sku":"24-WG085","link_type":"crosssell","linked_product_sku":"24-WG081-gray","linked_product_type":"simple","position":1},{"sku":"24-WG085","link_type":"crosssell","linked_product_sku":"24-WG085_Group","linked_product_type":"grouped","position":2}],"options":[],"media_gallery_entries":[{"id":38,"media_type":"image","label":"Image","position":1,"disabled":false,"types":["image","small_image","thumbnail"],"file":"\/l\/u\/luma-yoga-strap.jpg"}],"tier_prices":[],"custom_attributes":[{"attribute_code":"image","value":"\/l\/u\/luma-yoga-strap.jpg"},{"attribute_code":"small_image","value":"\/l\/u\/luma-yoga-strap.jpg"},{"attribute_code":"thumbnail","value":"\/l\/u\/luma-yoga-strap.jpg"},{"attribute_code":"options_container","value":"container2"},{"attribute_code":"msrp_display_actual_price_type","value":"0"},{"attribute_code":"url_key","value":"sprite-yoga-strap-6-foot"},{"attribute_code":"required_options","value":"0"},{"attribute_code":"has_options","value":"0"},{"attribute_code":"tax_class_id","value":"2"},{"attribute_code":"category_ids","value":["3","5"]},{"attribute_code":"description","value":"<p>The
+        Sprite Yoga Strap is your untiring partner in demanding stretches, holds and
+        alignment routines. The strap''s 100% organic cotton fabric is woven tightly
+        to form a soft, textured yet non-slip surface. The plastic clasp buckle is
+        easily adjustable, lightweight and durable under strain.<\/p>\n<ul>\n<li>100%
+        soft and durable cotton.\n<li>Plastic cinch buckle is easy to use.\n<li>Three
+        natural colors made from phthalate and heavy metal free dyes.\n<\/ul>"},{"attribute_code":"activity","value":"5435"},{"attribute_code":"material","value":"5459,5471"},{"attribute_code":"gender","value":"5507,5508,5511"},{"attribute_code":"category_gear","value":"5514"},{"attribute_code":"size","value":"5521"}]}'}
+    headers:
+      Cache-Control: ['no-store, no-cache, must-revalidate']
+      Connection: [keep-alive]
+      Content-Type: [application/json; charset=utf-8]
+      Date: ['Fri, 08 May 2020 06:38:24 GMT']
+      Expires: ['Thu, 19 Nov 1981 08:52:00 GMT']
+      Pragma: [no-cache]
+      Server: [nginx/1.14.0 (Ubuntu)]
+      Set-Cookie: ['PHPSESSID=phtqvc8d1foh7b2cvmnkvku94m; expires=Fri, 08-May-2020
+          07:38:24 GMT; Max-Age=3600; path=/; domain=magento; HttpOnly']
+      Transfer-Encoding: [chunked]
+      Vary: [Accept-Encoding]
+      X-Frame-Options: [SAMEORIGIN]
+      content-length: ['3502']
+    status: {code: 200, message: OK}
+- request:
+    body: null
+    headers:
+      Accept: ['*/*']
+      Accept-Encoding: ['gzip, deflate']
+      Connection: [keep-alive]
+      User-Agent: [python-requests/2.19.1]
+    method: GET
+    uri: http://magento/index.php/rest/default/V1/products/24-WG085
+  response:
+    body: {string: '{"id":33,"sku":"24-WG085","name":"Sprite Yoga Strap 6 foot","attribute_set_id":13,"price":14,"status":1,"visibility":1,"type_id":"simple","created_at":"2020-03-27
+        16:06:16","updated_at":"2020-03-27 16:06:16","extension_attributes":{"website_ids":[1],"category_links":[{"position":0,"category_id":"3"},{"position":0,"category_id":"5"}],"stock_item":{"item_id":33,"product_id":33,"stock_id":1,"qty":100,"is_in_stock":true,"is_qty_decimal":false,"show_default_notification_message":false,"use_config_min_qty":true,"min_qty":0,"use_config_min_sale_qty":1,"min_sale_qty":1,"use_config_max_sale_qty":true,"max_sale_qty":10000,"use_config_backorders":true,"backorders":0,"use_config_notify_stock_qty":true,"notify_stock_qty":1,"use_config_qty_increments":true,"qty_increments":0,"use_config_enable_qty_inc":true,"enable_qty_increments":false,"use_config_manage_stock":true,"manage_stock":true,"low_stock_date":null,"is_decimal_divided":false,"stock_status_changed_auto":0}},"product_links":[{"sku":"24-WG085","link_type":"related","linked_product_sku":"24-UG06","linked_product_type":"simple","position":4},{"sku":"24-WG085","link_type":"related","linked_product_sku":"24-UG04","linked_product_type":"simple","position":1},{"sku":"24-WG085","link_type":"related","linked_product_sku":"24-WG088","linked_product_type":"simple","position":3},{"sku":"24-WG085","link_type":"related","linked_product_sku":"24-WG086","linked_product_type":"simple","position":2},{"sku":"24-WG085","link_type":"crosssell","linked_product_sku":"24-UG06","linked_product_type":"simple","position":3},{"sku":"24-WG085","link_type":"crosssell","linked_product_sku":"24-UG07","linked_product_type":"simple","position":4},{"sku":"24-WG085","link_type":"crosssell","linked_product_sku":"24-WG081-gray","linked_product_type":"simple","position":1},{"sku":"24-WG085","link_type":"crosssell","linked_product_sku":"24-WG085_Group","linked_product_type":"grouped","position":2}],"options":[],"media_gallery_entries":[{"id":38,"media_type":"image","label":"Image","position":1,"disabled":false,"types":["image","small_image","thumbnail"],"file":"\/l\/u\/luma-yoga-strap.jpg"}],"tier_prices":[],"custom_attributes":[{"attribute_code":"image","value":"\/l\/u\/luma-yoga-strap.jpg"},{"attribute_code":"small_image","value":"\/l\/u\/luma-yoga-strap.jpg"},{"attribute_code":"thumbnail","value":"\/l\/u\/luma-yoga-strap.jpg"},{"attribute_code":"options_container","value":"container2"},{"attribute_code":"msrp_display_actual_price_type","value":"0"},{"attribute_code":"url_key","value":"sprite-yoga-strap-6-foot"},{"attribute_code":"required_options","value":"0"},{"attribute_code":"has_options","value":"0"},{"attribute_code":"tax_class_id","value":"2"},{"attribute_code":"category_ids","value":["3","5"]},{"attribute_code":"description","value":"<p>The
+        Sprite Yoga Strap is your untiring partner in demanding stretches, holds and
+        alignment routines. The strap''s 100% organic cotton fabric is woven tightly
+        to form a soft, textured yet non-slip surface. The plastic clasp buckle is
+        easily adjustable, lightweight and durable under strain.<\/p>\n<ul>\n<li>100%
+        soft and durable cotton.\n<li>Plastic cinch buckle is easy to use.\n<li>Three
+        natural colors made from phthalate and heavy metal free dyes.\n<\/ul>"},{"attribute_code":"activity","value":"5435"},{"attribute_code":"material","value":"5459,5471"},{"attribute_code":"gender","value":"5507,5508,5511"},{"attribute_code":"category_gear","value":"5514"},{"attribute_code":"size","value":"5521"}]}'}
+    headers:
+      Cache-Control: ['no-store, no-cache, must-revalidate']
+      Connection: [keep-alive]
+      Content-Type: [application/json; charset=utf-8]
+      Date: ['Fri, 08 May 2020 06:38:24 GMT']
+      Expires: ['Thu, 19 Nov 1981 08:52:00 GMT']
+      Pragma: [no-cache]
+      Server: [nginx/1.14.0 (Ubuntu)]
+      Set-Cookie: ['PHPSESSID=eknnojje7t28tddp42l1oi508i; expires=Fri, 08-May-2020
+          07:38:24 GMT; Max-Age=3600; path=/; domain=magento; HttpOnly']
+      Transfer-Encoding: [chunked]
+      Vary: [Accept-Encoding]
+      X-Frame-Options: [SAMEORIGIN]
+      content-length: ['3502']
+    status: {code: 200, message: OK}
+- request:
+    body: null
+    headers:
+      Accept: ['*/*']
+      Accept-Encoding: ['gzip, deflate']
+      Connection: [keep-alive]
+      User-Agent: [python-requests/2.19.1]
+    method: GET
+    uri: http://magento/media/catalog/product//l/u/luma-yoga-strap.jpg
+  response:
+    body:
+      string: !!binary |
+        R0lGODlhAQABAIAAAP///wAAACH5BAEAAAAALAAAAAABAAEAAAICRAEAOw==
+    headers:
+      Accept-Ranges: [bytes]
+      Cache-Control: [max-age=31536000, public]
+      Connection: [keep-alive]
+      Content-Length: ['178039']
+      Content-Type: [image/jpeg]
+      Date: ['Fri, 08 May 2020 06:38:24 GMT']
+      ETag: ['"5e7e1eb8-2b777"']
+      Expires: ['Sat, 08 May 2021 06:38:24 GMT']
+      Last-Modified: ['Fri, 27 Mar 2020 15:41:44 GMT']
+      Server: [nginx/1.14.0 (Ubuntu)]
+      X-Frame-Options: [SAMEORIGIN]
+    status: {code: 200, message: OK}
+- request:
+    body: null
+    headers:
+      Accept: ['*/*']
+      Accept-Encoding: ['gzip, deflate']
+      Connection: [keep-alive]
+      User-Agent: [python-requests/2.19.1]
+    method: GET
+    uri: http://magento/index.php/rest/V1/products/24-WG086
+  response:
+    body: {string: '{"id":34,"sku":"24-WG086","name":"Sprite Yoga Strap 8 foot","attribute_set_id":13,"price":17,"status":1,"visibility":1,"type_id":"simple","created_at":"2020-03-27
+        16:06:16","updated_at":"2020-03-27 16:06:16","extension_attributes":{"website_ids":[1],"category_links":[{"position":0,"category_id":"3"},{"position":0,"category_id":"5"}],"stock_item":{"item_id":34,"product_id":34,"stock_id":1,"qty":100,"is_in_stock":true,"is_qty_decimal":false,"show_default_notification_message":false,"use_config_min_qty":true,"min_qty":0,"use_config_min_sale_qty":1,"min_sale_qty":1,"use_config_max_sale_qty":true,"max_sale_qty":10000,"use_config_backorders":true,"backorders":0,"use_config_notify_stock_qty":true,"notify_stock_qty":1,"use_config_qty_increments":true,"qty_increments":0,"use_config_enable_qty_inc":true,"enable_qty_increments":false,"use_config_manage_stock":true,"manage_stock":true,"low_stock_date":null,"is_decimal_divided":false,"stock_status_changed_auto":0}},"product_links":[{"sku":"24-WG086","link_type":"related","linked_product_sku":"24-UG04","linked_product_type":"simple","position":2},{"sku":"24-WG086","link_type":"related","linked_product_sku":"24-UG05","linked_product_type":"simple","position":3},{"sku":"24-WG086","link_type":"related","linked_product_sku":"24-UG03","linked_product_type":"simple","position":1},{"sku":"24-WG086","link_type":"related","linked_product_sku":"24-WG085","linked_product_type":"simple","position":4},{"sku":"24-WG086","link_type":"crosssell","linked_product_sku":"24-UG06","linked_product_type":"simple","position":2},{"sku":"24-WG086","link_type":"crosssell","linked_product_sku":"24-UG02","linked_product_type":"simple","position":3},{"sku":"24-WG086","link_type":"crosssell","linked_product_sku":"24-WG084","linked_product_type":"simple","position":1},{"sku":"24-WG086","link_type":"crosssell","linked_product_sku":"24-WG080","linked_product_type":"bundle","position":4}],"options":[],"media_gallery_entries":[{"id":39,"media_type":"image","label":"Image","position":1,"disabled":false,"types":["image","small_image","thumbnail"],"file":"\/l\/u\/luma-yoga-strap.jpg"}],"tier_prices":[],"custom_attributes":[{"attribute_code":"image","value":"\/l\/u\/luma-yoga-strap.jpg"},{"attribute_code":"small_image","value":"\/l\/u\/luma-yoga-strap.jpg"},{"attribute_code":"thumbnail","value":"\/l\/u\/luma-yoga-strap.jpg"},{"attribute_code":"options_container","value":"container2"},{"attribute_code":"msrp_display_actual_price_type","value":"0"},{"attribute_code":"url_key","value":"sprite-yoga-strap-8-foot"},{"attribute_code":"required_options","value":"0"},{"attribute_code":"has_options","value":"0"},{"attribute_code":"tax_class_id","value":"2"},{"attribute_code":"category_ids","value":["3","5"]},{"attribute_code":"description","value":"<p>The
+        Sprite Yoga Strap is your untiring partner in demanding stretches, holds and
+        alignment routines. The strap''s 100% organic cotton fabric is woven tightly
+        to form a soft, textured yet non-slip surface. The plastic clasp buckle is
+        easily adjustable, lightweight and durable under strain.<\/p>\n<ul>\n<li>8''
+        long x 1.0\" wide.\n<li>100% soft and durable cotton.\n<li>Plastic cinch buckle
+        is easy to use.\n<li>Three natural colors made from phthalate and heavy metal
+        free dyes.\n<\/ul>"},{"attribute_code":"activity","value":"5435"},{"attribute_code":"material","value":"5459,5471"},{"attribute_code":"gender","value":"5507,5508,5511"},{"attribute_code":"category_gear","value":"5514"},{"attribute_code":"size","value":"5522"}]}'}
+    headers:
+      Cache-Control: ['no-store, no-cache, must-revalidate']
+      Connection: [keep-alive]
+      Content-Type: [application/json; charset=utf-8]
+      Date: ['Fri, 08 May 2020 06:38:25 GMT']
+      Expires: ['Thu, 19 Nov 1981 08:52:00 GMT']
+      Pragma: [no-cache]
+      Server: [nginx/1.14.0 (Ubuntu)]
+      Set-Cookie: ['PHPSESSID=6r1ald952sjdion1bkq4gh164b; expires=Fri, 08-May-2020
+          07:38:25 GMT; Max-Age=3600; path=/; domain=magento; HttpOnly']
+      Transfer-Encoding: [chunked]
+      Vary: [Accept-Encoding]
+      X-Frame-Options: [SAMEORIGIN]
+      content-length: ['3516']
+    status: {code: 200, message: OK}
+- request:
+    body: null
+    headers:
+      Accept: ['*/*']
+      Accept-Encoding: ['gzip, deflate']
+      Connection: [keep-alive]
+      User-Agent: [python-requests/2.19.1]
+    method: GET
+    uri: http://magento/index.php/rest/default/V1/products/24-WG086
+  response:
+    body: {string: '{"id":34,"sku":"24-WG086","name":"Sprite Yoga Strap 8 foot","attribute_set_id":13,"price":17,"status":1,"visibility":1,"type_id":"simple","created_at":"2020-03-27
+        16:06:16","updated_at":"2020-03-27 16:06:16","extension_attributes":{"website_ids":[1],"category_links":[{"position":0,"category_id":"3"},{"position":0,"category_id":"5"}],"stock_item":{"item_id":34,"product_id":34,"stock_id":1,"qty":100,"is_in_stock":true,"is_qty_decimal":false,"show_default_notification_message":false,"use_config_min_qty":true,"min_qty":0,"use_config_min_sale_qty":1,"min_sale_qty":1,"use_config_max_sale_qty":true,"max_sale_qty":10000,"use_config_backorders":true,"backorders":0,"use_config_notify_stock_qty":true,"notify_stock_qty":1,"use_config_qty_increments":true,"qty_increments":0,"use_config_enable_qty_inc":true,"enable_qty_increments":false,"use_config_manage_stock":true,"manage_stock":true,"low_stock_date":null,"is_decimal_divided":false,"stock_status_changed_auto":0}},"product_links":[{"sku":"24-WG086","link_type":"related","linked_product_sku":"24-UG04","linked_product_type":"simple","position":2},{"sku":"24-WG086","link_type":"related","linked_product_sku":"24-UG05","linked_product_type":"simple","position":3},{"sku":"24-WG086","link_type":"related","linked_product_sku":"24-UG03","linked_product_type":"simple","position":1},{"sku":"24-WG086","link_type":"related","linked_product_sku":"24-WG085","linked_product_type":"simple","position":4},{"sku":"24-WG086","link_type":"crosssell","linked_product_sku":"24-UG06","linked_product_type":"simple","position":2},{"sku":"24-WG086","link_type":"crosssell","linked_product_sku":"24-UG02","linked_product_type":"simple","position":3},{"sku":"24-WG086","link_type":"crosssell","linked_product_sku":"24-WG084","linked_product_type":"simple","position":1},{"sku":"24-WG086","link_type":"crosssell","linked_product_sku":"24-WG080","linked_product_type":"bundle","position":4}],"options":[],"media_gallery_entries":[{"id":39,"media_type":"image","label":"Image","position":1,"disabled":false,"types":["image","small_image","thumbnail"],"file":"\/l\/u\/luma-yoga-strap.jpg"}],"tier_prices":[],"custom_attributes":[{"attribute_code":"image","value":"\/l\/u\/luma-yoga-strap.jpg"},{"attribute_code":"small_image","value":"\/l\/u\/luma-yoga-strap.jpg"},{"attribute_code":"thumbnail","value":"\/l\/u\/luma-yoga-strap.jpg"},{"attribute_code":"options_container","value":"container2"},{"attribute_code":"msrp_display_actual_price_type","value":"0"},{"attribute_code":"url_key","value":"sprite-yoga-strap-8-foot"},{"attribute_code":"required_options","value":"0"},{"attribute_code":"has_options","value":"0"},{"attribute_code":"tax_class_id","value":"2"},{"attribute_code":"category_ids","value":["3","5"]},{"attribute_code":"description","value":"<p>The
+        Sprite Yoga Strap is your untiring partner in demanding stretches, holds and
+        alignment routines. The strap''s 100% organic cotton fabric is woven tightly
+        to form a soft, textured yet non-slip surface. The plastic clasp buckle is
+        easily adjustable, lightweight and durable under strain.<\/p>\n<ul>\n<li>8''
+        long x 1.0\" wide.\n<li>100% soft and durable cotton.\n<li>Plastic cinch buckle
+        is easy to use.\n<li>Three natural colors made from phthalate and heavy metal
+        free dyes.\n<\/ul>"},{"attribute_code":"activity","value":"5435"},{"attribute_code":"material","value":"5459,5471"},{"attribute_code":"gender","value":"5507,5508,5511"},{"attribute_code":"category_gear","value":"5514"},{"attribute_code":"size","value":"5522"}]}'}
+    headers:
+      Cache-Control: ['no-store, no-cache, must-revalidate']
+      Connection: [keep-alive]
+      Content-Type: [application/json; charset=utf-8]
+      Date: ['Fri, 08 May 2020 06:38:25 GMT']
+      Expires: ['Thu, 19 Nov 1981 08:52:00 GMT']
+      Pragma: [no-cache]
+      Server: [nginx/1.14.0 (Ubuntu)]
+      Set-Cookie: ['PHPSESSID=rieo6jaennn0c3irctjpu64em5; expires=Fri, 08-May-2020
+          07:38:25 GMT; Max-Age=3600; path=/; domain=magento; HttpOnly']
+      Transfer-Encoding: [chunked]
+      Vary: [Accept-Encoding]
+      X-Frame-Options: [SAMEORIGIN]
+      content-length: ['3516']
+    status: {code: 200, message: OK}
+- request:
+    body: null
+    headers:
+      Accept: ['*/*']
+      Accept-Encoding: ['gzip, deflate']
+      Connection: [keep-alive]
+      User-Agent: [python-requests/2.19.1]
+    method: GET
+    uri: http://magento/media/catalog/product//l/u/luma-yoga-strap.jpg
+  response:
+    body:
+      string: !!binary |
+        R0lGODlhAQABAIAAAP///wAAACH5BAEAAAAALAAAAAABAAEAAAICRAEAOw==
+    headers:
+      Accept-Ranges: [bytes]
+      Cache-Control: [max-age=31536000, public]
+      Connection: [keep-alive]
+      Content-Length: ['178039']
+      Content-Type: [image/jpeg]
+      Date: ['Fri, 08 May 2020 06:38:25 GMT']
+      ETag: ['"5e7e1eb8-2b777"']
+      Expires: ['Sat, 08 May 2021 06:38:25 GMT']
+      Last-Modified: ['Fri, 27 Mar 2020 15:41:44 GMT']
+      Server: [nginx/1.14.0 (Ubuntu)]
+      X-Frame-Options: [SAMEORIGIN]
+    status: {code: 200, message: OK}
+- request:
+    body: null
+    headers:
+      Accept: ['*/*']
+      Accept-Encoding: ['gzip, deflate']
+      Connection: [keep-alive]
+      User-Agent: [python-requests/2.19.1]
+    method: GET
+    uri: http://magento/index.php/rest/V1/products/24-WG087
+  response:
+    body: {string: '{"id":35,"sku":"24-WG087","name":"Sprite Yoga Strap 10 foot","attribute_set_id":13,"price":21,"status":1,"visibility":1,"type_id":"simple","created_at":"2020-03-27
+        16:06:16","updated_at":"2020-03-27 16:06:16","extension_attributes":{"website_ids":[1],"category_links":[{"position":0,"category_id":"3"},{"position":0,"category_id":"5"}],"stock_item":{"item_id":35,"product_id":35,"stock_id":1,"qty":100,"is_in_stock":true,"is_qty_decimal":false,"show_default_notification_message":false,"use_config_min_qty":true,"min_qty":0,"use_config_min_sale_qty":1,"min_sale_qty":1,"use_config_max_sale_qty":true,"max_sale_qty":10000,"use_config_backorders":true,"backorders":0,"use_config_notify_stock_qty":true,"notify_stock_qty":1,"use_config_qty_increments":true,"qty_increments":0,"use_config_enable_qty_inc":true,"enable_qty_increments":false,"use_config_manage_stock":true,"manage_stock":true,"low_stock_date":null,"is_decimal_divided":false,"stock_status_changed_auto":0}},"product_links":[{"sku":"24-WG087","link_type":"related","linked_product_sku":"24-WG083-blue","linked_product_type":"simple","position":4},{"sku":"24-WG087","link_type":"related","linked_product_sku":"24-WG085","linked_product_type":"simple","position":1},{"sku":"24-WG087","link_type":"related","linked_product_sku":"24-WG086","linked_product_type":"simple","position":2},{"sku":"24-WG087","link_type":"related","linked_product_sku":"24-WG080","linked_product_type":"bundle","position":3},{"sku":"24-WG087","link_type":"crosssell","linked_product_sku":"24-UG01","linked_product_type":"simple","position":4},{"sku":"24-WG087","link_type":"crosssell","linked_product_sku":"24-WG081-gray","linked_product_type":"simple","position":3},{"sku":"24-WG087","link_type":"crosssell","linked_product_sku":"24-WG085","linked_product_type":"simple","position":2},{"sku":"24-WG087","link_type":"crosssell","linked_product_sku":"24-WG080","linked_product_type":"bundle","position":1}],"options":[],"media_gallery_entries":[{"id":40,"media_type":"image","label":"Image","position":1,"disabled":false,"types":["image","small_image","thumbnail"],"file":"\/l\/u\/luma-yoga-strap.jpg"}],"tier_prices":[],"custom_attributes":[{"attribute_code":"image","value":"\/l\/u\/luma-yoga-strap.jpg"},{"attribute_code":"small_image","value":"\/l\/u\/luma-yoga-strap.jpg"},{"attribute_code":"thumbnail","value":"\/l\/u\/luma-yoga-strap.jpg"},{"attribute_code":"options_container","value":"container2"},{"attribute_code":"msrp_display_actual_price_type","value":"0"},{"attribute_code":"url_key","value":"sprite-yoga-strap-10-foot"},{"attribute_code":"required_options","value":"0"},{"attribute_code":"has_options","value":"0"},{"attribute_code":"tax_class_id","value":"2"},{"attribute_code":"category_ids","value":["3","5"]},{"attribute_code":"description","value":"<p>The
+        Sprite Yoga Strap is your untiring partner in demanding stretches, holds and
+        alignment routines. The strap''s 100% organic cotton fabric is woven tightly
+        to form a soft, textured yet non-slip surface. The plastic clasp buckle is
+        easily adjustable, lightweight and durable under strain.<\/p>\n<ul>\n<li>10''
+        long x 1.0\" wide.\n<li>100% soft and durable cotton.\n<li>Plastic cinch buckle
+        is easy to use.\n<li>Three natural colors made from phthalate and heavy metal
+        free dyes.\n<\/ul>"},{"attribute_code":"activity","value":"5435"},{"attribute_code":"material","value":"5459,5471"},{"attribute_code":"gender","value":"5507,5508,5511"},{"attribute_code":"category_gear","value":"5514"},{"attribute_code":"size","value":"5523"}]}'}
+    headers:
+      Cache-Control: ['no-store, no-cache, must-revalidate']
+      Connection: [keep-alive]
+      Content-Type: [application/json; charset=utf-8]
+      Date: ['Fri, 08 May 2020 06:38:26 GMT']
+      Expires: ['Thu, 19 Nov 1981 08:52:00 GMT']
+      Pragma: [no-cache]
+      Server: [nginx/1.14.0 (Ubuntu)]
+      Set-Cookie: ['PHPSESSID=3a6nk22p0l5dqd1f6h80b8gg98; expires=Fri, 08-May-2020
+          07:38:26 GMT; Max-Age=3600; path=/; domain=magento; HttpOnly']
+      Transfer-Encoding: [chunked]
+      Vary: [Accept-Encoding]
+      X-Frame-Options: [SAMEORIGIN]
+      content-length: ['3533']
+    status: {code: 200, message: OK}
+- request:
+    body: null
+    headers:
+      Accept: ['*/*']
+      Accept-Encoding: ['gzip, deflate']
+      Connection: [keep-alive]
+      User-Agent: [python-requests/2.19.1]
+    method: GET
+    uri: http://magento/index.php/rest/default/V1/products/24-WG087
+  response:
+    body: {string: '{"id":35,"sku":"24-WG087","name":"Sprite Yoga Strap 10 foot","attribute_set_id":13,"price":21,"status":1,"visibility":1,"type_id":"simple","created_at":"2020-03-27
+        16:06:16","updated_at":"2020-03-27 16:06:16","extension_attributes":{"website_ids":[1],"category_links":[{"position":0,"category_id":"3"},{"position":0,"category_id":"5"}],"stock_item":{"item_id":35,"product_id":35,"stock_id":1,"qty":100,"is_in_stock":true,"is_qty_decimal":false,"show_default_notification_message":false,"use_config_min_qty":true,"min_qty":0,"use_config_min_sale_qty":1,"min_sale_qty":1,"use_config_max_sale_qty":true,"max_sale_qty":10000,"use_config_backorders":true,"backorders":0,"use_config_notify_stock_qty":true,"notify_stock_qty":1,"use_config_qty_increments":true,"qty_increments":0,"use_config_enable_qty_inc":true,"enable_qty_increments":false,"use_config_manage_stock":true,"manage_stock":true,"low_stock_date":null,"is_decimal_divided":false,"stock_status_changed_auto":0}},"product_links":[{"sku":"24-WG087","link_type":"related","linked_product_sku":"24-WG083-blue","linked_product_type":"simple","position":4},{"sku":"24-WG087","link_type":"related","linked_product_sku":"24-WG085","linked_product_type":"simple","position":1},{"sku":"24-WG087","link_type":"related","linked_product_sku":"24-WG086","linked_product_type":"simple","position":2},{"sku":"24-WG087","link_type":"related","linked_product_sku":"24-WG080","linked_product_type":"bundle","position":3},{"sku":"24-WG087","link_type":"crosssell","linked_product_sku":"24-UG01","linked_product_type":"simple","position":4},{"sku":"24-WG087","link_type":"crosssell","linked_product_sku":"24-WG081-gray","linked_product_type":"simple","position":3},{"sku":"24-WG087","link_type":"crosssell","linked_product_sku":"24-WG085","linked_product_type":"simple","position":2},{"sku":"24-WG087","link_type":"crosssell","linked_product_sku":"24-WG080","linked_product_type":"bundle","position":1}],"options":[],"media_gallery_entries":[{"id":40,"media_type":"image","label":"Image","position":1,"disabled":false,"types":["image","small_image","thumbnail"],"file":"\/l\/u\/luma-yoga-strap.jpg"}],"tier_prices":[],"custom_attributes":[{"attribute_code":"image","value":"\/l\/u\/luma-yoga-strap.jpg"},{"attribute_code":"small_image","value":"\/l\/u\/luma-yoga-strap.jpg"},{"attribute_code":"thumbnail","value":"\/l\/u\/luma-yoga-strap.jpg"},{"attribute_code":"options_container","value":"container2"},{"attribute_code":"msrp_display_actual_price_type","value":"0"},{"attribute_code":"url_key","value":"sprite-yoga-strap-10-foot"},{"attribute_code":"required_options","value":"0"},{"attribute_code":"has_options","value":"0"},{"attribute_code":"tax_class_id","value":"2"},{"attribute_code":"category_ids","value":["3","5"]},{"attribute_code":"description","value":"<p>The
+        Sprite Yoga Strap is your untiring partner in demanding stretches, holds and
+        alignment routines. The strap''s 100% organic cotton fabric is woven tightly
+        to form a soft, textured yet non-slip surface. The plastic clasp buckle is
+        easily adjustable, lightweight and durable under strain.<\/p>\n<ul>\n<li>10''
+        long x 1.0\" wide.\n<li>100% soft and durable cotton.\n<li>Plastic cinch buckle
+        is easy to use.\n<li>Three natural colors made from phthalate and heavy metal
+        free dyes.\n<\/ul>"},{"attribute_code":"activity","value":"5435"},{"attribute_code":"material","value":"5459,5471"},{"attribute_code":"gender","value":"5507,5508,5511"},{"attribute_code":"category_gear","value":"5514"},{"attribute_code":"size","value":"5523"}]}'}
+    headers:
+      Cache-Control: ['no-store, no-cache, must-revalidate']
+      Connection: [keep-alive]
+      Content-Type: [application/json; charset=utf-8]
+      Date: ['Fri, 08 May 2020 06:38:26 GMT']
+      Expires: ['Thu, 19 Nov 1981 08:52:00 GMT']
+      Pragma: [no-cache]
+      Server: [nginx/1.14.0 (Ubuntu)]
+      Set-Cookie: ['PHPSESSID=sdsndrdvfm6v6aq1a76iero58u; expires=Fri, 08-May-2020
+          07:38:26 GMT; Max-Age=3600; path=/; domain=magento; HttpOnly']
+      Transfer-Encoding: [chunked]
+      Vary: [Accept-Encoding]
+      X-Frame-Options: [SAMEORIGIN]
+      content-length: ['3533']
+    status: {code: 200, message: OK}
+- request:
+    body: null
+    headers:
+      Accept: ['*/*']
+      Accept-Encoding: ['gzip, deflate']
+      Connection: [keep-alive]
+      User-Agent: [python-requests/2.19.1]
+    method: GET
+    uri: http://magento/media/catalog/product//l/u/luma-yoga-strap.jpg
+  response:
+    body:
+      string: !!binary |
+        R0lGODlhAQABAIAAAP///wAAACH5BAEAAAAALAAAAAABAAEAAAICRAEAOw==
+    headers:
+      Accept-Ranges: [bytes]
+      Cache-Control: [max-age=31536000, public]
+      Connection: [keep-alive]
+      Content-Length: ['178039']
+      Content-Type: [image/jpeg]
+      Date: ['Fri, 08 May 2020 06:38:26 GMT']
+      ETag: ['"5e7e1eb8-2b777"']
+      Expires: ['Sat, 08 May 2021 06:38:26 GMT']
+      Last-Modified: ['Fri, 27 Mar 2020 15:41:44 GMT']
+      Server: [nginx/1.14.0 (Ubuntu)]
+      X-Frame-Options: [SAMEORIGIN]
+    status: {code: 200, message: OK}
+- request:
+    body: null
+    headers:
+      Accept: ['*/*']
+      Accept-Encoding: ['gzip, deflate']
+      Connection: [keep-alive]
+      User-Agent: [python-requests/2.19.1]
+    method: GET
+    uri: http://magento/index.php/rest/V1/products/24-WG088
+  response:
+    body: {string: '{"id":22,"sku":"24-WG088","name":"Sprite Foam Roller","attribute_set_id":11,"price":19,"status":1,"visibility":4,"type_id":"simple","created_at":"2020-03-27
+        16:06:14","updated_at":"2020-03-27 16:06:14","extension_attributes":{"website_ids":[1],"category_links":[{"position":0,"category_id":"3"},{"position":0,"category_id":"5"}],"stock_item":{"item_id":22,"product_id":22,"stock_id":1,"qty":100,"is_in_stock":true,"is_qty_decimal":false,"show_default_notification_message":false,"use_config_min_qty":true,"min_qty":0,"use_config_min_sale_qty":1,"min_sale_qty":1,"use_config_max_sale_qty":true,"max_sale_qty":10000,"use_config_backorders":true,"backorders":0,"use_config_notify_stock_qty":true,"notify_stock_qty":1,"use_config_qty_increments":true,"qty_increments":0,"use_config_enable_qty_inc":true,"enable_qty_increments":false,"use_config_manage_stock":true,"manage_stock":true,"low_stock_date":null,"is_decimal_divided":false,"stock_status_changed_auto":0}},"product_links":[{"sku":"24-WG088","link_type":"related","linked_product_sku":"24-UG02","linked_product_type":"simple","position":4},{"sku":"24-WG088","link_type":"related","linked_product_sku":"24-UG01","linked_product_type":"simple","position":1},{"sku":"24-WG088","link_type":"related","linked_product_sku":"24-UG03","linked_product_type":"simple","position":2},{"sku":"24-WG088","link_type":"related","linked_product_sku":"24-WG080","linked_product_type":"bundle","position":3},{"sku":"24-WG088","link_type":"crosssell","linked_product_sku":"24-UG06","linked_product_type":"simple","position":4},{"sku":"24-WG088","link_type":"crosssell","linked_product_sku":"24-UG01","linked_product_type":"simple","position":2},{"sku":"24-WG088","link_type":"crosssell","linked_product_sku":"24-UG03","linked_product_type":"simple","position":1},{"sku":"24-WG088","link_type":"crosssell","linked_product_sku":"24-WG085_Group","linked_product_type":"grouped","position":3}],"options":[],"media_gallery_entries":[{"id":27,"media_type":"image","label":"Image","position":1,"disabled":false,"types":["image","small_image","thumbnail"],"file":"\/l\/u\/luma-foam-roller.jpg"}],"tier_prices":[],"custom_attributes":[{"attribute_code":"image","value":"\/l\/u\/luma-foam-roller.jpg"},{"attribute_code":"small_image","value":"\/l\/u\/luma-foam-roller.jpg"},{"attribute_code":"thumbnail","value":"\/l\/u\/luma-foam-roller.jpg"},{"attribute_code":"options_container","value":"container2"},{"attribute_code":"msrp_display_actual_price_type","value":"0"},{"attribute_code":"url_key","value":"sprite-foam-roller"},{"attribute_code":"required_options","value":"0"},{"attribute_code":"has_options","value":"0"},{"attribute_code":"tax_class_id","value":"2"},{"attribute_code":"category_ids","value":["3","5"]},{"attribute_code":"description","value":"<p>It
+        hurts so good to use the Sprite Foam Roller on achy, tired muscles for myofascial
+        massage therapy. Or you can add this fundamental piece to your Pilates and
+        yoga accouterment, or apply towards core stability, strengthening and balance
+        exercise. <\/p>\n<ul>\n<li>6'''' wide by 12'''' long.<\/li>\n<li>Safe for
+        myofascial release.<\/li>\n<li>EPP or PE foam options.<\/li>\n<li>Solid, dense,
+        closed-cell foam.<\/li>\n<\/ul>"},{"attribute_code":"activity","value":"5435,5438"},{"attribute_code":"material","value":"5469"},{"attribute_code":"gender","value":"5507,5508,5511"},{"attribute_code":"category_gear","value":"5514"}]}'}
+    headers:
+      Cache-Control: ['no-store, no-cache, must-revalidate']
+      Connection: [keep-alive]
+      Content-Type: [application/json; charset=utf-8]
+      Date: ['Fri, 08 May 2020 06:38:27 GMT']
+      Expires: ['Thu, 19 Nov 1981 08:52:00 GMT']
+      Pragma: [no-cache]
+      Server: [nginx/1.14.0 (Ubuntu)]
+      Set-Cookie: ['PHPSESSID=74n3prbv0ig99ub920gcp5nupj; expires=Fri, 08-May-2020
+          07:38:27 GMT; Max-Age=3600; path=/; domain=magento; HttpOnly']
+      Transfer-Encoding: [chunked]
+      Vary: [Accept-Encoding]
+      X-Frame-Options: [SAMEORIGIN]
+      content-length: ['3408']
+    status: {code: 200, message: OK}
+- request:
+    body: null
+    headers:
+      Accept: ['*/*']
+      Accept-Encoding: ['gzip, deflate']
+      Connection: [keep-alive]
+      User-Agent: [python-requests/2.19.1]
+    method: GET
+    uri: http://magento/index.php/rest/default/V1/products/24-WG088
+  response:
+    body: {string: '{"id":22,"sku":"24-WG088","name":"Sprite Foam Roller","attribute_set_id":11,"price":19,"status":1,"visibility":4,"type_id":"simple","created_at":"2020-03-27
+        16:06:14","updated_at":"2020-03-27 16:06:14","extension_attributes":{"website_ids":[1],"category_links":[{"position":0,"category_id":"3"},{"position":0,"category_id":"5"}],"stock_item":{"item_id":22,"product_id":22,"stock_id":1,"qty":100,"is_in_stock":true,"is_qty_decimal":false,"show_default_notification_message":false,"use_config_min_qty":true,"min_qty":0,"use_config_min_sale_qty":1,"min_sale_qty":1,"use_config_max_sale_qty":true,"max_sale_qty":10000,"use_config_backorders":true,"backorders":0,"use_config_notify_stock_qty":true,"notify_stock_qty":1,"use_config_qty_increments":true,"qty_increments":0,"use_config_enable_qty_inc":true,"enable_qty_increments":false,"use_config_manage_stock":true,"manage_stock":true,"low_stock_date":null,"is_decimal_divided":false,"stock_status_changed_auto":0}},"product_links":[{"sku":"24-WG088","link_type":"related","linked_product_sku":"24-UG02","linked_product_type":"simple","position":4},{"sku":"24-WG088","link_type":"related","linked_product_sku":"24-UG01","linked_product_type":"simple","position":1},{"sku":"24-WG088","link_type":"related","linked_product_sku":"24-UG03","linked_product_type":"simple","position":2},{"sku":"24-WG088","link_type":"related","linked_product_sku":"24-WG080","linked_product_type":"bundle","position":3},{"sku":"24-WG088","link_type":"crosssell","linked_product_sku":"24-UG06","linked_product_type":"simple","position":4},{"sku":"24-WG088","link_type":"crosssell","linked_product_sku":"24-UG01","linked_product_type":"simple","position":2},{"sku":"24-WG088","link_type":"crosssell","linked_product_sku":"24-UG03","linked_product_type":"simple","position":1},{"sku":"24-WG088","link_type":"crosssell","linked_product_sku":"24-WG085_Group","linked_product_type":"grouped","position":3}],"options":[],"media_gallery_entries":[{"id":27,"media_type":"image","label":"Image","position":1,"disabled":false,"types":["image","small_image","thumbnail"],"file":"\/l\/u\/luma-foam-roller.jpg"}],"tier_prices":[],"custom_attributes":[{"attribute_code":"image","value":"\/l\/u\/luma-foam-roller.jpg"},{"attribute_code":"small_image","value":"\/l\/u\/luma-foam-roller.jpg"},{"attribute_code":"thumbnail","value":"\/l\/u\/luma-foam-roller.jpg"},{"attribute_code":"options_container","value":"container2"},{"attribute_code":"msrp_display_actual_price_type","value":"0"},{"attribute_code":"url_key","value":"sprite-foam-roller"},{"attribute_code":"required_options","value":"0"},{"attribute_code":"has_options","value":"0"},{"attribute_code":"tax_class_id","value":"2"},{"attribute_code":"category_ids","value":["3","5"]},{"attribute_code":"description","value":"<p>It
+        hurts so good to use the Sprite Foam Roller on achy, tired muscles for myofascial
+        massage therapy. Or you can add this fundamental piece to your Pilates and
+        yoga accouterment, or apply towards core stability, strengthening and balance
+        exercise. <\/p>\n<ul>\n<li>6'''' wide by 12'''' long.<\/li>\n<li>Safe for
+        myofascial release.<\/li>\n<li>EPP or PE foam options.<\/li>\n<li>Solid, dense,
+        closed-cell foam.<\/li>\n<\/ul>"},{"attribute_code":"activity","value":"5435,5438"},{"attribute_code":"material","value":"5469"},{"attribute_code":"gender","value":"5507,5508,5511"},{"attribute_code":"category_gear","value":"5514"}]}'}
+    headers:
+      Cache-Control: ['no-store, no-cache, must-revalidate']
+      Connection: [keep-alive]
+      Content-Type: [application/json; charset=utf-8]
+      Date: ['Fri, 08 May 2020 06:38:27 GMT']
+      Expires: ['Thu, 19 Nov 1981 08:52:00 GMT']
+      Pragma: [no-cache]
+      Server: [nginx/1.14.0 (Ubuntu)]
+      Set-Cookie: ['PHPSESSID=amvn9aj4tqlu83jvuo81q8g45v; expires=Fri, 08-May-2020
+          07:38:27 GMT; Max-Age=3600; path=/; domain=magento; HttpOnly']
+      Transfer-Encoding: [chunked]
+      Vary: [Accept-Encoding]
+      X-Frame-Options: [SAMEORIGIN]
+      content-length: ['3408']
+    status: {code: 200, message: OK}
+- request:
+    body: null
+    headers:
+      Accept: ['*/*']
+      Accept-Encoding: ['gzip, deflate']
+      Connection: [keep-alive]
+      User-Agent: [python-requests/2.19.1]
+    method: GET
+    uri: http://magento/media/catalog/product//l/u/luma-foam-roller.jpg
+  response:
+    body:
+      string: !!binary |
+        R0lGODlhAQABAIAAAP///wAAACH5BAEAAAAALAAAAAABAAEAAAICRAEAOw==
+    headers:
+      Accept-Ranges: [bytes]
+      Cache-Control: [max-age=31536000, public]
+      Connection: [keep-alive]
+      Content-Length: ['53637']
+      Content-Type: [image/jpeg]
+      Date: ['Fri, 08 May 2020 06:38:27 GMT']
+      ETag: ['"5e7e1eb8-d185"']
+      Expires: ['Sat, 08 May 2021 06:38:27 GMT']
+      Last-Modified: ['Fri, 27 Mar 2020 15:41:44 GMT']
+      Server: [nginx/1.14.0 (Ubuntu)]
+      X-Frame-Options: [SAMEORIGIN]
+    status: {code: 200, message: OK}
+version: 1

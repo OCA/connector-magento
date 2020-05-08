@@ -111,7 +111,6 @@ class TestSaleOrder(MagentoSyncTestCase):
         })
         self.env['delivery.carrier'].create({
             'name': 'ups_GND',
-            'partner_id': self.env.ref('base.main_partner').id,
             'product_id': product.id,
             'magento_code': 'ups_GND',
             'magento_carrier_code': 'ups_GND',

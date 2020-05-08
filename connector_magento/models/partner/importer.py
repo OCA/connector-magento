@@ -61,16 +61,21 @@ class PartnerImportMapper(Component):
 
     @mapping
     def names(self, record):
+        """ Middlename not always present in Magento 2 """
+        # TODO Check on first run
         parts = [part for part in (record['firstname'],
-                                   record['middlename'],
+                                   record.get('middlename'),
                                    record['lastname']) if part]
         return {'name': ' '.join(parts)}
 
     @mapping
     def customer_group_id(self, record):
         # import customer groups
-        binder = self.binder_for(model='magento.res.partner.category')
-        category = binder.to_internal(record['group_id'], unwrap=True)
+        if record['group_id'] == 0:
+            category = self.env.ref('connector_magento.category_no_account')
+        else:
+            binder = self.binder_for(model='magento.res.partner.category')
+            category = binder.to_internal(record['group_id'], unwrap=True)
 
         if not category:
             raise MappingError("The partner category with "
@@ -196,19 +201,31 @@ class PartnerAddressBook(Component):
             importer = self.component(usage='record.importer')
             importer.run(address_id, address_infos=infos)
 
-    def _get_address_infos(self, magento_partner_id, partner_binding_id):
-        adapter = self.component(usage='backend.adapter')
-        mag_address_ids = adapter.search({'customer_id':
-                                          {'eq': magento_partner_id}})
-        if not mag_address_ids:
-            return
-        for address_id in mag_address_ids:
-            magento_record = adapter.read(address_id)
+    def _read_addresses(self, magento_partner_id):
+        """ Provide addresses
+        - Magento 1.x: read the addresses from the address repository
+        - Magento 2.x: addresses are included in the partner record
+        """
+        if self.collection.version == '1.7':
+            adapter = self.component(usage='backend.adapter')
+            mag_address_ids = adapter.search({'customer_id':
+                                              {'eq': magento_partner_id}})
+            return [(address_id, adapter.read(address_id))
+                    for address_id in mag_address_ids]
 
+        with self.collection.work_on('magento.res.partner') as partner:
+            adapter = partner.component(usage='backend.adapter')
+            record = adapter.read(magento_partner_id)
+        return [(addr['id'], addr) for addr in record['addresses']]
+
+    def _get_address_infos(self, magento_partner_id, partner_binding_id):
+        for address_id, magento_record in self._read_addresses(
+                magento_partner_id):
             # defines if the billing address is merged with the partner
             # or imported as a standalone contact
             merge = False
-            if magento_record.get('is_default_billing'):
+            if (magento_record.get('is_default_billing')  # Magento 1.x
+                    or magento_record.get('default_billing')):  # Magento 2.x
                 binding_model = self.env['magento.res.partner']
                 partner_binding = binding_model.browse(partner_binding_id)
                 if magento_record.get('company'):
@@ -275,10 +292,15 @@ class BaseAddressImportMapper(AbstractComponent):
 
     @mapping
     def street(self, record):
+        """ 'street' can be presented as a list in Magento2 """
         value = record['street']
         if not value:
             return {}
-        lines = [line.strip() for line in value.split('\n') if line.strip()]
+        if isinstance(value, list):
+            lines = value
+        else:
+            lines = [line.strip() for line in value.split('\n')
+                     if line.strip()]
         if len(lines) == 1:
             result = {'street': lines[0], 'street2': False}
         elif len(lines) >= 2:
@@ -289,7 +311,8 @@ class BaseAddressImportMapper(AbstractComponent):
 
     @mapping
     def title(self, record):
-        prefix = record['prefix']
+        """ Prefix is optionally present in Magento 2 """
+        prefix = record.get('prefix')
         if not prefix:
             return
         title = self.env['res.partner.title'].search(
@@ -412,11 +435,28 @@ class AddressImportMapper(Component):
         fields += [
             ('created_at', 'created_at'),
             ('updated_at', 'updated_at'),
-            ('is_default_billing', 'is_default_billing'),
-            ('is_default_shipping', 'is_default_shipping'),
             ('company', 'company'),
         ]
         return fields
+
+    @staticmethod
+    def is_billing(record):
+        return (
+            record.get('default_billing')  # Magento 2.x
+            or record.get('is_default_billing'))  # Magento 1.x
+
+    @staticmethod
+    def is_shipping(record):
+        return (
+            record.get('default_shipping')  # Magento 2.x
+            or record.get('is_default_shipping'))  # Magento 1.x
+
+    @mapping
+    def default_billing(self, record):
+        return {'is_default_billing': self.is_billing(record)}
+
+    def default_shipping(self, record):
+        return {'default_shipping': self.is_shipping(record)}
 
     @mapping
     def names(self, record):
@@ -427,9 +467,9 @@ class AddressImportMapper(Component):
 
     @mapping
     def type(self, record):
-        if record.get('is_default_billing'):
+        if self.is_billing(record):
             address_type = 'invoice'
-        elif record.get('is_default_shipping'):
+        elif self.is_shipping(record):
             address_type = 'delivery'
         else:
             address_type = 'other'
