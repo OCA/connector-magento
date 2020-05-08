@@ -35,7 +35,7 @@ class MagentoPickingExporter(Component):
         item_qty = {}
         # get product and quantities to ship from the picking
         for line in binding.move_lines:
-            sale_line = line.procurement_id.sale_line_id
+            sale_line = line.sale_line_id
             if not sale_line.magento_bind_ids:
                 continue
             magento_sale_line = next(
@@ -64,36 +64,54 @@ class MagentoPickingExporter(Component):
         """
         Export the picking to Magento
         """
-        if binding.external_id:
-            return _('Already exported')
-        picking_method = binding.picking_method
-        if picking_method == 'complete':
-            args = self._get_args(binding)
-        elif picking_method == 'partial':
+        def get_lines_info():
             lines_info = self._get_lines_info(binding)
             if not lines_info:
-                raise NothingToDoJob(_('Canceled: the delivery order does not '
-                                       'contain lines from the original '
-                                       'sale order.'))
-            args = self._get_args(binding, lines_info)
-        else:
-            raise ValueError("Wrong value for picking_method, authorized "
-                             "values are 'partial' or 'complete', "
-                             "found: %s" % picking_method)
-        try:
-            external_id = self.backend_adapter.create(*args)
-        except xmlrpc.client.Fault as err:
-            # When the shipping is already created on Magento, it returns:
-            # <Fault 102: u"Impossible de faire
-            # l\'exp\xe9dition de la commande.">
-            if err.faultCode == 102:
-                raise NothingToDoJob('Canceled: the delivery order already '
-                                     'exists on Magento (fault 102).')
+                raise NothingToDoJob(
+                    _('Canceled: the delivery order does not '
+                      'contain lines from the original sale order.'))
+            return lines_info
+
+        if binding.external_id:
+            return _('Already exported')
+
+        if self.collection.version == '1.7':
+            picking_method = binding.picking_method
+            if picking_method == 'complete':
+                args = self._get_args(binding)
+            elif picking_method == 'partial':
+                lines_info = get_lines_info()
+                args = self._get_args(binding, lines_info)
             else:
+                raise ValueError("Wrong value for picking_method, authorized "
+                                 "values are 'partial' or 'complete', "
+                                 "found: %s" % picking_method)
+            try:
+                external_id = self.backend_adapter.create(*args)
+            except xmlrpc.client.Fault as err:
+                # When the shipping is already created on Magento, it returns:
+                # <Fault 102: u"Impossible de faire
+                # l\'exp\xe9dition de la commande.">
+                if err.faultCode == 102:
+                    raise NothingToDoJob(
+                        'Canceled: the delivery order already '
+                        'exists on Magento (fault 102).')
                 raise
-        else:
-            self.binder.bind(external_id, binding)
-            # ensure that we store the external ID
-            if not odoo.tools.config['test_enable']:
-                # pylint: disable=invalid-commit
-                self.env.cr.commit()  # noqa
+
+        else:  # Magento 2.x
+            arguments = {
+                'items': [{
+                    'order_item_id': key,
+                    'qty': val,
+                } for key, val in get_lines_info().items()]
+            }
+            external_id = self.backend_adapter._call(
+                'order/%s/ship' %
+                binding.sale_id.magento_bind_ids[0].external_id,
+                arguments, http_method='post')
+
+        self.binder.bind(external_id, binding)
+        # ensure that we store the external ID
+        if not odoo.tools.config['test_enable']:
+            # pylint: disable=invalid-commit
+            self.env.cr.commit()  # noqa

@@ -66,4 +66,5 @@ class StoreAdapter(Component):
     _apply_on = 'magento.store'
 
     _magento_model = 'ol_groups'
+    _magento2_model = 'store/storeGroups'
     _admin_path = 'system_store/editGroup/group_id/{id}'

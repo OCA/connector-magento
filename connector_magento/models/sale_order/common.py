@@ -239,11 +239,17 @@ class SaleOrderAdapter(Component):
     _apply_on = 'magento.sale.order'
 
     _magento_model = 'sales_order'
+    _magento2_model = 'orders'
+    _magento2_search = 'orders'
+    _magento2_key = 'entity_id'
     _admin_path = '{model}/view/order_id/{id}'
+    _admin2_path = 'sales/order/view/order_id/{id}'
 
-    def _call(self, method, arguments):
+    def _call(self, method, arguments, http_method=None, storeview=None):
         try:
-            return super(SaleOrderAdapter, self)._call(method, arguments)
+            return super(SaleOrderAdapter, self)._call(
+                method, arguments, http_method=http_method,
+                storeview=storeview)
         except xmlrpc.client.Fault as err:
             # this is the error in the Magento API
             # when the sales order does not exist
@@ -271,10 +277,14 @@ class SaleOrderAdapter(Component):
         if magento_storeview_ids is not None:
             filters['store_id'] = {'in': magento_storeview_ids}
 
-        arguments = {'imported': False,
-                     # 'limit': 200,
-                     'filters': filters,
-                     }
+        if self.collection.version == '1.7':
+            arguments = {
+                'imported': False,
+                # 'limit': 200,
+                'filters': filters,
+            }
+        else:
+            arguments = filters
         return super(SaleOrderAdapter, self).search(arguments)
 
     def read(self, external_id, attributes=None):
@@ -283,11 +293,16 @@ class SaleOrderAdapter(Component):
         :rtype: dict
         """
         # pylint: disable=method-required-super
-        record = self._call('%s.info' % self._magento_model,
-                            [external_id, attributes])
-        return record
+        if self.collection.version == '1.7':
+            return self._call('%s.info' % self._magento_model,
+                              [external_id, attributes])
+        return super(SaleOrderAdapter, self).read(
+            external_id, attributes=attributes)
 
     def get_parent(self, external_id):
+        if self.collection.version == '2.0':
+            res = self.read(external_id)
+            return res.get('relation_parent_id')
         return self._call('%s.get_parent' % self._magento_model,
                           [external_id])
 
