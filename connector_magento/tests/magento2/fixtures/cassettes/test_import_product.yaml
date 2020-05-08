@@ -1,0 +1,364 @@
+interactions:
+- request:
+    body: null
+    headers:
+      Accept: ['*/*']
+      Accept-Encoding: ['gzip, deflate']
+      Connection: [keep-alive]
+      User-Agent: [python-requests/2.19.1]
+    method: GET
+    uri: http://magento/index.php/rest/V1/products/24-WG02
+  response:
+    body: {string: '{"id":44,"sku":"24-WG02","name":"Didi Sport Watch","attribute_set_id":11,"price":92,"status":1,"visibility":4,"type_id":"simple","created_at":"2020-03-27
+        16:06:17","updated_at":"2020-03-27 16:06:17","extension_attributes":{"website_ids":[1],"category_links":[{"position":0,"category_id":"3"},{"position":0,"category_id":"7"},{"position":0,"category_id":"6"},{"position":0,"category_id":"8"}],"stock_item":{"item_id":44,"product_id":44,"stock_id":1,"qty":100,"is_in_stock":true,"is_qty_decimal":false,"show_default_notification_message":false,"use_config_min_qty":true,"min_qty":0,"use_config_min_sale_qty":1,"min_sale_qty":1,"use_config_max_sale_qty":true,"max_sale_qty":10000,"use_config_backorders":true,"backorders":0,"use_config_notify_stock_qty":true,"notify_stock_qty":1,"use_config_qty_increments":true,"qty_increments":0,"use_config_enable_qty_inc":true,"enable_qty_increments":false,"use_config_manage_stock":true,"manage_stock":true,"low_stock_date":null,"is_decimal_divided":false,"stock_status_changed_auto":0}},"product_links":[],"options":[],"media_gallery_entries":[{"id":50,"media_type":"image","label":"Image","position":1,"disabled":false,"types":["image","small_image","thumbnail"],"file":"\/w\/g\/wg02-bk-0.jpg"}],"tier_prices":[],"custom_attributes":[{"attribute_code":"image","value":"\/w\/g\/wg02-bk-0.jpg"},{"attribute_code":"small_image","value":"\/w\/g\/wg02-bk-0.jpg"},{"attribute_code":"thumbnail","value":"\/w\/g\/wg02-bk-0.jpg"},{"attribute_code":"options_container","value":"container2"},{"attribute_code":"msrp_display_actual_price_type","value":"0"},{"attribute_code":"url_key","value":"didi-sport-watch"},{"attribute_code":"required_options","value":"0"},{"attribute_code":"has_options","value":"0"},{"attribute_code":"tax_class_id","value":"2"},{"attribute_code":"category_ids","value":["3","7","6","8"]},{"attribute_code":"description","value":"<p>The
+        Didi Sport Watch helps you keep your workout plan down to the second. The
+        vertical, digital face looks sleek and futuristic. This watch is programmed
+        with tons of helpful features such as a timer, an alarm clock, a pedometer,
+        and more to help make your excercise more productive.<\/p>\n<ul>\n<li>Digital
+        display.<\/li>\n<li>LED backlight.<\/li>\n<li>Rubber strap with buckle clasp.<\/li>\n<li>1-year
+        limited warranty.<\/li>\n<\/ul>"},{"attribute_code":"activity","value":"5443,5438"},{"attribute_code":"material","value":"5470,5472,5475"},{"attribute_code":"gender","value":"5508"},{"attribute_code":"category_gear","value":"5513,5514,5517"},{"attribute_code":"new","value":"1"}]}'}
+    headers:
+      Cache-Control: ['no-store, no-cache, must-revalidate']
+      Connection: [keep-alive]
+      Content-Type: [application/json; charset=utf-8]
+      Date: ['Fri, 08 May 2020 06:38:17 GMT']
+      Expires: ['Thu, 19 Nov 1981 08:52:00 GMT']
+      Pragma: [no-cache]
+      Server: [nginx/1.14.0 (Ubuntu)]
+      Set-Cookie: ['PHPSESSID=si727eludhoqa2pbpjkghhsln7; expires=Fri, 08-May-2020
+          07:38:17 GMT; Max-Age=3600; path=/; domain=magento; HttpOnly']
+      Transfer-Encoding: [chunked]
+      Vary: [Accept-Encoding]
+      X-Frame-Options: [SAMEORIGIN]
+      content-length: ['2568']
+    status: {code: 200, message: OK}
+- request:
+    body: null
+    headers:
+      Accept: ['*/*']
+      Accept-Encoding: ['gzip, deflate']
+      Connection: [keep-alive]
+      User-Agent: [python-requests/2.19.1]
+    method: GET
+    uri: http://magento/index.php/rest/V1/categories/3
+  response:
+    body: {string: '{"id":3,"parent_id":2,"name":"Gear","is_active":true,"position":4,"level":2,"children":"4,5,6","created_at":"2020-03-27
+        16:06:12","updated_at":"2020-03-27 16:06:12","path":"1\/2\/3","available_sort_by":[],"include_in_menu":true,"custom_attributes":[{"attribute_code":"display_mode","value":"PAGE"},{"attribute_code":"is_anchor","value":"0"},{"attribute_code":"path","value":"1\/2\/3"},{"attribute_code":"children_count","value":"3"},{"attribute_code":"url_key","value":"gear"},{"attribute_code":"url_path","value":"gear"}]}'}
+    headers:
+      Cache-Control: ['no-store, no-cache, must-revalidate']
+      Connection: [keep-alive]
+      Content-Type: [application/json; charset=utf-8]
+      Date: ['Fri, 08 May 2020 06:38:17 GMT']
+      Expires: ['Thu, 19 Nov 1981 08:52:00 GMT']
+      Pragma: [no-cache]
+      Server: [nginx/1.14.0 (Ubuntu)]
+      Set-Cookie: ['PHPSESSID=9id13rrteiti1jcm96o3c6etb5; expires=Fri, 08-May-2020
+          07:38:17 GMT; Max-Age=3600; path=/; domain=magento; HttpOnly']
+      Transfer-Encoding: [chunked]
+      Vary: [Accept-Encoding]
+      X-Frame-Options: [SAMEORIGIN]
+      content-length: ['523']
+    status: {code: 200, message: OK}
+- request:
+    body: null
+    headers:
+      Accept: ['*/*']
+      Accept-Encoding: ['gzip, deflate']
+      Connection: [keep-alive]
+      User-Agent: [python-requests/2.19.1]
+    method: GET
+    uri: http://magento/index.php/rest/V1/categories/2
+  response:
+    body: {string: '{"id":2,"parent_id":1,"name":"Default Category","is_active":true,"position":1,"level":1,"children":"3,9,11,20,37,38","created_at":"2020-03-27
+        15:25:28","updated_at":"2020-04-24 10:01:36","path":"1\/2","available_sort_by":[],"include_in_menu":true,"custom_attributes":[{"attribute_code":"display_mode","value":"PRODUCTS"},{"attribute_code":"path","value":"1\/2"},{"attribute_code":"children_count","value":"39"}]}'}
+    headers:
+      Cache-Control: ['no-store, no-cache, must-revalidate']
+      Connection: [keep-alive]
+      Content-Type: [application/json; charset=utf-8]
+      Date: ['Fri, 08 May 2020 06:38:17 GMT']
+      Expires: ['Thu, 19 Nov 1981 08:52:00 GMT']
+      Pragma: [no-cache]
+      Server: [nginx/1.14.0 (Ubuntu)]
+      Set-Cookie: ['PHPSESSID=dj8radg77uam0noe586qcmjk4v; expires=Fri, 08-May-2020
+          07:38:17 GMT; Max-Age=3600; path=/; domain=magento; HttpOnly']
+      Transfer-Encoding: [chunked]
+      Vary: [Accept-Encoding]
+      X-Frame-Options: [SAMEORIGIN]
+      content-length: ['412']
+    status: {code: 200, message: OK}
+- request:
+    body: null
+    headers:
+      Accept: ['*/*']
+      Accept-Encoding: ['gzip, deflate']
+      Connection: [keep-alive]
+      User-Agent: [python-requests/2.19.1]
+    method: GET
+    uri: http://magento/index.php/rest/V1/categories/1
+  response:
+    body: {string: '{"id":1,"parent_id":0,"name":"Root Catalog","position":0,"level":0,"children":"2","created_at":"2020-03-27
+        15:25:28","updated_at":"2020-04-24 10:01:36","path":"1","available_sort_by":[],"include_in_menu":true,"custom_attributes":[{"attribute_code":"path","value":"1"},{"attribute_code":"children_count","value":"40"}]}'}
+    headers:
+      Cache-Control: ['no-store, no-cache, must-revalidate']
+      Connection: [keep-alive]
+      Content-Type: [application/json; charset=utf-8]
+      Date: ['Fri, 08 May 2020 06:38:17 GMT']
+      Expires: ['Thu, 19 Nov 1981 08:52:00 GMT']
+      Pragma: [no-cache]
+      Server: [nginx/1.14.0 (Ubuntu)]
+      Set-Cookie: ['PHPSESSID=run5sqfvg7gvvaqld4l7m5un3h; expires=Fri, 08-May-2020
+          07:38:17 GMT; Max-Age=3600; path=/; domain=magento; HttpOnly']
+      Transfer-Encoding: [chunked]
+      Vary: [Accept-Encoding]
+      X-Frame-Options: [SAMEORIGIN]
+      content-length: ['318']
+    status: {code: 200, message: OK}
+- request:
+    body: null
+    headers:
+      Accept: ['*/*']
+      Accept-Encoding: ['gzip, deflate']
+      Connection: [keep-alive]
+      User-Agent: [python-requests/2.19.1]
+    method: GET
+    uri: http://magento/index.php/rest/default/V1/categories/1
+  response:
+    body: {string: '{"id":1,"parent_id":0,"name":"Root Catalog","position":0,"level":0,"children":"2","created_at":"2020-03-27
+        15:25:28","updated_at":"2020-04-24 10:01:36","path":"1","available_sort_by":[],"include_in_menu":true,"custom_attributes":[{"attribute_code":"path","value":"1"},{"attribute_code":"children_count","value":"40"}]}'}
+    headers:
+      Cache-Control: ['no-store, no-cache, must-revalidate']
+      Connection: [keep-alive]
+      Content-Type: [application/json; charset=utf-8]
+      Date: ['Fri, 08 May 2020 06:38:17 GMT']
+      Expires: ['Thu, 19 Nov 1981 08:52:00 GMT']
+      Pragma: [no-cache]
+      Server: [nginx/1.14.0 (Ubuntu)]
+      Set-Cookie: ['PHPSESSID=os5s4qquegsqd2hc43iquvoki6; expires=Fri, 08-May-2020
+          07:38:17 GMT; Max-Age=3600; path=/; domain=magento; HttpOnly']
+      Transfer-Encoding: [chunked]
+      Vary: [Accept-Encoding]
+      X-Frame-Options: [SAMEORIGIN]
+      content-length: ['318']
+    status: {code: 200, message: OK}
+- request:
+    body: null
+    headers:
+      Accept: ['*/*']
+      Accept-Encoding: ['gzip, deflate']
+      Connection: [keep-alive]
+      User-Agent: [python-requests/2.19.1]
+    method: GET
+    uri: http://magento/index.php/rest/default/V1/categories/2
+  response:
+    body: {string: '{"id":2,"parent_id":1,"name":"Default Category","is_active":true,"position":1,"level":1,"children":"3,9,11,20,37,38","created_at":"2020-03-27
+        15:25:28","updated_at":"2020-04-24 10:01:36","path":"1\/2","available_sort_by":[],"include_in_menu":true,"custom_attributes":[{"attribute_code":"display_mode","value":"PRODUCTS"},{"attribute_code":"path","value":"1\/2"},{"attribute_code":"children_count","value":"39"}]}'}
+    headers:
+      Cache-Control: ['no-store, no-cache, must-revalidate']
+      Connection: [keep-alive]
+      Content-Type: [application/json; charset=utf-8]
+      Date: ['Fri, 08 May 2020 06:38:17 GMT']
+      Expires: ['Thu, 19 Nov 1981 08:52:00 GMT']
+      Pragma: [no-cache]
+      Server: [nginx/1.14.0 (Ubuntu)]
+      Set-Cookie: ['PHPSESSID=5kc9k1a497ahmtnsbjf75af83a; expires=Fri, 08-May-2020
+          07:38:17 GMT; Max-Age=3600; path=/; domain=magento; HttpOnly']
+      Transfer-Encoding: [chunked]
+      Vary: [Accept-Encoding]
+      X-Frame-Options: [SAMEORIGIN]
+      content-length: ['412']
+    status: {code: 200, message: OK}
+- request:
+    body: null
+    headers:
+      Accept: ['*/*']
+      Accept-Encoding: ['gzip, deflate']
+      Connection: [keep-alive]
+      User-Agent: [python-requests/2.19.1]
+    method: GET
+    uri: http://magento/index.php/rest/default/V1/categories/3
+  response:
+    body: {string: '{"id":3,"parent_id":2,"name":"Gear","is_active":true,"position":4,"level":2,"children":"4,5,6","created_at":"2020-03-27
+        16:06:12","updated_at":"2020-03-27 16:06:12","path":"1\/2\/3","available_sort_by":[],"include_in_menu":true,"custom_attributes":[{"attribute_code":"display_mode","value":"PAGE"},{"attribute_code":"is_anchor","value":"0"},{"attribute_code":"path","value":"1\/2\/3"},{"attribute_code":"children_count","value":"3"},{"attribute_code":"url_key","value":"gear"},{"attribute_code":"url_path","value":"gear"}]}'}
+    headers:
+      Cache-Control: ['no-store, no-cache, must-revalidate']
+      Connection: [keep-alive]
+      Content-Type: [application/json; charset=utf-8]
+      Date: ['Fri, 08 May 2020 06:38:18 GMT']
+      Expires: ['Thu, 19 Nov 1981 08:52:00 GMT']
+      Pragma: [no-cache]
+      Server: [nginx/1.14.0 (Ubuntu)]
+      Set-Cookie: ['PHPSESSID=cm04c062u4gri1uh0darp9bqrg; expires=Fri, 08-May-2020
+          07:38:18 GMT; Max-Age=3600; path=/; domain=magento; HttpOnly']
+      Transfer-Encoding: [chunked]
+      Vary: [Accept-Encoding]
+      X-Frame-Options: [SAMEORIGIN]
+      content-length: ['523']
+    status: {code: 200, message: OK}
+- request:
+    body: null
+    headers:
+      Accept: ['*/*']
+      Accept-Encoding: ['gzip, deflate']
+      Connection: [keep-alive]
+      User-Agent: [python-requests/2.19.1]
+    method: GET
+    uri: http://magento/index.php/rest/V1/categories/7
+  response:
+    body: {string: '{"id":7,"parent_id":2,"name":"Collections","is_active":false,"position":5,"level":2,"children":"34,35,36,39,40,8","created_at":"2020-03-27
+        16:06:12","updated_at":"2020-03-27 16:12:21","path":"1\/2\/7","available_sort_by":[],"include_in_menu":false,"custom_attributes":[{"attribute_code":"display_mode","value":"PAGE"},{"attribute_code":"is_anchor","value":"0"},{"attribute_code":"path","value":"1\/2\/7"},{"attribute_code":"children_count","value":"6"},{"attribute_code":"url_key","value":"collections"},{"attribute_code":"url_path","value":"collections"}]}'}
+    headers:
+      Cache-Control: ['no-store, no-cache, must-revalidate']
+      Connection: [keep-alive]
+      Content-Type: [application/json; charset=utf-8]
+      Date: ['Fri, 08 May 2020 06:38:18 GMT']
+      Expires: ['Thu, 19 Nov 1981 08:52:00 GMT']
+      Pragma: [no-cache]
+      Server: [nginx/1.14.0 (Ubuntu)]
+      Set-Cookie: ['PHPSESSID=v0v1fgd7p3mklrqk5gqi9qrg6j; expires=Fri, 08-May-2020
+          07:38:18 GMT; Max-Age=3600; path=/; domain=magento; HttpOnly']
+      Transfer-Encoding: [chunked]
+      Vary: [Accept-Encoding]
+      X-Frame-Options: [SAMEORIGIN]
+      content-length: ['557']
+    status: {code: 200, message: OK}
+- request:
+    body: null
+    headers:
+      Accept: ['*/*']
+      Accept-Encoding: ['gzip, deflate']
+      Connection: [keep-alive]
+      User-Agent: [python-requests/2.19.1]
+    method: GET
+    uri: http://magento/index.php/rest/default/V1/categories/7
+  response:
+    body: {string: '{"id":7,"parent_id":2,"name":"Collections","is_active":false,"position":5,"level":2,"children":"34,35,36,39,40,8","created_at":"2020-03-27
+        16:06:12","updated_at":"2020-03-27 16:12:21","path":"1\/2\/7","available_sort_by":[],"include_in_menu":false,"custom_attributes":[{"attribute_code":"display_mode","value":"PAGE"},{"attribute_code":"is_anchor","value":"0"},{"attribute_code":"path","value":"1\/2\/7"},{"attribute_code":"children_count","value":"6"},{"attribute_code":"url_key","value":"collections"},{"attribute_code":"url_path","value":"collections"}]}'}
+    headers:
+      Cache-Control: ['no-store, no-cache, must-revalidate']
+      Connection: [keep-alive]
+      Content-Type: [application/json; charset=utf-8]
+      Date: ['Fri, 08 May 2020 06:38:18 GMT']
+      Expires: ['Thu, 19 Nov 1981 08:52:00 GMT']
+      Pragma: [no-cache]
+      Server: [nginx/1.14.0 (Ubuntu)]
+      Set-Cookie: ['PHPSESSID=np18kk62ul3u8slpjgh3kc9ngr; expires=Fri, 08-May-2020
+          07:38:18 GMT; Max-Age=3600; path=/; domain=magento; HttpOnly']
+      Transfer-Encoding: [chunked]
+      Vary: [Accept-Encoding]
+      X-Frame-Options: [SAMEORIGIN]
+      content-length: ['557']
+    status: {code: 200, message: OK}
+- request:
+    body: null
+    headers:
+      Accept: ['*/*']
+      Accept-Encoding: ['gzip, deflate']
+      Connection: [keep-alive]
+      User-Agent: [python-requests/2.19.1]
+    method: GET
+    uri: http://magento/index.php/rest/V1/categories/8
+  response:
+    body: {string: '{"id":8,"parent_id":7,"name":"New Luma Yoga Collection","is_active":true,"position":1,"level":3,"children":"","created_at":"2020-03-27
+        16:06:12","updated_at":"2020-03-27 16:06:12","path":"1\/2\/7\/8","available_sort_by":[],"include_in_menu":false,"custom_attributes":[{"attribute_code":"is_anchor","value":"1"},{"attribute_code":"path","value":"1\/2\/7\/8"},{"attribute_code":"children_count","value":"0"},{"attribute_code":"url_key","value":"yoga-new"},{"attribute_code":"url_path","value":"collections\/yoga-new"}]}'}
+    headers:
+      Cache-Control: ['no-store, no-cache, must-revalidate']
+      Connection: [keep-alive]
+      Content-Type: [application/json; charset=utf-8]
+      Date: ['Fri, 08 May 2020 06:38:18 GMT']
+      Expires: ['Thu, 19 Nov 1981 08:52:00 GMT']
+      Pragma: [no-cache]
+      Server: [nginx/1.14.0 (Ubuntu)]
+      Set-Cookie: ['PHPSESSID=hakon6p2sa5i026448p4ldsom2; expires=Fri, 08-May-2020
+          07:38:18 GMT; Max-Age=3600; path=/; domain=magento; HttpOnly']
+      Transfer-Encoding: [chunked]
+      Vary: [Accept-Encoding]
+      X-Frame-Options: [SAMEORIGIN]
+      content-length: ['517']
+    status: {code: 200, message: OK}
+- request:
+    body: null
+    headers:
+      Accept: ['*/*']
+      Accept-Encoding: ['gzip, deflate']
+      Connection: [keep-alive]
+      User-Agent: [python-requests/2.19.1]
+    method: GET
+    uri: http://magento/index.php/rest/default/V1/categories/8
+  response:
+    body: {string: '{"id":8,"parent_id":7,"name":"New Luma Yoga Collection","is_active":true,"position":1,"level":3,"children":"","created_at":"2020-03-27
+        16:06:12","updated_at":"2020-03-27 16:06:12","path":"1\/2\/7\/8","available_sort_by":[],"include_in_menu":false,"custom_attributes":[{"attribute_code":"is_anchor","value":"1"},{"attribute_code":"path","value":"1\/2\/7\/8"},{"attribute_code":"children_count","value":"0"},{"attribute_code":"url_key","value":"yoga-new"},{"attribute_code":"url_path","value":"collections\/yoga-new"}]}'}
+    headers:
+      Cache-Control: ['no-store, no-cache, must-revalidate']
+      Connection: [keep-alive]
+      Content-Type: [application/json; charset=utf-8]
+      Date: ['Fri, 08 May 2020 06:38:18 GMT']
+      Expires: ['Thu, 19 Nov 1981 08:52:00 GMT']
+      Pragma: [no-cache]
+      Server: [nginx/1.14.0 (Ubuntu)]
+      Set-Cookie: ['PHPSESSID=gh0vn0ut8kugvhn38v7r4lm1oj; expires=Fri, 08-May-2020
+          07:38:18 GMT; Max-Age=3600; path=/; domain=magento; HttpOnly']
+      Transfer-Encoding: [chunked]
+      Vary: [Accept-Encoding]
+      X-Frame-Options: [SAMEORIGIN]
+      content-length: ['517']
+    status: {code: 200, message: OK}
+- request:
+    body: null
+    headers:
+      Accept: ['*/*']
+      Accept-Encoding: ['gzip, deflate']
+      Connection: [keep-alive]
+      User-Agent: [python-requests/2.19.1]
+    method: GET
+    uri: http://magento/index.php/rest/default/V1/products/24-WG02
+  response:
+    body: {string: '{"id":44,"sku":"24-WG02","name":"Didi Sport Watch","attribute_set_id":11,"price":92,"status":1,"visibility":4,"type_id":"simple","created_at":"2020-03-27
+        16:06:17","updated_at":"2020-03-27 16:06:17","extension_attributes":{"website_ids":[1],"category_links":[{"position":0,"category_id":"3"},{"position":0,"category_id":"7"},{"position":0,"category_id":"6"},{"position":0,"category_id":"8"}],"stock_item":{"item_id":44,"product_id":44,"stock_id":1,"qty":100,"is_in_stock":true,"is_qty_decimal":false,"show_default_notification_message":false,"use_config_min_qty":true,"min_qty":0,"use_config_min_sale_qty":1,"min_sale_qty":1,"use_config_max_sale_qty":true,"max_sale_qty":10000,"use_config_backorders":true,"backorders":0,"use_config_notify_stock_qty":true,"notify_stock_qty":1,"use_config_qty_increments":true,"qty_increments":0,"use_config_enable_qty_inc":true,"enable_qty_increments":false,"use_config_manage_stock":true,"manage_stock":true,"low_stock_date":null,"is_decimal_divided":false,"stock_status_changed_auto":0}},"product_links":[],"options":[],"media_gallery_entries":[{"id":50,"media_type":"image","label":"Image","position":1,"disabled":false,"types":["image","small_image","thumbnail"],"file":"\/w\/g\/wg02-bk-0.jpg"}],"tier_prices":[],"custom_attributes":[{"attribute_code":"image","value":"\/w\/g\/wg02-bk-0.jpg"},{"attribute_code":"small_image","value":"\/w\/g\/wg02-bk-0.jpg"},{"attribute_code":"thumbnail","value":"\/w\/g\/wg02-bk-0.jpg"},{"attribute_code":"options_container","value":"container2"},{"attribute_code":"msrp_display_actual_price_type","value":"0"},{"attribute_code":"url_key","value":"didi-sport-watch"},{"attribute_code":"required_options","value":"0"},{"attribute_code":"has_options","value":"0"},{"attribute_code":"tax_class_id","value":"2"},{"attribute_code":"category_ids","value":["3","7","6","8"]},{"attribute_code":"description","value":"<p>The
+        Didi Sport Watch helps you keep your workout plan down to the second. The
+        vertical, digital face looks sleek and futuristic. This watch is programmed
+        with tons of helpful features such as a timer, an alarm clock, a pedometer,
+        and more to help make your excercise more productive.<\/p>\n<ul>\n<li>Digital
+        display.<\/li>\n<li>LED backlight.<\/li>\n<li>Rubber strap with buckle clasp.<\/li>\n<li>1-year
+        limited warranty.<\/li>\n<\/ul>"},{"attribute_code":"activity","value":"5443,5438"},{"attribute_code":"material","value":"5470,5472,5475"},{"attribute_code":"gender","value":"5508"},{"attribute_code":"category_gear","value":"5513,5514,5517"},{"attribute_code":"new","value":"1"}]}'}
+    headers:
+      Cache-Control: ['no-store, no-cache, must-revalidate']
+      Connection: [keep-alive]
+      Content-Type: [application/json; charset=utf-8]
+      Date: ['Fri, 08 May 2020 06:38:18 GMT']
+      Expires: ['Thu, 19 Nov 1981 08:52:00 GMT']
+      Pragma: [no-cache]
+      Server: [nginx/1.14.0 (Ubuntu)]
+      Set-Cookie: ['PHPSESSID=ueu734u7vj47rpvqdg6fdscoqm; expires=Fri, 08-May-2020
+          07:38:18 GMT; Max-Age=3600; path=/; domain=magento; HttpOnly']
+      Transfer-Encoding: [chunked]
+      Vary: [Accept-Encoding]
+      X-Frame-Options: [SAMEORIGIN]
+      content-length: ['2568']
+    status: {code: 200, message: OK}
+- request:
+    body: null
+    headers:
+      Accept: ['*/*']
+      Accept-Encoding: ['gzip, deflate']
+      Connection: [keep-alive]
+      User-Agent: [python-requests/2.19.1]
+    method: GET
+    uri: http://magento/media/catalog/product//w/g/wg02-bk-0.jpg
+  response:
+    body:
+      string: !!binary |
+        R0lGODlhAQABAIAAAP///wAAACH5BAEAAAAALAAAAAABAAEAAAICRAEAOw==
+    headers:
+      Accept-Ranges: [bytes]
+      Cache-Control: [max-age=31536000, public]
+      Connection: [keep-alive]
+      Content-Length: ['144915']
+      Content-Type: [image/jpeg]
+      Date: ['Fri, 08 May 2020 06:38:19 GMT']
+      ETag: ['"5e7e1eb8-23613"']
+      Expires: ['Sat, 08 May 2021 06:38:19 GMT']
+      Last-Modified: ['Fri, 27 Mar 2020 15:41:44 GMT']
+      Server: [nginx/1.14.0 (Ubuntu)]
+      X-Frame-Options: [SAMEORIGIN]
+    status: {code: 200, message: OK}
+version: 1

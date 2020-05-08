@@ -11,6 +11,7 @@ Helpers usable in the tests
 
 import xmlrpc.client
 import logging
+import urllib
 
 import mock
 import odoo
@@ -36,9 +37,15 @@ class MockResponseImage(object):
 
     def __init__(self, resp_data, code=200, msg='OK'):
         self.resp_data = resp_data
-        self.code = code
+        self.content = resp_data
+        self.status_code = code
         self.msg = msg
         self.headers = {'content-type': 'image/jpeg'}
+
+    def raise_for_status(self):
+        if self.status_code != 200:
+            raise urllib.error.HTTPError(
+                '', self.status_code, str(self.status_code), None, None)
 
     def read(self):
         # pylint: disable=method-required-super
@@ -50,8 +57,8 @@ class MockResponseImage(object):
 
 @contextmanager
 def mock_urlopen_image():
-    with mock.patch('urllib.request.urlopen') as urlopen:
-        urlopen.return_value = MockResponseImage('')
+    with mock.patch('requests.get') as requests_get:
+        requests_get.return_value = MockResponseImage('')
         yield
 
 
@@ -80,6 +87,7 @@ class MagentoTestCase(SavepointComponentCase):
 
     def setUp(self):
         super(MagentoTestCase, self).setUp()
+        self.recorder = recorder
         # disable commits when run from pytest/nosetest
         odoo.tools.config['test_enable'] = True
 
@@ -152,11 +160,14 @@ class MagentoTestCase(SavepointComponentCase):
         filename = 'import_%s_%s' % (table_name[8:], str(magento_id))
 
         def run_import():
+            if self.backend.version != '1.7':
+                return self.env[model_name].import_record(
+                    self.backend, magento_id)
             with mock_urlopen_image():
                 self.env[model_name].import_record(self.backend, magento_id)
 
         if cassette:
-            with recorder.use_cassette(filename):
+            with self.recorder.use_cassette(filename):
                 run_import()
         else:
             run_import()

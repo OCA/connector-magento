@@ -26,6 +26,9 @@ class ProductCategoryBatchImporter(Component):
 
     def run(self, filters=None):
         """ Run the synchronization """
+        if self.collection.version == '2.0':
+            # TODO. See 8.0 version
+            raise NotImplementedError
         from_date = filters.pop('from_date', None)
         to_date = filters.pop('to_date', None)
         if from_date or to_date:

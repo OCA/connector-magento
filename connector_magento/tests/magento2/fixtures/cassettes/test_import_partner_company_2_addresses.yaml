@@ -1,0 +1,60 @@
+interactions:
+- request:
+    body: null
+    headers:
+      Accept: ['*/*']
+      Accept-Encoding: ['gzip, deflate']
+      Connection: [keep-alive]
+      User-Agent: [python-requests/2.19.1]
+    method: GET
+    uri: http://magento/index.php/rest/V1/customers/4
+  response:
+    body: {string: '{"id":4,"group_id":1,"default_billing":"4","default_shipping":"5","created_at":"2020-04-24
+        08:55:13","updated_at":"2020-04-24 08:56:20","created_in":"Default Store View","email":"clay@lock.nl","firstname":"Clay","lastname":"Lock","gender":0,"store_id":1,"website_id":1,"addresses":[{"id":4,"customer_id":4,"region":{"region_code":null,"region":null,"region_id":0},"region_id":0,"country_id":"AF","street":["Billing"],"company":"Clay
+        Company","telephone":"111","postcode":"111","city":"City","firstname":"Clay","lastname":"Lock","default_billing":true},{"id":5,"customer_id":4,"region":{"region_code":null,"region":null,"region_id":0},"region_id":0,"country_id":"AF","street":["Shipping"],"company":"Clay
+        Company","telephone":"111","postcode":"111","city":"City","firstname":"Clay","lastname":"Lock","default_shipping":true}],"disable_auto_group_change":0,"extension_attributes":{"is_subscribed":false}}'}
+    headers:
+      Cache-Control: ['no-store, no-cache, must-revalidate']
+      Connection: [keep-alive]
+      Content-Type: [application/json; charset=utf-8]
+      Date: ['Fri, 24 Apr 2020 09:50:44 GMT']
+      Expires: ['Thu, 19 Nov 1981 08:52:00 GMT']
+      Pragma: [no-cache]
+      Server: [nginx/1.14.0 (Ubuntu)]
+      Set-Cookie: ['PHPSESSID=u59dshdtm421ldf7uf7kp2tr0t; expires=Fri, 24-Apr-2020
+          10:50:44 GMT; Max-Age=3600; path=/; domain=magento; HttpOnly']
+      Transfer-Encoding: [chunked]
+      Vary: [Accept-Encoding]
+      X-Frame-Options: [SAMEORIGIN]
+      content-length: ['902']
+    status: {code: 200, message: OK}
+- request:
+    body: null
+    headers:
+      Accept: ['*/*']
+      Accept-Encoding: ['gzip, deflate']
+      Connection: [keep-alive]
+      User-Agent: [python-requests/2.19.1]
+    method: GET
+    uri: http://magento/index.php/rest/V1/customers/4
+  response:
+    body: {string: '{"id":4,"group_id":1,"default_billing":"4","default_shipping":"5","created_at":"2020-04-24
+        08:55:13","updated_at":"2020-04-24 08:56:20","created_in":"Default Store View","email":"clay@lock.nl","firstname":"Clay","lastname":"Lock","gender":0,"store_id":1,"website_id":1,"addresses":[{"id":4,"customer_id":4,"region":{"region_code":null,"region":null,"region_id":0},"region_id":0,"country_id":"AF","street":["Billing"],"company":"Clay
+        Company","telephone":"111","postcode":"111","city":"City","firstname":"Clay","lastname":"Lock","default_billing":true},{"id":5,"customer_id":4,"region":{"region_code":null,"region":null,"region_id":0},"region_id":0,"country_id":"AF","street":["Shipping"],"company":"Clay
+        Company","telephone":"111","postcode":"111","city":"City","firstname":"Clay","lastname":"Lock","default_shipping":true}],"disable_auto_group_change":0,"extension_attributes":{"is_subscribed":false}}'}
+    headers:
+      Cache-Control: ['no-store, no-cache, must-revalidate']
+      Connection: [keep-alive]
+      Content-Type: [application/json; charset=utf-8]
+      Date: ['Fri, 24 Apr 2020 09:50:44 GMT']
+      Expires: ['Thu, 19 Nov 1981 08:52:00 GMT']
+      Pragma: [no-cache]
+      Server: [nginx/1.14.0 (Ubuntu)]
+      Set-Cookie: ['PHPSESSID=m5h6nbvsa3dnb6i6eqhqnv5j0p; expires=Fri, 24-Apr-2020
+          10:50:44 GMT; Max-Age=3600; path=/; domain=magento; HttpOnly']
+      Transfer-Encoding: [chunked]
+      Vary: [Accept-Encoding]
+      X-Frame-Options: [SAMEORIGIN]
+      content-length: ['902']
+    status: {code: 200, message: OK}
+version: 1
