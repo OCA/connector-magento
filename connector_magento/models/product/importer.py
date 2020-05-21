@@ -12,6 +12,7 @@ import sys
 import html2text
 
 from odoo import _
+from odoo import tools
 import requests
 from odoo.addons.component.core import Component
 from odoo.addons.connector.components.mapper import mapping
@@ -207,6 +208,10 @@ class ProductImportMapper(Component):
         and set active flag in Odoo. Status == 1 in Magento means active.
         2.0 REST API returns an integer, 1.x a string."""
         return {'active': (record.get('status') in ('1', 1))}
+
+    @mapping
+    def visibilty(self, record):
+        return {'visibility': tools.ustr(record.get('visibility', '4'))}
 
     @mapping
     def price(self, record):

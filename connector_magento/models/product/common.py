@@ -84,6 +84,17 @@ class MagentoProductProduct(models.Model):
              "from stock synchronizations.",
     )
 
+    visibility = fields.Selection(
+        selection=[('1', 'Not Visible Individually'),
+                   ('2', 'Catalog'),
+                   ('3', 'Search'),
+                   ('4', 'Catalog, Search'),
+                   ],
+        string='Visibility',
+        default='4',
+        required=True,
+    )
+
     RECOMPUTE_QTY_STEP = 1000  # products at a time
 
     @job(default_channel='root.magento')
