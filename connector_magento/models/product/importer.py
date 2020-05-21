@@ -222,11 +222,12 @@ class ProductImportMapper(Component):
 
     @mapping
     def website_ids(self, record):
-        if self.collection.version == '2.0':
-            return {}
+        mag_website_ids = \
+            record.get("extension_attributes", {}).get("website_ids", [])\
+            if self.collection.version == '2.0' else record['websites']
         website_ids = []
         binder = self.binder_for('magento.website')
-        for mag_website_id in record['websites']:
+        for mag_website_id in mag_website_ids:
             website_binding = binder.to_internal(mag_website_id)
             website_ids.append((4, website_binding.id))
         return {'website_ids': website_ids}
