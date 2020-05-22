@@ -257,18 +257,11 @@ class ProductProductAdapter(Component):
             _logger.info("Prepare to call api with %s " % data)
             # Replace by the
             id = data['sku']
-            self._call(
+            return self._call(
                 'products', {
                     'product': data
                 },
                 http_method='post')
-            stock_datas = {"stockItem": {
-                'is_in_stock': True}}
-            self._call(
-                'products/%s/stockItems/1' % id,
-                stock_datas,
-                http_method='put')
-            return
         return self._call('ol_catalog_product.update',
                           [int(id), data, storeview_id, 'id'])
 
