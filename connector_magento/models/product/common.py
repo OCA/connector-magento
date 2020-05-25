@@ -254,14 +254,13 @@ class ProductProductAdapter(Component):
         # XXX actually only ol_catalog_product.update works
         # the PHP connector maybe breaks the catalog_product.update
         if self.collection.version == '2.0':
-            _logger.info("Prepare to call api with %s " % data)
-            # Replace by the
-            id = data['sku']
             return self._call(
-                'products', {
+                'products/%s' % id, arguments={
                     'product': data
                 },
-                http_method='post')
+                http_method='put',
+                storeview='all',
+            )
         return self._call('ol_catalog_product.update',
                           [int(id), data, storeview_id, 'id'])
 
