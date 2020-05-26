@@ -269,10 +269,13 @@ class BaseAddressImportMapper(AbstractComponent):
 
     @mapping
     def state(self, record):
-        if not record.get('region'):
+        region = record.get('region')
+        if type(region) == dict:
+            region = region.get('region')
+        if not region:
             return
         state = self.env['res.country.state'].search(
-            [('name', '=ilike', record['region'])],
+            [('name', '=ilike', "%{region}%".format(region=region))],
             limit=1,
         )
         if state:
