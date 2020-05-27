@@ -5,6 +5,7 @@
 import logging
 
 from collections import namedtuple
+from odoo import _
 from odoo.addons.component.core import AbstractComponent, Component
 from odoo.addons.connector.exception import MappingError
 from odoo.addons.connector.components.mapper import mapping, only_create
@@ -49,7 +50,6 @@ class PartnerImportMapper(Component):
         (normalize_datetime('created_at'), 'created_at'),
         (normalize_datetime('updated_at'), 'updated_at'),
         ('email', 'emailid'),
-        ('taxvat', 'vat'),
         ('group_id', 'group_id'),
     ]
 
@@ -137,6 +137,35 @@ class PartnerImportMapper(Component):
         )
         if partner:
             return {'odoo_id': partner.id}
+
+    @mapping
+    def vat(self, record):
+        if not record.get("taxvat"):
+            return {}
+        vals = {
+            "taxvat": record.get("taxvat"),
+        }
+        vat_country, vat_number = self.env["res.partner"]._split_vat(
+            record.get("taxvat"))
+        valid_vat = self.env["res.partner"].simple_vat_check(
+            vat_country.lower(), record.get("taxvat"))
+        if valid_vat:
+            vals.update(vat=record.get("taxvat"))
+            return vals
+        billing = next((
+            billing_address for billing_address in record.get("addresses", [])
+            if str(billing_address.get("id")) == record.get("default_billing")
+            ), False)
+        if billing:
+            country_code = billing.get("country_id")
+            valid_vat = self.env["res.partner"].simple_vat_check(
+                country_code.lower(), record.get("taxvat"))
+            if valid_vat:
+                vals.update(vat=country_code.upper() + record.get("taxvat"))
+                return vals
+        vals.update(
+            comment=_("VAT number: {vat}").format(vat=record.get("taxvat")))
+        return vals
 
 
 class PartnerImporter(Component):
