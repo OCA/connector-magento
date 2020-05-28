@@ -4,6 +4,7 @@
 # License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl).
 
 import logging
+import math
 import xmlrpc.client
 
 from collections import defaultdict
@@ -16,6 +17,8 @@ from odoo.addons.queue_job.job import job, related_action
 from ...components.backend_adapter import MAGENTO_DATETIME_FORMAT
 
 _logger = logging.getLogger(__name__)
+
+PAGE_SIZE = 100
 
 
 def chunks(items, length):
@@ -227,7 +230,48 @@ class ProductProductAdapter(Component):
             filters.setdefault('updated_at', {})
             filters['updated_at']['to'] = to_date.strftime(dt_fmt)
         if self.collection.version == '2.0':
-            return super(ProductProductAdapter, self).search(filters=filters)
+            key = self._magento2_key or 'id'
+            params = {}
+            if self._magento2_search:
+                params['fields'] = 'items[%s]' % key
+                params.update(self.get_searchCriteria(filters))
+            else:
+                params['fields'] = key
+                if filters:
+                    raise NotImplementedError  # Unexpected much?
+            items_ids = set()
+            stop_searching = False
+            current_page = 0
+            params['fields'] = params['fields'] + ',total_count'
+
+            while not stop_searching:
+                current_page += 1
+                params['searchCriteria[pageSize]'] = PAGE_SIZE
+                params['searchCriteria[currentPage]'] = current_page
+                params['searchCriteria[sortOrders][0][field]'] = 'id'
+                params['searchCriteria[sortOrders][0][direction]'] = 'ASC'
+                res = self._call(
+                    self._magento2_search or self._magento2_model,
+                    params)
+                total_count = res.get('total_count')
+                _logger.debug(
+                    'Retrieved page {current_page} of {estimated_pages} '
+                    'estimated pages for a total of {total_count} products'.
+                    format(
+                        current_page=current_page,
+                        estimated_pages=math.ceil(total_count / PAGE_SIZE),
+                        total_count=total_count))
+                if 'items' in res:
+                    res = res['items'] or []
+                page_items = set(item[key] for item in res if item[key] != 0)
+                if (len(items_ids) + len(page_items)) >= total_count or \
+                        any(item in items_ids for item in page_items):
+                    # As Magento would keep sending us the last products, stop
+                    #  when it send any duplicate
+                    stop_searching = True
+                items_ids.update(page_items)
+            return list(items_ids)
+
         # TODO add a search entry point on the Magento API
         return [int(row['product_id']) for row
                 in self._call('%s.list' % self._magento_model,
