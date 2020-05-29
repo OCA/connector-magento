@@ -203,9 +203,9 @@ class ProductProductAdapter(Component):
     _magento2_key = 'sku'
     _admin_path = '/{model}/edit/id/{id}'
 
-    def _call(self, method, arguments, http_method=None, storeview=None):
+    def _call(self, method, arguments=None, http_method=None, storeview=None):
         try:
-            return super(ProductProductAdapter, self)._call(method, arguments, http_method=http_method, storeview=storeview)
+            return super(ProductProductAdapter, self)._call(method, arguments=arguments, http_method=http_method, storeview=storeview)
         except xmlrpc.client.Fault as err:
             # this is the error in the Magento API
             # when the product does not exist
