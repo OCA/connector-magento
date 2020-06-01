@@ -315,14 +315,9 @@ class SaleOrderImportMapper(Component):
             [('magento_code', '=', ifield), ('company_id', '=', company_id)],
             limit=1,
         )
-        if not carrier:
-            raise FailedJobError(
-                "The configuration is missing for the Delivery Carrier '%s'.\n\n"
-                "Resolution:\n"
-                "- Go to "
-                "'Inventory > Configuration > Delivery > Delivery Methods'\n"
-                "- Create a new Delivery Method with Magento Carrier Code '%s'"
-                "" % (ifield, ifield))
+        assert carrier, ("carrier %s should exist because the import fails "
+                         "in SaleOrderImporter._before_import when it is "
+                         " missing" % ifield)
         return {'carrier_id': carrier.id}
 
     @mapping
@@ -453,6 +448,27 @@ class SaleOrderImporter(Component):
     def _before_import(self):
         rules = self.component(usage='sale.import.rule')
         rules.check(self.magento_record)
+
+        ifield = self.magento_record.get('shipping_method') or \
+            self.magento_record.get('shipping_description')
+        if not ifield:
+            return
+
+        user = self.env['res.users'].browse(self.env.uid)
+        company_id = user and user.company_id.id \
+            or self.backend_record.company_id.id
+        carrier = self.env['delivery.carrier'].search(
+            [('magento_code', '=', ifield), ('company_id', '=', company_id)],
+            limit=1,
+        )
+        if not carrier:
+            raise FailedJobError(
+                "The configuration is missing for the Delivery Carrier '%s'.\n\n"
+                "Resolution:\n"
+                "- Go to "
+                "'Inventory > Configuration > Delivery > Delivery Methods'\n"
+                "- Create a new Delivery Method with Magento Carrier Code '%s'"
+                "" % (ifield, ifield))
 
     def _link_parent_orders(self, binding):
         """ Link the magento.sale.order to its parent orders.
