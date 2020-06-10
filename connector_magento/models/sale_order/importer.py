@@ -73,7 +73,9 @@ class SaleImportRule(Component):
 
     def _rule_paid(self, record, method):
         """ Import the order only if it has received a payment """
-        if not record.get('payment', {}).get('amount_paid'):
+        if not record.get('payment', {}).get('amount_paid') and \
+                not record.get('payment', {}).get('base_amount_paid') and \
+                not record.get('payment', {}).get('base_amount_paid_online'):
             raise OrderImportRuleRetry('The order has not been paid.\n'
                                        'The import will be retried later.')
 
