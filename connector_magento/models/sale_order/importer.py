@@ -89,7 +89,7 @@ class SaleImportRule(Component):
         """ Rule always executed, whichever is the selected rule """
         # the order has been canceled since the job has been created
         order_id = record['increment_id']
-        if record['state'] == 'canceled':
+        if record['state'] == 'canceled' or record.get('status') == 'canceled':
             raise NothingToDoJob('Order %s canceled' % order_id)
         max_days = method.days_before_cancel
         if max_days:
