@@ -306,7 +306,12 @@ class SaleOrderImportMapper(Component):
 
     @mapping
     def shipping_method(self, record):
-        ifield = record.get('shipping_method') or record.get('shipping_description')
+        ifield = None
+        if self.collection.version == '2.0':
+            shippings = record['extension_attributes']['shipping_assignments']
+            ifield = shippings and shippings[0]['shipping'].get('method')
+        ifield = ifield or record.get('shipping_method') or \
+            record.get('shipping_description')
         if not ifield:
             return
 
@@ -451,7 +456,12 @@ class SaleOrderImporter(Component):
         rules = self.component(usage='sale.import.rule')
         rules.check(self.magento_record)
 
-        ifield = self.magento_record.get('shipping_method') or \
+        ifield = None
+        if self.collection.version == '2.0':
+            shippings = self.magento_record[
+                'extension_attributes']['shipping_assignments']
+            ifield = shippings and shippings[0]['shipping'].get('method')
+        ifield = ifield or self.magento_record.get('shipping_method') or \
             self.magento_record.get('shipping_description')
         if not ifield:
             return
@@ -464,13 +474,13 @@ class SaleOrderImporter(Component):
             limit=1,
         )
         if not carrier:
-            raise FailedJobError(
-                "The configuration is missing for the Delivery Carrier '%s'.\n\n"
-                "Resolution:\n"
-                "- Go to "
-                "'Inventory > Configuration > Delivery > Delivery Methods'\n"
-                "- Create a new Delivery Method with Magento Carrier Code '%s'"
-                "" % (ifield, ifield))
+            self.env['delivery.carrier'].create({
+                'name': ifield,
+                'magento_code': ifield,
+                'company_id': company_id,
+                'product_id':
+                self.env.ref('connector_ecommerce.product_product_shipping').id,
+            })
 
     def _link_parent_orders(self, binding):
         """ Link the magento.sale.order to its parent orders.
