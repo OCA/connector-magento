@@ -132,6 +132,18 @@ class MagentoProductProduct(models.Model):
                                                 self.browse(product_ids))
         return True
 
+    def _get_product_fields(self, backend):
+        product_fields = ['magento_qty', 'virtual_available']
+        if backend.product_stock_field_id:
+            product_fields.append(backend.product_stock_field_id.name)
+        return product_fields
+
+    def _get_stock_field(self, backend, product):
+        stock_field = 'virtual_available'
+        if backend.product_stock_field_id:
+            stock_field = backend.product_stock_field_id.name
+        return stock_field
+
     @api.multi
     def _recompute_magento_qty_backend(self, backend, products,
                                        read_fields=None):
@@ -142,18 +154,13 @@ class MagentoProductProduct(models.Model):
         :meth:`~._magento_qty`.
 
         """
-        if backend.product_stock_field_id:
-            stock_field = backend.product_stock_field_id.name
-        else:
-            stock_field = 'virtual_available'
-
         location = self.env['stock.location']
         if self.env.context.get('location'):
             location = location.browse(self.env.context['location'])
         else:
             location = backend.warehouse_id.lot_stock_id
 
-        product_fields = ['magento_qty', stock_field]
+        product_fields = self._get_product_fields(backend)
         if read_fields:
             product_fields += read_fields
 
@@ -163,13 +170,12 @@ class MagentoProductProduct(models.Model):
             for product in records.read(fields=product_fields):
                 new_qty = self._magento_qty(product,
                                             backend,
-                                            location,
-                                            stock_field)
+                                            location)
                 if new_qty != product['magento_qty']:
                     self.browse(product['id']).magento_qty = new_qty
 
     @api.multi
-    def _magento_qty(self, product, backend, location, stock_field):
+    def _magento_qty(self, product, backend, location):
         """ Return the current quantity for one product.
 
         Can be inherited to change the way the quantity is computed,
@@ -179,6 +185,7 @@ class MagentoProductProduct(models.Model):
         ``read_fields`` argument of :meth:`~._recompute_magento_qty_backend`
 
         """
+        stock_field = self._get_stock_field(backend, product)
         return product[stock_field]
 
 
