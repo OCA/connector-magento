@@ -400,8 +400,24 @@ class ProductInventoryExporter(Component):
             })
         return result
 
+    def _get_source_item_data(self, binding, fields):
+        result = {}
+        if self.collection.version == '2.0':
+            if 'magento_qty' in fields:
+                result.update({
+                    'sku': self.binder.to_external(binding),
+                    'source_code': 'default',
+                    'quantity': binding.magento_qty,
+                    'status': 1,
+                })
+            return result
+
     def run(self, binding, fields):
         """ Export the product inventory to Magento """
         external_id = self.binder.to_external(binding)
+        if binding.backend_id.use_source_items:
+            data = self._get_source_item_data(binding, fields)
+            self.backend_adapter.update_source_item(external_id, data)
+            return
         data = self._get_data(binding, fields)
         self.backend_adapter.update_inventory(external_id, data)
