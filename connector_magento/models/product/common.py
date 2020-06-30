@@ -347,6 +347,14 @@ class ProductProductAdapter(Component):
         self._call('products/%s/stockItems/%s' % (
             self.escape(external_id), item_id), data, http_method='put')
 
+    def update_source_item(self, external_id, data):
+        if self.collection.version == '2.0':
+            return self._call(
+                'inventory/source-items',
+                {"sourceItems": [data]},
+                http_method='post'
+            )
+
 
 class MagentoBindingProductListener(Component):
     _name = 'magento.binding.product.product.listener'

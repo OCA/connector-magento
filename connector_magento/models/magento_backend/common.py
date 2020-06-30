@@ -169,6 +169,9 @@ class MagentoBackend(models.Model):
         "level. "
         "When import partner, ignore company_id if this flag is set.",
     )
+    use_source_items = fields.Boolean(
+        "Use stock source items", help="Export inventory data as source items"
+        ". If not checked, it will be exported as stock item.", default=False)
 
     _sql_constraints = [
         ('sale_prefix_uniq', 'unique(sale_prefix)',
