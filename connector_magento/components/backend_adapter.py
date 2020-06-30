@@ -5,6 +5,7 @@
 import socket
 import logging
 import xmlrpc.client
+from urllib.parse import quote_plus
 import urllib
 
 from odoo.addons.component.core import AbstractComponent
@@ -190,6 +191,12 @@ class GenericAdapter(AbstractComponent):
         if isinstance(term, str):
             return urllib.parse.quote(
                 term).replace('/', '%2F')
+        return term
+
+    @staticmethod
+    def escape(term):
+        if isinstance(term, str):
+            return quote_plus(term)
         return term
 
     @staticmethod
