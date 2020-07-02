@@ -1,0 +1,413 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="view_magento_backend_form" model="ir.ui.view">
+        <field name="name">magento.backend.form</field>
+        <field name="model">magento.backend</field>
+        <field name="arch" type="xml">
+            <form string="Magento Backend">
+                <header>
+                  <button name="synchronize_metadata"
+                    type="object"
+                    class="oe_highlight"
+                    string="Synchronize Metadata"/>
+                </header>
+                <sheet>
+                    <label for="name" class="oe_edit_only"/>
+                    <h1>
+                        <field name="name" class="oe_inline" />
+                    </h1>
+                    <group name="magento" string="Magento Configuration">
+                        <notebook>
+                            <page string="API" name="api">
+                                <group colspan="4" col="4">
+                                    <field name="version" colspan="2"/>
+                                    <field name="location" placeholder="e.g. http://my.magento.com"
+                                        colspan="2"/>
+                                    <field name="use_custom_api_path" colspan="2"/>
+                                    <field name="verify_ssl" colspan="2"
+                                           attrs="{'invisible': [('version', '=', '1.7')]}"/>
+                                    <field name="username" colspan="2"
+                                           attrs="{'invisible': [('version', '!=', '1.7')], 'required': [('version', '=', '1.7')]}"/>
+                                    <field name="password" password="1" colspan="2"
+                                           attrs="{'invisible': [('version', '!=', '1.7')], 'required': [('version', '=', '1.7')]}"/>
+                                    <field name="token" password="1" colspan="2"
+                                           attrs="{'invisible': [('version', '=', '1.7')], 'required': [('version', '!=', '1.7')]}"/>
+                                </group>
+                            </page>
+                            <page string="HTTP Authentication" name="auth" colspan="4" col="4">
+                                <group colspan="4" col="4">
+                                    <field name="use_auth_basic" colspan="4"/>
+                                    <field name="auth_basic_username" colspan="2"
+                                          attrs="{'invisible': [('use_auth_basic', '=', False)], 'required': [('use_auth_basic', '=', True)]}"/>
+                                    <field name="auth_basic_password" colspan="2"
+                                          password="1"
+                                          attrs="{'invisible': [('use_auth_basic', '=', False)], 'required': [('use_auth_basic', '=', True)]}"/>
+                                </group>
+                            </page>
+                        </notebook>
+                    </group>
+                    <group name="main_configuration" string="Main Configuration">
+                        <field name="warehouse_id"/>
+                    </group>
+                    <notebook>
+                        <page name="import" string="Imports">
+                            <p class="oe_grey oe_inline">
+                                By clicking on the buttons,
+                                you will initiate the synchronizations
+                                with Magento.
+                                Note that the import or exports
+                                won't be done directly,
+                                they will create 'Jobs'
+                                executed as soon as possible.
+                            </p>
+                            <p class="oe_grey oe_inline">
+                                Once imported,
+                                some types of records,
+                                like the products or categories,
+                                need a manual review.
+                                You will find the list
+                                of the new records to review
+                                in the menu 'Connectors > Checkpoint'.
+                            </p>
+                            <group>
+                                <label for="import_customer_groups"
+                                    string="Import all customer groups"
+                                    class="oe_inline"/>
+                                <div>
+                                    <button name="import_customer_groups"
+                                        type="object"
+                                        class="oe_highlight"
+                                        string="Import in background"/>
+                                </div>
+                            </group>
+                            <group>
+                                <label for="import_partners"
+                                    string="Import partners from all websites"
+                                    class="oe_inline"/>
+                                <button name="import_partners"
+                                    type="object"
+                                    class="oe_highlight"
+                                    string="Import in background"/>
+                            </group>
+                            <group>
+                                <div>
+                                    <label for="import_categories_from_date"
+                                        string="Import products categories since"
+                                        class="oe_inline"/>
+                                    <field name="import_categories_from_date"
+                                        class="oe_inline"
+                                        nolabel="1"/>
+                                </div>
+                                <button name="import_product_categories"
+                                    type="object"
+                                    class="oe_highlight"
+                                    string="Import in background"/>
+                            </group>
+                            <group>
+                                <div>
+                                    <label for="import_products_from_date"
+                                        string="Import products since"
+                                        class="oe_inline"/>
+                                    <field name="import_products_from_date"
+                                        class="oe_inline"
+                                        nolabel="1"/>
+                                </div>
+                                <button name="import_product_product"
+                                    type="object"
+                                    class="oe_highlight"
+                                    string="Import in background"/>
+                            </group>
+                            <group>
+                                <label for="import_sale_orders"
+                                    string="Import sales orders from all store views"
+                                    class="oe_inline"/>
+                                <button name="import_sale_orders"
+                                    type="object"
+                                    class="oe_highlight"
+                                    string="Import in background"/>
+                            </group>
+                            <group>
+                                <label for="update_product_stock_qty"
+                                    string="Update all the products stock quantities"
+                                    class="oe_inline"/>
+                                <button name="update_product_stock_qty"
+                                    type="object"
+                                    class="oe_highlight"
+                                    string="Update"/>
+                            </group>
+
+                        </page>
+
+                        <page name="advanced_configuration" string="Advanced Configuration">
+                            <group>
+                                <field name="admin_location" placeholder="e.g. http://my.magento.com/admin"/>
+                                <field name="default_lang_id" widget="selection"/>
+                                <field name="default_category_id"/>
+                                <field name="sale_prefix" placeholder="mag-" />
+                                <field name="product_stock_field_id" widget="selection"
+                                    domain="[('model', 'in', ['product.product', 'product.template']), ('ttype', '=', 'float')]"/>
+                                <field name="account_analytic_id" groups="analytic.group_analytic_accounting" />
+                                <field name="fiscal_position_id"/>
+                                <field name="is_multi_company"/>
+                            </group>
+                        </page>
+
+                        <page name="website" string="Websites">
+                            <group string="Websites">
+                                <field name="website_ids" nolabel="1"/>
+                            </group>
+                        </page>
+
+                    </notebook>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="view_magento_backend_tree" model="ir.ui.view">
+        <field name="name">magento.backend.tree</field>
+        <field name="model">magento.backend</field>
+        <field name="arch" type="xml">
+            <tree string="Magento Backend">
+                <field name="name"/>
+                <field name="location"/>
+            </tree>
+        </field>
+    </record>
+
+    <record id="action_magento_backend" model="ir.actions.act_window">
+        <field name="name">Magento Backends</field>
+        <field name="res_model">magento.backend</field>
+        <field name="view_type">form</field>
+        <field name="view_mode">tree,form</field>
+        <field name="view_id" ref="view_magento_backend_tree"/>
+    </record>
+
+
+    <record id="view_magento_website_form" model="ir.ui.view">
+        <field name="name">magento.website.form</field>
+        <field name="model">magento.website</field>
+        <field name="arch" type="xml">
+            <form string="Magento Website" create="false"
+                    delete="false">
+                <sheet>
+                    <h1>
+                        <field name="name" class="oe_inline"/>
+                    </h1>
+                    <group string="Informations">
+                        <field name="external_id" invisible="1"/>
+                        <field name="backend_id" readonly="1"/>
+                        <field name="code"/>
+                        <field name="sort_order"/>
+                    </group>
+                    <group string="Options" name="options">
+                        <field name="account_analytic_id" groups="analytic.group_analytic_accounting" class="oe_read_only"/>
+                        <field name="specific_account_analytic_id" groups="analytic.group_analytic_accounting" class="oe_edit_only" />
+                        <field name="fiscal_position_id" class="oe_read_only"/>
+                        <field name="specific_fiscal_position_id" class="oe_edit_only" />
+                        <field name="is_multi_company" invisible="1"/>
+                        <field name="warehouse_id" class="oe_read_only" attrs="{'invisible': [('is_multi_company', '=', False)]}"/>
+                        <field name="specific_warehouse_id" class="oe_edit_only" attrs="{'invisible': [('is_multi_company', '=', False)]}"/>
+                    </group>
+                    <notebook>
+                        <page name="import" string="Imports">
+                            <group>
+                                <div>
+                                    <label for="import_partners_from_date"
+                                        string="Import partners since"
+                                        class="oe_inline"/>
+                                    <field name="import_partners_from_date"
+                                        class="oe_inline"
+                                        nolabel="1"/>
+                                </div>
+                                <button name="import_partners"
+                                    type="object"
+                                    class="oe_highlight"
+                                    string="Import in background"/>
+                            </group>
+                        </page>
+
+                        <page name="store" string="Stores">
+                            <group string="Stores">
+                                <field name="store_ids" nolabel="1"/>
+                            </group>
+                        </page>
+
+                    </notebook>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="view_magento_website_tree" model="ir.ui.view">
+        <field name="name">magento.website.tree</field>
+        <field name="model">magento.website</field>
+        <field name="arch" type="xml">
+            <tree string="Magento Website" create="false"
+                    delete="false">
+                <field name="name"/>
+                <field name="backend_id"/>
+                <field name="code"/>
+                <field name="sort_order"/>
+            </tree>
+        </field>
+    </record>
+
+    <record id="action_magento_website" model="ir.actions.act_window">
+        <field name="name">Magento Websites</field>
+        <field name="res_model">magento.website</field>
+        <field name="view_type">form</field>
+        <field name="view_mode">tree,form</field>
+        <field name="view_id" ref="view_magento_website_tree"/>
+    </record>
+
+
+    <record id="view_magento_store_form" model="ir.ui.view">
+        <field name="name">magento.store.form</field>
+        <field name="model">magento.store</field>
+        <field name="arch" type="xml">
+            <form string="Magento Store" create="false"
+                    delete="false">
+                <sheet>
+                    <h1>
+                        <field name="name" class="oe_inline"/>
+                    </h1>
+                    <group string="Informations">
+                        <field name="website_id"/>
+                    </group>
+                    <group string="Options">
+                        <field name="account_analytic_id" groups="analytic.group_analytic_accounting" class="oe_read_only"/>
+                        <field name="specific_account_analytic_id" groups="analytic.group_analytic_accounting" class="oe_edit_only" />
+                        <field name="fiscal_position_id" class="oe_read_only"/>
+                        <field name="specific_fiscal_position_id" class="oe_edit_only" />
+                        <field name="is_multi_company" invisible="1"/>
+                        <field name="warehouse_id" class="oe_read_only" attrs="{'invisible': [('is_multi_company', '=', False)]}"/>
+                        <field name="specific_warehouse_id" class="oe_edit_only" attrs="{'invisible': [('is_multi_company', '=', False)]}"/>
+                        <field name="send_picking_done_mail"/>
+                        <field name="send_invoice_paid_mail"/>
+                        <field name="create_invoice_on"/>
+                    </group>
+
+                    <notebook>
+                        <page name="storeview" string="Storeviews">
+                            <group string="Storeviews">
+                                <field name="storeview_ids" nolabel="1"/>
+                            </group>
+                        </page>
+                    </notebook>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="view_magento_store_tree" model="ir.ui.view">
+        <field name="name">magento.store.tree</field>
+        <field name="model">magento.store</field>
+        <field name="arch" type="xml">
+            <tree string="Magento Store" create="false"
+                    delete="false">
+                <field name="name"/>
+                <field name="website_id"/>
+            </tree>
+        </field>
+    </record>
+
+    <record id="action_magento_store" model="ir.actions.act_window">
+        <field name="name">Magento Stores</field>
+        <field name="res_model">magento.store</field>
+        <field name="view_type">form</field>
+        <field name="view_mode">tree,form</field>
+        <field name="view_id" ref="view_magento_store_tree"/>
+    </record>
+
+
+    <record id="view_magento_storeview_form" model="ir.ui.view">
+        <field name="name">magento.storeview.form</field>
+        <field name="model">magento.storeview</field>
+        <field name="arch" type="xml">
+            <form string="Magento Storeview" create="false"
+                    delete="false">
+                <sheet>
+                    <h1>
+                        <field name="name" class="oe_inline"/>
+                    </h1>
+                    <group string="Informations">
+                        <field name="code"/>
+                        <field name="store_id"/>
+                        <field name="sort_order"/>
+                        <field name="enabled"/>
+                        <field name="no_sales_order_sync"/>
+                    </group>
+                    <group string="Options">
+                        <field name="account_analytic_id" groups="analytic.group_analytic_accounting" class="oe_read_only"/>
+                        <field name="specific_account_analytic_id" groups="analytic.group_analytic_accounting" class="oe_edit_only" />
+                        <field name="fiscal_position_id" class="oe_read_only"/>
+                        <field name="specific_fiscal_position_id" class="oe_edit_only" />
+                        <field name="is_multi_company" invisible="1"/>
+                        <field name="warehouse_id" class="oe_read_only" attrs="{'invisible': [('is_multi_company', '=', False)]}"/>
+                        <field name="specific_warehouse_id" class="oe_edit_only" attrs="{'invisible': [('is_multi_company', '=', False)]}"/>
+                        <field name="team_id" options="{'no_create': True}"/>
+                        <field name="lang_id" widget="selection"/>
+                        <field name="base_media_url"/>
+                        <field name="catalog_price_tax_included"/>
+                        <p attrs="{'invisible': [('catalog_price_tax_included', '=', False)]}">
+                          This option should respect the same
+                          configuration as Magento.  Pay
+                          attention to the taxes on the products,
+                          which should surely include prices when
+                          this option is activated.
+                        </p>
+                    </group>
+                    <notebook>
+                        <page name="import" string="Imports">
+                            <group colspan="4">
+                              <div>
+                                <label for="import_orders_from_date"
+                                       string="Import Sale Orders since"
+                                       class="oe_inline"/>
+                                <field name='import_orders_from_date'
+                                       class="oe_inline"
+                                       nolabel="1"/>
+                              </div>
+                              <button name="import_sale_orders"
+                                      type="object"
+                                      class="oe_highlight"
+                                      string="Import Sale Orders"
+                                      attrs="{'invisible': [('no_sales_order_sync', '=', True)]}"/>
+
+                            </group>
+                        </page>
+
+                    </notebook>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="view_magento_storeview_tree" model="ir.ui.view">
+        <field name="name">magento.storeview.tree</field>
+        <field name="model">magento.storeview</field>
+        <field name="arch" type="xml">
+            <tree string="Magento Storeview" create="false"
+                    delete="false">
+                <field name="name"/>
+                <field name="code"/>
+                <field name="enabled"/>
+                <field name="no_sales_order_sync"/>
+                <field name="catalog_price_tax_included"/>
+                <field name="sort_order"/>
+                <field name="store_id"/>
+            </tree>
+        </field>
+    </record>
+
+    <record id="action_magento_storeview" model="ir.actions.act_window">
+        <field name="name">Magento Storeviews</field>
+        <field name="res_model">magento.storeview</field>
+        <field name="view_type">form</field>
+        <field name="view_mode">tree,form</field>
+        <field name="view_id" ref="view_magento_storeview_tree"/>
+    </record>
+
+</odoo>

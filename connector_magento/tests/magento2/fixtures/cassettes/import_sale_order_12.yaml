@@ -1,0 +1,600 @@
+interactions:
+- request:
+    body: null
+    headers:
+      Accept: ['*/*']
+      Accept-Encoding: ['gzip, deflate']
+      Connection: [keep-alive]
+      User-Agent: [python-requests/2.19.1]
+    method: GET
+    uri: http://magento/index.php/rest/V1/orders/12
+  response:
+    body: {string: '{"applied_rule_ids":"2,3","base_currency_code":"USD","base_discount_amount":-58.6,"base_grand_total":253.74,"base_discount_tax_compensation_amount":0,"base_shipping_amount":0,"base_shipping_discount_amount":0,"base_shipping_discount_tax_compensation_amnt":0,"base_shipping_incl_tax":0,"base_shipping_tax_amount":0,"base_subtotal":293,"base_subtotal_incl_tax":317.17,"base_tax_amount":19.34,"base_total_due":253.74,"base_to_global_rate":1,"base_to_order_rate":1,"billing_address_id":24,"created_at":"2020-04-25
+        07:23:37","customer_dob":"1973-12-15 00:00:00","customer_email":"roni_cost@example.com","customer_firstname":"Veronica","customer_gender":2,"customer_group_id":1,"customer_id":1,"customer_is_guest":0,"customer_lastname":"Costello","customer_note_notify":1,"discount_amount":-58.6,"entity_id":12,"global_currency_code":"USD","grand_total":253.74,"discount_tax_compensation_amount":0,"increment_id":"000000015","is_virtual":0,"order_currency_code":"USD","protect_code":"8da79fef0f4d6ea295c9e6d1c12cbc19","quote_id":15,"shipping_amount":0,"shipping_description":"Best
+        Way - Table Rate","shipping_discount_amount":0,"shipping_discount_tax_compensation_amount":0,"shipping_incl_tax":0,"shipping_tax_amount":0,"state":"new","status":"pending","store_currency_code":"USD","store_id":1,"store_name":"Main
+        Website\nMain Website Store\nDefault Store View","store_to_base_rate":0,"store_to_order_rate":0,"subtotal":293,"subtotal_incl_tax":317.17,"tax_amount":19.34,"total_due":253.74,"total_item_count":2,"total_qty_ordered":2,"updated_at":"2020-05-01
+        11:44:13","weight":1,"items":[{"amount_refunded":0,"applied_rule_ids":"2,3","base_amount_refunded":0,"base_discount_amount":13.8,"base_discount_invoiced":0,"base_discount_tax_compensation_amount":0,"base_original_price":69,"base_price":69,"base_price_incl_tax":74.69,"base_row_invoiced":0,"base_row_total":55.2,"base_row_total_incl_tax":59.75,"base_tax_amount":4.55,"base_tax_invoiced":0,"created_at":"2020-04-25
+        07:23:37","discount_amount":13.8,"discount_invoiced":0,"discount_percent":20,"free_shipping":0,"discount_tax_compensation_amount":0,"is_qty_decimal":0,"is_virtual":0,"item_id":24,"name":"Abominable
+        Hoodie-XS-Blue","no_discount":0,"order_id":12,"original_price":69,"price":69,"price_incl_tax":74.69,"product_id":181,"product_type":"simple","qty_canceled":0,"qty_invoiced":0,"qty_ordered":1,"qty_refunded":0,"qty_shipped":1,"quote_item_id":35,"row_invoiced":0,"row_total":55.2,"row_total_incl_tax":59.75,"row_weight":0,"sku":"MH09-XS-Blue","store_id":1,"tax_amount":4.55,"tax_invoiced":0,"tax_percent":8.25,"updated_at":"2020-05-01
+        11:44:13","weight":1},{"amount_refunded":0,"applied_rule_ids":"2,3","base_amount_refunded":0,"base_discount_amount":44.8,"base_discount_invoiced":0,"base_discount_tax_compensation_amount":0,"base_original_price":224,"base_price":224,"base_price_incl_tax":242.48,"base_row_invoiced":0,"base_row_total":179.2,"base_row_total_incl_tax":193.99,"base_tax_amount":14.79,"base_tax_invoiced":0,"created_at":"2020-04-25
+        07:23:37","discount_amount":44.8,"discount_invoiced":0,"discount_percent":20,"free_shipping":0,"discount_tax_compensation_amount":0,"is_qty_decimal":0,"is_virtual":0,"item_id":25,"name":"Racer
+        Back Maxi Dress","no_discount":0,"order_id":12,"original_price":224,"price":224,"price_incl_tax":242.48,"product_id":2051,"product_type":"simple","qty_canceled":0,"qty_invoiced":0,"qty_ordered":1,"qty_refunded":0,"qty_shipped":1,"quote_item_id":36,"row_invoiced":0,"row_total":179.2,"row_total_incl_tax":193.99,"row_weight":0,"sku":"RACER","store_id":1,"tax_amount":14.79,"tax_invoiced":0,"tax_percent":8.25,"updated_at":"2020-05-01
+        11:44:13"}],"billing_address":{"address_type":"billing","city":"Calder","country_id":"US","customer_address_id":23,"email":"roni_cost@example.com","entity_id":24,"firstname":"Veronica","lastname":"Costello","parent_id":12,"postcode":"49628-7978","region":"Michigan","region_code":"MI","region_id":33,"street":["6146
+        Honey Bluff Parkway"],"telephone":"(555) 229-3326"},"payment":{"account_status":null,"additional_information":["Check
+        \/ Money order"],"amount_ordered":253.74,"base_amount_ordered":253.74,"base_shipping_amount":0,"cc_exp_year":"0","cc_last4":null,"cc_ss_start_month":"0","cc_ss_start_year":"0","entity_id":12,"method":"checkmo","parent_id":12,"shipping_amount":0},"status_histories":[{"comment":"pending","created_at":"2020-04-25
+        16:50:54","entity_id":12,"is_customer_notified":0,"is_visible_on_front":0,"parent_id":12},{"comment":"canceled","created_at":"2020-04-25
+        16:50:53","entity_id":11,"is_customer_notified":0,"is_visible_on_front":0,"parent_id":12},{"comment":"pending","created_at":"2020-04-25
+        15:46:13","entity_id":10,"is_customer_notified":0,"is_visible_on_front":0,"parent_id":12},{"comment":"canceled","created_at":"2020-04-25
+        15:35:28","entity_id":9,"is_customer_notified":0,"is_visible_on_front":0,"parent_id":12}],"extension_attributes":{"shipping_assignments":[{"shipping":{"address":{"address_type":"shipping","city":"Calder","country_id":"US","customer_address_id":22,"email":"roni_cost@example.com","entity_id":23,"firstname":"Veronica","lastname":"Costello","parent_id":12,"postcode":"49628-7978","region":"Michigan","region_code":"MI","region_id":33,"street":["6146
+        Honey Bluff Parkway"],"telephone":"(555) 229-3326"},"method":"tablerate_bestway","total":{"base_shipping_amount":0,"base_shipping_discount_amount":0,"base_shipping_discount_tax_compensation_amnt":0,"base_shipping_incl_tax":0,"base_shipping_tax_amount":0,"shipping_amount":0,"shipping_discount_amount":0,"shipping_discount_tax_compensation_amount":0,"shipping_incl_tax":0,"shipping_tax_amount":0}},"items":[{"amount_refunded":0,"applied_rule_ids":"2,3","base_amount_refunded":0,"base_discount_amount":13.8,"base_discount_invoiced":0,"base_discount_tax_compensation_amount":0,"base_original_price":69,"base_price":69,"base_price_incl_tax":74.69,"base_row_invoiced":0,"base_row_total":55.2,"base_row_total_incl_tax":59.75,"base_tax_amount":4.55,"base_tax_invoiced":0,"created_at":"2020-04-25
+        07:23:37","discount_amount":13.8,"discount_invoiced":0,"discount_percent":20,"free_shipping":0,"discount_tax_compensation_amount":0,"is_qty_decimal":0,"is_virtual":0,"item_id":24,"name":"Abominable
+        Hoodie-XS-Blue","no_discount":0,"order_id":12,"original_price":69,"price":69,"price_incl_tax":74.69,"product_id":181,"product_type":"simple","qty_canceled":0,"qty_invoiced":0,"qty_ordered":1,"qty_refunded":0,"qty_shipped":1,"quote_item_id":35,"row_invoiced":0,"row_total":55.2,"row_total_incl_tax":59.75,"row_weight":0,"sku":"MH09-XS-Blue","store_id":1,"tax_amount":4.55,"tax_invoiced":0,"tax_percent":8.25,"updated_at":"2020-05-01
+        11:44:13","weight":1},{"amount_refunded":0,"applied_rule_ids":"2,3","base_amount_refunded":0,"base_discount_amount":44.8,"base_discount_invoiced":0,"base_discount_tax_compensation_amount":0,"base_original_price":224,"base_price":224,"base_price_incl_tax":242.48,"base_row_invoiced":0,"base_row_total":179.2,"base_row_total_incl_tax":193.99,"base_tax_amount":14.79,"base_tax_invoiced":0,"created_at":"2020-04-25
+        07:23:37","discount_amount":44.8,"discount_invoiced":0,"discount_percent":20,"free_shipping":0,"discount_tax_compensation_amount":0,"is_qty_decimal":0,"is_virtual":0,"item_id":25,"name":"Racer
+        Back Maxi Dress","no_discount":0,"order_id":12,"original_price":224,"price":224,"price_incl_tax":242.48,"product_id":2051,"product_type":"simple","qty_canceled":0,"qty_invoiced":0,"qty_ordered":1,"qty_refunded":0,"qty_shipped":1,"quote_item_id":36,"row_invoiced":0,"row_total":179.2,"row_total_incl_tax":193.99,"row_weight":0,"sku":"RACER","store_id":1,"tax_amount":14.79,"tax_invoiced":0,"tax_percent":8.25,"updated_at":"2020-05-01
+        11:44:13"}]}],"payment_additional_info":[{"key":"method_title","value":"Check
+        \/ Money order"}],"applied_taxes":[{"code":"US-MI-*-Rate 1","title":"US-MI-*-Rate
+        1","percent":8.25,"amount":19.34,"base_amount":19.34}],"item_applied_taxes":[{"type":"product","item_id":24,"applied_taxes":[{"code":"US-MI-*-Rate
+        1","title":"US-MI-*-Rate 1","percent":8.25,"amount":4.55,"base_amount":4.55}]},{"type":"product","item_id":25,"applied_taxes":[{"code":"US-MI-*-Rate
+        1","title":"US-MI-*-Rate 1","percent":8.25,"amount":14.79,"base_amount":14.79}]}],"converting_from_quote":true}}'}
+    headers:
+      Cache-Control: ['no-store, no-cache, must-revalidate']
+      Connection: [keep-alive]
+      Content-Type: [application/json; charset=utf-8]
+      Date: ['Fri, 08 May 2020 06:51:12 GMT']
+      Expires: ['Thu, 19 Nov 1981 08:52:00 GMT']
+      Pragma: [no-cache]
+      Server: [nginx/1.14.0 (Ubuntu)]
+      Set-Cookie: ['PHPSESSID=2qvraag78mu4jjo57pngcne7eg; expires=Fri, 08-May-2020
+          07:51:12 GMT; Max-Age=3600; path=/; domain=magento; HttpOnly']
+      Transfer-Encoding: [chunked]
+      Vary: [Accept-Encoding]
+      X-Frame-Options: [SAMEORIGIN]
+      content-length: ['8259']
+    status: {code: 200, message: OK}
+- request:
+    body: null
+    headers:
+      Accept: ['*/*']
+      Accept-Encoding: ['gzip, deflate']
+      Connection: [keep-alive]
+      User-Agent: [python-requests/2.19.1]
+    method: GET
+    uri: http://magento/index.php/rest/V1/customers/1
+  response:
+    body: {string: '{"id":1,"group_id":1,"default_billing":"1","default_shipping":"1","created_at":"2020-03-27
+        16:12:15","updated_at":"2020-03-27 16:12:15","created_in":"Default Store View","dob":"1973-12-15","email":"roni_cost@example.com","firstname":"Veronica","lastname":"Costello","gender":2,"store_id":1,"website_id":1,"addresses":[{"id":1,"customer_id":1,"region":{"region_code":"MI","region":"Michigan","region_id":33},"region_id":33,"country_id":"US","street":["6146
+        Honey Bluff Parkway"],"telephone":"(555) 229-3326","postcode":"49628-7978","city":"Calder","firstname":"Veronica","lastname":"Costello","default_shipping":true,"default_billing":true},{"id":7,"customer_id":1,"region":{"region_code":"MI","region":"Michigan","region_id":33},"region_id":33,"country_id":"US","street":["6146
+        Honey Bluff Parkway"],"telephone":"(555) 229-3326","postcode":"49628-7978","city":"Calder","firstname":"Veronica","lastname":"Costello"},{"id":8,"customer_id":1,"region":{"region_code":"MI","region":"Michigan","region_id":33},"region_id":33,"country_id":"US","street":["6146
+        Honey Bluff Parkway"],"telephone":"(555) 229-3326","postcode":"49628-7978","city":"Calder","firstname":"Veronica","lastname":"Costello"},{"id":9,"customer_id":1,"region":{"region_code":"MI","region":"Michigan","region_id":33},"region_id":33,"country_id":"US","street":["6146
+        Honey Bluff Parkway"],"telephone":"(555) 229-3326","postcode":"49628-7978","city":"Calder","firstname":"Veronica","lastname":"Costello"},{"id":10,"customer_id":1,"region":{"region_code":"MI","region":"Michigan","region_id":33},"region_id":33,"country_id":"US","street":["6146
+        Honey Bluff Parkway"],"telephone":"(555) 229-3326","postcode":"49628-7978","city":"Calder","firstname":"Veronica","lastname":"Costello"},{"id":11,"customer_id":1,"region":{"region_code":"MI","region":"Michigan","region_id":33},"region_id":33,"country_id":"US","street":["6146
+        Honey Bluff Parkway"],"telephone":"(555) 229-3326","postcode":"49628-7978","city":"Calder","firstname":"Veronica","lastname":"Costello"},{"id":12,"customer_id":1,"region":{"region_code":"MI","region":"Michigan","region_id":33},"region_id":33,"country_id":"US","street":["6146
+        Honey Bluff Parkway"],"telephone":"(555) 229-3326","postcode":"49628-7978","city":"Calder","firstname":"Veronica","lastname":"Costello"},{"id":13,"customer_id":1,"region":{"region_code":"MI","region":"Michigan","region_id":33},"region_id":33,"country_id":"US","street":["6146
+        Honey Bluff Parkway"],"telephone":"(555) 229-3326","postcode":"49628-7978","city":"Calder","firstname":"Veronica","lastname":"Costello"},{"id":14,"customer_id":1,"region":{"region_code":"MI","region":"Michigan","region_id":33},"region_id":33,"country_id":"US","street":["6146
+        Honey Bluff Parkway"],"telephone":"(555) 229-3326","postcode":"49628-7978","city":"Calder","firstname":"Veronica","lastname":"Costello"},{"id":15,"customer_id":1,"region":{"region_code":"MI","region":"Michigan","region_id":33},"region_id":33,"country_id":"US","street":["6146
+        Honey Bluff Parkway"],"telephone":"(555) 229-3326","postcode":"49628-7978","city":"Calder","firstname":"Veronica","lastname":"Costello"},{"id":16,"customer_id":1,"region":{"region_code":"MI","region":"Michigan","region_id":33},"region_id":33,"country_id":"US","street":["6146
+        Honey Bluff Parkway"],"telephone":"(555) 229-3326","postcode":"49628-7978","city":"Calder","firstname":"Veronica","lastname":"Costello"},{"id":17,"customer_id":1,"region":{"region_code":"MI","region":"Michigan","region_id":33},"region_id":33,"country_id":"US","street":["6146
+        Honey Bluff Parkway"],"telephone":"(555) 229-3326","postcode":"49628-7978","city":"Calder","firstname":"Veronica","lastname":"Costello"},{"id":18,"customer_id":1,"region":{"region_code":"MI","region":"Michigan","region_id":33},"region_id":33,"country_id":"US","street":["6146
+        Honey Bluff Parkway"],"telephone":"(555) 229-3326","postcode":"49628-7978","city":"Calder","firstname":"Veronica","lastname":"Costello"},{"id":19,"customer_id":1,"region":{"region_code":"MI","region":"Michigan","region_id":33},"region_id":33,"country_id":"US","street":["6146
+        Honey Bluff Parkway"],"telephone":"(555) 229-3326","postcode":"49628-7978","city":"Calder","firstname":"Veronica","lastname":"Costello"},{"id":20,"customer_id":1,"region":{"region_code":"MI","region":"Michigan","region_id":33},"region_id":33,"country_id":"US","street":["6146
+        Honey Bluff Parkway"],"telephone":"(555) 229-3326","postcode":"49628-7978","city":"Calder","firstname":"Veronica","lastname":"Costello"},{"id":21,"customer_id":1,"region":{"region_code":"MI","region":"Michigan","region_id":33},"region_id":33,"country_id":"US","street":["6146
+        Honey Bluff Parkway"],"telephone":"(555) 229-3326","postcode":"49628-7978","city":"Calder","firstname":"Veronica","lastname":"Costello"},{"id":22,"customer_id":1,"region":{"region_code":"MI","region":"Michigan","region_id":33},"region_id":33,"country_id":"US","street":["6146
+        Honey Bluff Parkway"],"telephone":"(555) 229-3326","postcode":"49628-7978","city":"Calder","firstname":"Veronica","lastname":"Costello"},{"id":23,"customer_id":1,"region":{"region_code":"MI","region":"Michigan","region_id":33},"region_id":33,"country_id":"US","street":["6146
+        Honey Bluff Parkway"],"telephone":"(555) 229-3326","postcode":"49628-7978","city":"Calder","firstname":"Veronica","lastname":"Costello"},{"id":24,"customer_id":1,"region":{"region_code":"MI","region":"Michigan","region_id":33},"region_id":33,"country_id":"US","street":["6146
+        Honey Bluff Parkway"],"telephone":"(555) 229-3326","postcode":"49628-7978","city":"Calder","firstname":"Veronica","lastname":"Costello"},{"id":25,"customer_id":1,"region":{"region_code":"MI","region":"Michigan","region_id":33},"region_id":33,"country_id":"US","street":["6146
+        Honey Bluff Parkway"],"telephone":"(555) 229-3326","postcode":"49628-7978","city":"Calder","firstname":"Veronica","lastname":"Costello"},{"id":26,"customer_id":1,"region":{"region_code":"MI","region":"Michigan","region_id":33},"region_id":33,"country_id":"US","street":["6146
+        Honey Bluff Parkway"],"telephone":"(555) 229-3326","postcode":"49628-7978","city":"Calder","firstname":"Veronica","lastname":"Costello"},{"id":27,"customer_id":1,"region":{"region_code":"MI","region":"Michigan","region_id":33},"region_id":33,"country_id":"US","street":["6146
+        Honey Bluff Parkway"],"telephone":"(555) 229-3326","postcode":"49628-7978","city":"Calder","firstname":"Veronica","lastname":"Costello"}],"disable_auto_group_change":0,"extension_attributes":{"is_subscribed":false}}'}
+    headers:
+      Cache-Control: ['no-store, no-cache, must-revalidate']
+      Connection: [keep-alive]
+      Content-Type: [application/json; charset=utf-8]
+      Date: ['Fri, 08 May 2020 06:51:12 GMT']
+      Expires: ['Thu, 19 Nov 1981 08:52:00 GMT']
+      Pragma: [no-cache]
+      Server: [nginx/1.14.0 (Ubuntu)]
+      Set-Cookie: ['PHPSESSID=2ug6q8jks9crf3l4fgtnruikvc; expires=Fri, 08-May-2020
+          07:51:12 GMT; Max-Age=3600; path=/; domain=magento; HttpOnly']
+      Transfer-Encoding: [chunked]
+      Vary: [Accept-Encoding]
+      X-Frame-Options: [SAMEORIGIN]
+      content-length: ['6511']
+    status: {code: 200, message: OK}
+- request:
+    body: null
+    headers:
+      Accept: ['*/*']
+      Accept-Encoding: ['gzip, deflate']
+      Connection: [keep-alive]
+      User-Agent: [python-requests/2.19.1]
+    method: GET
+    uri: http://magento/index.php/rest/V1/customerGroups/1
+  response:
+    body: {string: '{"id":1,"code":"General","tax_class_id":3,"tax_class_name":"Retail
+        Customer"}'}
+    headers:
+      Cache-Control: ['no-store, no-cache, must-revalidate']
+      Connection: [keep-alive]
+      Content-Type: [application/json; charset=utf-8]
+      Date: ['Fri, 08 May 2020 06:51:12 GMT']
+      Expires: ['Thu, 19 Nov 1981 08:52:00 GMT']
+      Pragma: [no-cache]
+      Server: [nginx/1.14.0 (Ubuntu)]
+      Set-Cookie: ['PHPSESSID=j4tm6cn6643p2kn35uvrtvgiph; expires=Fri, 08-May-2020
+          07:51:12 GMT; Max-Age=3600; path=/; domain=magento; HttpOnly']
+      Transfer-Encoding: [chunked]
+      Vary: [Accept-Encoding]
+      X-Frame-Options: [SAMEORIGIN]
+      content-length: ['77']
+    status: {code: 200, message: OK}
+- request:
+    body: null
+    headers:
+      Accept: ['*/*']
+      Accept-Encoding: ['gzip, deflate']
+      Connection: [keep-alive]
+      User-Agent: [python-requests/2.19.1]
+    method: GET
+    uri: http://magento/index.php/rest/V1/customers/1
+  response:
+    body: {string: '{"id":1,"group_id":1,"default_billing":"1","default_shipping":"1","created_at":"2020-03-27
+        16:12:15","updated_at":"2020-03-27 16:12:15","created_in":"Default Store View","dob":"1973-12-15","email":"roni_cost@example.com","firstname":"Veronica","lastname":"Costello","gender":2,"store_id":1,"website_id":1,"addresses":[{"id":1,"customer_id":1,"region":{"region_code":"MI","region":"Michigan","region_id":33},"region_id":33,"country_id":"US","street":["6146
+        Honey Bluff Parkway"],"telephone":"(555) 229-3326","postcode":"49628-7978","city":"Calder","firstname":"Veronica","lastname":"Costello","default_shipping":true,"default_billing":true},{"id":7,"customer_id":1,"region":{"region_code":"MI","region":"Michigan","region_id":33},"region_id":33,"country_id":"US","street":["6146
+        Honey Bluff Parkway"],"telephone":"(555) 229-3326","postcode":"49628-7978","city":"Calder","firstname":"Veronica","lastname":"Costello"},{"id":8,"customer_id":1,"region":{"region_code":"MI","region":"Michigan","region_id":33},"region_id":33,"country_id":"US","street":["6146
+        Honey Bluff Parkway"],"telephone":"(555) 229-3326","postcode":"49628-7978","city":"Calder","firstname":"Veronica","lastname":"Costello"},{"id":9,"customer_id":1,"region":{"region_code":"MI","region":"Michigan","region_id":33},"region_id":33,"country_id":"US","street":["6146
+        Honey Bluff Parkway"],"telephone":"(555) 229-3326","postcode":"49628-7978","city":"Calder","firstname":"Veronica","lastname":"Costello"},{"id":10,"customer_id":1,"region":{"region_code":"MI","region":"Michigan","region_id":33},"region_id":33,"country_id":"US","street":["6146
+        Honey Bluff Parkway"],"telephone":"(555) 229-3326","postcode":"49628-7978","city":"Calder","firstname":"Veronica","lastname":"Costello"},{"id":11,"customer_id":1,"region":{"region_code":"MI","region":"Michigan","region_id":33},"region_id":33,"country_id":"US","street":["6146
+        Honey Bluff Parkway"],"telephone":"(555) 229-3326","postcode":"49628-7978","city":"Calder","firstname":"Veronica","lastname":"Costello"},{"id":12,"customer_id":1,"region":{"region_code":"MI","region":"Michigan","region_id":33},"region_id":33,"country_id":"US","street":["6146
+        Honey Bluff Parkway"],"telephone":"(555) 229-3326","postcode":"49628-7978","city":"Calder","firstname":"Veronica","lastname":"Costello"},{"id":13,"customer_id":1,"region":{"region_code":"MI","region":"Michigan","region_id":33},"region_id":33,"country_id":"US","street":["6146
+        Honey Bluff Parkway"],"telephone":"(555) 229-3326","postcode":"49628-7978","city":"Calder","firstname":"Veronica","lastname":"Costello"},{"id":14,"customer_id":1,"region":{"region_code":"MI","region":"Michigan","region_id":33},"region_id":33,"country_id":"US","street":["6146
+        Honey Bluff Parkway"],"telephone":"(555) 229-3326","postcode":"49628-7978","city":"Calder","firstname":"Veronica","lastname":"Costello"},{"id":15,"customer_id":1,"region":{"region_code":"MI","region":"Michigan","region_id":33},"region_id":33,"country_id":"US","street":["6146
+        Honey Bluff Parkway"],"telephone":"(555) 229-3326","postcode":"49628-7978","city":"Calder","firstname":"Veronica","lastname":"Costello"},{"id":16,"customer_id":1,"region":{"region_code":"MI","region":"Michigan","region_id":33},"region_id":33,"country_id":"US","street":["6146
+        Honey Bluff Parkway"],"telephone":"(555) 229-3326","postcode":"49628-7978","city":"Calder","firstname":"Veronica","lastname":"Costello"},{"id":17,"customer_id":1,"region":{"region_code":"MI","region":"Michigan","region_id":33},"region_id":33,"country_id":"US","street":["6146
+        Honey Bluff Parkway"],"telephone":"(555) 229-3326","postcode":"49628-7978","city":"Calder","firstname":"Veronica","lastname":"Costello"},{"id":18,"customer_id":1,"region":{"region_code":"MI","region":"Michigan","region_id":33},"region_id":33,"country_id":"US","street":["6146
+        Honey Bluff Parkway"],"telephone":"(555) 229-3326","postcode":"49628-7978","city":"Calder","firstname":"Veronica","lastname":"Costello"},{"id":19,"customer_id":1,"region":{"region_code":"MI","region":"Michigan","region_id":33},"region_id":33,"country_id":"US","street":["6146
+        Honey Bluff Parkway"],"telephone":"(555) 229-3326","postcode":"49628-7978","city":"Calder","firstname":"Veronica","lastname":"Costello"},{"id":20,"customer_id":1,"region":{"region_code":"MI","region":"Michigan","region_id":33},"region_id":33,"country_id":"US","street":["6146
+        Honey Bluff Parkway"],"telephone":"(555) 229-3326","postcode":"49628-7978","city":"Calder","firstname":"Veronica","lastname":"Costello"},{"id":21,"customer_id":1,"region":{"region_code":"MI","region":"Michigan","region_id":33},"region_id":33,"country_id":"US","street":["6146
+        Honey Bluff Parkway"],"telephone":"(555) 229-3326","postcode":"49628-7978","city":"Calder","firstname":"Veronica","lastname":"Costello"},{"id":22,"customer_id":1,"region":{"region_code":"MI","region":"Michigan","region_id":33},"region_id":33,"country_id":"US","street":["6146
+        Honey Bluff Parkway"],"telephone":"(555) 229-3326","postcode":"49628-7978","city":"Calder","firstname":"Veronica","lastname":"Costello"},{"id":23,"customer_id":1,"region":{"region_code":"MI","region":"Michigan","region_id":33},"region_id":33,"country_id":"US","street":["6146
+        Honey Bluff Parkway"],"telephone":"(555) 229-3326","postcode":"49628-7978","city":"Calder","firstname":"Veronica","lastname":"Costello"},{"id":24,"customer_id":1,"region":{"region_code":"MI","region":"Michigan","region_id":33},"region_id":33,"country_id":"US","street":["6146
+        Honey Bluff Parkway"],"telephone":"(555) 229-3326","postcode":"49628-7978","city":"Calder","firstname":"Veronica","lastname":"Costello"},{"id":25,"customer_id":1,"region":{"region_code":"MI","region":"Michigan","region_id":33},"region_id":33,"country_id":"US","street":["6146
+        Honey Bluff Parkway"],"telephone":"(555) 229-3326","postcode":"49628-7978","city":"Calder","firstname":"Veronica","lastname":"Costello"},{"id":26,"customer_id":1,"region":{"region_code":"MI","region":"Michigan","region_id":33},"region_id":33,"country_id":"US","street":["6146
+        Honey Bluff Parkway"],"telephone":"(555) 229-3326","postcode":"49628-7978","city":"Calder","firstname":"Veronica","lastname":"Costello"},{"id":27,"customer_id":1,"region":{"region_code":"MI","region":"Michigan","region_id":33},"region_id":33,"country_id":"US","street":["6146
+        Honey Bluff Parkway"],"telephone":"(555) 229-3326","postcode":"49628-7978","city":"Calder","firstname":"Veronica","lastname":"Costello"}],"disable_auto_group_change":0,"extension_attributes":{"is_subscribed":false}}'}
+    headers:
+      Cache-Control: ['no-store, no-cache, must-revalidate']
+      Connection: [keep-alive]
+      Content-Type: [application/json; charset=utf-8]
+      Date: ['Fri, 08 May 2020 06:51:12 GMT']
+      Expires: ['Thu, 19 Nov 1981 08:52:00 GMT']
+      Pragma: [no-cache]
+      Server: [nginx/1.14.0 (Ubuntu)]
+      Set-Cookie: ['PHPSESSID=ktvs24hn4dc0f8u5pi1dhnoacn; expires=Fri, 08-May-2020
+          07:51:12 GMT; Max-Age=3600; path=/; domain=magento; HttpOnly']
+      Transfer-Encoding: [chunked]
+      Vary: [Accept-Encoding]
+      X-Frame-Options: [SAMEORIGIN]
+      content-length: ['6511']
+    status: {code: 200, message: OK}
+- request:
+    body: null
+    headers:
+      Accept: ['*/*']
+      Accept-Encoding: ['gzip, deflate']
+      Connection: [keep-alive]
+      User-Agent: [python-requests/2.19.1]
+    method: GET
+    uri: http://magento/index.php/rest/V1/products/MH09-XS-Blue
+  response:
+    body: {string: '{"id":181,"sku":"MH09-XS-Blue","name":"Abominable Hoodie-XS-Blue","attribute_set_id":9,"price":69,"status":1,"visibility":1,"type_id":"simple","created_at":"2020-03-27
+        16:06:41","updated_at":"2020-03-27 16:06:41","weight":1,"extension_attributes":{"website_ids":[1],"category_links":[{"position":0,"category_id":"15"}],"stock_item":{"item_id":181,"product_id":181,"stock_id":1,"qty":97,"is_in_stock":true,"is_qty_decimal":false,"show_default_notification_message":false,"use_config_min_qty":true,"min_qty":0,"use_config_min_sale_qty":1,"min_sale_qty":1,"use_config_max_sale_qty":true,"max_sale_qty":10000,"use_config_backorders":true,"backorders":0,"use_config_notify_stock_qty":true,"notify_stock_qty":1,"use_config_qty_increments":true,"qty_increments":0,"use_config_enable_qty_inc":true,"enable_qty_increments":false,"use_config_manage_stock":true,"manage_stock":true,"low_stock_date":null,"is_decimal_divided":false,"stock_status_changed_auto":0}},"product_links":[],"options":[],"media_gallery_entries":[{"id":283,"media_type":"image","label":"","position":1,"disabled":false,"types":["image","small_image","thumbnail"],"file":"\/m\/h\/mh09-blue_main_1.jpg"},{"id":284,"media_type":"image","label":"","position":2,"disabled":false,"types":[],"file":"\/m\/h\/mh09-blue_alt1_1.jpg"},{"id":285,"media_type":"image","label":"","position":3,"disabled":false,"types":[],"file":"\/m\/h\/mh09-blue_back_1.jpg"}],"tier_prices":[],"custom_attributes":[{"attribute_code":"image","value":"\/m\/h\/mh09-blue_main_1.jpg"},{"attribute_code":"small_image","value":"\/m\/h\/mh09-blue_main_1.jpg"},{"attribute_code":"thumbnail","value":"\/m\/h\/mh09-blue_main_1.jpg"},{"attribute_code":"options_container","value":"container2"},{"attribute_code":"msrp_display_actual_price_type","value":"0"},{"attribute_code":"url_key","value":"abominable-hoodie-xs-blue"},{"attribute_code":"required_options","value":"0"},{"attribute_code":"has_options","value":"0"},{"attribute_code":"tax_class_id","value":"2"},{"attribute_code":"category_ids","value":["15"]},{"attribute_code":"description","value":"<p>It
+        took CoolTech&trade; weather apparel know-how and lots of wind-resistant fabric
+        to get the Abominable Hoodie just right. It''s aggressively warm when it needs
+        to be, while maintaining your comfort in milder climes.<\/p>\n<p>&bull; Blue
+        heather hoodie.<br \/>&bull; Relaxed fit. <br \/>&bull; Moisture-wicking.
+        <br \/>&bull; Machine wash\/dry.<\/p>"},{"attribute_code":"size","value":"5593"},{"attribute_code":"color","value":"5477"}]}'}
+    headers:
+      Cache-Control: ['no-store, no-cache, must-revalidate']
+      Connection: [keep-alive]
+      Content-Type: [application/json; charset=utf-8]
+      Date: ['Fri, 08 May 2020 06:51:14 GMT']
+      Expires: ['Thu, 19 Nov 1981 08:52:00 GMT']
+      Pragma: [no-cache]
+      Server: [nginx/1.14.0 (Ubuntu)]
+      Set-Cookie: ['PHPSESSID=cvt7uf94o4r77scniu0rof2ehq; expires=Fri, 08-May-2020
+          07:51:14 GMT; Max-Age=3600; path=/; domain=magento; HttpOnly']
+      Transfer-Encoding: [chunked]
+      Vary: [Accept-Encoding]
+      X-Frame-Options: [SAMEORIGIN]
+      content-length: ['2514']
+    status: {code: 200, message: OK}
+- request:
+    body: null
+    headers:
+      Accept: ['*/*']
+      Accept-Encoding: ['gzip, deflate']
+      Connection: [keep-alive]
+      User-Agent: [python-requests/2.19.1]
+    method: GET
+    uri: http://magento/index.php/rest/V1/categories/15
+  response:
+    body: {string: '{"id":15,"parent_id":12,"name":"Hoodies & Sweatshirts","is_active":true,"position":2,"level":4,"children":"","created_at":"2020-03-27
+        16:06:36","updated_at":"2020-03-27 16:06:36","path":"1\/2\/11\/12\/15","available_sort_by":[],"include_in_menu":true,"custom_attributes":[{"attribute_code":"is_anchor","value":"1"},{"attribute_code":"path","value":"1\/2\/11\/12\/15"},{"attribute_code":"children_count","value":"0"},{"attribute_code":"url_key","value":"hoodies-and-sweatshirts-men"},{"attribute_code":"url_path","value":"men\/tops-men\/hoodies-and-sweatshirts-men"}]}'}
+    headers:
+      Cache-Control: ['no-store, no-cache, must-revalidate']
+      Connection: [keep-alive]
+      Content-Type: [application/json; charset=utf-8]
+      Date: ['Fri, 08 May 2020 06:51:14 GMT']
+      Expires: ['Thu, 19 Nov 1981 08:52:00 GMT']
+      Pragma: [no-cache]
+      Server: [nginx/1.14.0 (Ubuntu)]
+      Set-Cookie: ['PHPSESSID=dnpbveck0a1it71thfi4fark1j; expires=Fri, 08-May-2020
+          07:51:14 GMT; Max-Age=3600; path=/; domain=magento; HttpOnly']
+      Transfer-Encoding: [chunked]
+      Vary: [Accept-Encoding]
+      X-Frame-Options: [SAMEORIGIN]
+      content-length: ['567']
+    status: {code: 200, message: OK}
+- request:
+    body: null
+    headers:
+      Accept: ['*/*']
+      Accept-Encoding: ['gzip, deflate']
+      Connection: [keep-alive]
+      User-Agent: [python-requests/2.19.1]
+    method: GET
+    uri: http://magento/index.php/rest/V1/categories/12
+  response:
+    body: {string: '{"id":12,"parent_id":11,"name":"Tops","is_active":true,"position":1,"level":3,"children":"14,15,16,17","created_at":"2020-03-27
+        16:06:36","updated_at":"2020-03-27 16:06:36","path":"1\/2\/11\/12","available_sort_by":[],"include_in_menu":true,"custom_attributes":[{"attribute_code":"is_anchor","value":"1"},{"attribute_code":"path","value":"1\/2\/11\/12"},{"attribute_code":"children_count","value":"4"},{"attribute_code":"url_key","value":"tops-men"},{"attribute_code":"url_path","value":"men\/tops-men"}]}'}
+    headers:
+      Cache-Control: ['no-store, no-cache, must-revalidate']
+      Connection: [keep-alive]
+      Content-Type: [application/json; charset=utf-8]
+      Date: ['Fri, 08 May 2020 06:51:14 GMT']
+      Expires: ['Thu, 19 Nov 1981 08:52:00 GMT']
+      Pragma: [no-cache]
+      Server: [nginx/1.14.0 (Ubuntu)]
+      Set-Cookie: ['PHPSESSID=o5a1n7mpj3sriad1e2tt5p18u5; expires=Fri, 08-May-2020
+          07:51:14 GMT; Max-Age=3600; path=/; domain=magento; HttpOnly']
+      Transfer-Encoding: [chunked]
+      Vary: [Accept-Encoding]
+      X-Frame-Options: [SAMEORIGIN]
+      content-length: ['505']
+    status: {code: 200, message: OK}
+- request:
+    body: null
+    headers:
+      Accept: ['*/*']
+      Accept-Encoding: ['gzip, deflate']
+      Connection: [keep-alive]
+      User-Agent: [python-requests/2.19.1]
+    method: GET
+    uri: http://magento/index.php/rest/V1/categories/11
+  response:
+    body: {string: '{"id":11,"parent_id":2,"name":"Men","is_active":true,"position":3,"level":2,"children":"12,13","created_at":"2020-03-27
+        16:06:36","updated_at":"2020-03-27 16:06:36","path":"1\/2\/11","available_sort_by":[],"include_in_menu":true,"custom_attributes":[{"attribute_code":"display_mode","value":"PAGE"},{"attribute_code":"is_anchor","value":"0"},{"attribute_code":"path","value":"1\/2\/11"},{"attribute_code":"children_count","value":"8"},{"attribute_code":"url_key","value":"men"},{"attribute_code":"url_path","value":"men"}]}'}
+    headers:
+      Cache-Control: ['no-store, no-cache, must-revalidate']
+      Connection: [keep-alive]
+      Content-Type: [application/json; charset=utf-8]
+      Date: ['Fri, 08 May 2020 06:51:14 GMT']
+      Expires: ['Thu, 19 Nov 1981 08:52:00 GMT']
+      Pragma: [no-cache]
+      Server: [nginx/1.14.0 (Ubuntu)]
+      Set-Cookie: ['PHPSESSID=g2o6fgjj61epg251sgjokaraj5; expires=Fri, 08-May-2020
+          07:51:14 GMT; Max-Age=3600; path=/; domain=magento; HttpOnly']
+      Transfer-Encoding: [chunked]
+      Vary: [Accept-Encoding]
+      X-Frame-Options: [SAMEORIGIN]
+      content-length: ['523']
+    status: {code: 200, message: OK}
+- request:
+    body: null
+    headers:
+      Accept: ['*/*']
+      Accept-Encoding: ['gzip, deflate']
+      Connection: [keep-alive]
+      User-Agent: [python-requests/2.19.1]
+    method: GET
+    uri: http://magento/index.php/rest/V1/categories/2
+  response:
+    body: {string: '{"id":2,"parent_id":1,"name":"Default Category","is_active":true,"position":1,"level":1,"children":"3,9,11,20,37,38","created_at":"2020-03-27
+        15:25:28","updated_at":"2020-04-24 10:01:36","path":"1\/2","available_sort_by":[],"include_in_menu":true,"custom_attributes":[{"attribute_code":"display_mode","value":"PRODUCTS"},{"attribute_code":"path","value":"1\/2"},{"attribute_code":"children_count","value":"39"}]}'}
+    headers:
+      Cache-Control: ['no-store, no-cache, must-revalidate']
+      Connection: [keep-alive]
+      Content-Type: [application/json; charset=utf-8]
+      Date: ['Fri, 08 May 2020 06:51:14 GMT']
+      Expires: ['Thu, 19 Nov 1981 08:52:00 GMT']
+      Pragma: [no-cache]
+      Server: [nginx/1.14.0 (Ubuntu)]
+      Set-Cookie: ['PHPSESSID=mf0nkrgld6cc5pk5t8ofrj3c30; expires=Fri, 08-May-2020
+          07:51:14 GMT; Max-Age=3600; path=/; domain=magento; HttpOnly']
+      Transfer-Encoding: [chunked]
+      Vary: [Accept-Encoding]
+      X-Frame-Options: [SAMEORIGIN]
+      content-length: ['412']
+    status: {code: 200, message: OK}
+- request:
+    body: null
+    headers:
+      Accept: ['*/*']
+      Accept-Encoding: ['gzip, deflate']
+      Connection: [keep-alive]
+      User-Agent: [python-requests/2.19.1]
+    method: GET
+    uri: http://magento/index.php/rest/V1/categories/1
+  response:
+    body: {string: '{"id":1,"parent_id":0,"name":"Root Catalog","position":0,"level":0,"children":"2","created_at":"2020-03-27
+        15:25:28","updated_at":"2020-04-24 10:01:36","path":"1","available_sort_by":[],"include_in_menu":true,"custom_attributes":[{"attribute_code":"path","value":"1"},{"attribute_code":"children_count","value":"40"}]}'}
+    headers:
+      Cache-Control: ['no-store, no-cache, must-revalidate']
+      Connection: [keep-alive]
+      Content-Type: [application/json; charset=utf-8]
+      Date: ['Fri, 08 May 2020 06:51:14 GMT']
+      Expires: ['Thu, 19 Nov 1981 08:52:00 GMT']
+      Pragma: [no-cache]
+      Server: [nginx/1.14.0 (Ubuntu)]
+      Set-Cookie: ['PHPSESSID=gk3gdb8ij2937o0035ifbn6968; expires=Fri, 08-May-2020
+          07:51:14 GMT; Max-Age=3600; path=/; domain=magento; HttpOnly']
+      Transfer-Encoding: [chunked]
+      Vary: [Accept-Encoding]
+      X-Frame-Options: [SAMEORIGIN]
+      content-length: ['318']
+    status: {code: 200, message: OK}
+- request:
+    body: null
+    headers:
+      Accept: ['*/*']
+      Accept-Encoding: ['gzip, deflate']
+      Connection: [keep-alive]
+      User-Agent: [python-requests/2.19.1]
+    method: GET
+    uri: http://magento/index.php/rest/default/V1/categories/1
+  response:
+    body: {string: '{"id":1,"parent_id":0,"name":"Root Catalog","position":0,"level":0,"children":"2","created_at":"2020-03-27
+        15:25:28","updated_at":"2020-04-24 10:01:36","path":"1","available_sort_by":[],"include_in_menu":true,"custom_attributes":[{"attribute_code":"path","value":"1"},{"attribute_code":"children_count","value":"40"}]}'}
+    headers:
+      Cache-Control: ['no-store, no-cache, must-revalidate']
+      Connection: [keep-alive]
+      Content-Type: [application/json; charset=utf-8]
+      Date: ['Fri, 08 May 2020 06:51:15 GMT']
+      Expires: ['Thu, 19 Nov 1981 08:52:00 GMT']
+      Pragma: [no-cache]
+      Server: [nginx/1.14.0 (Ubuntu)]
+      Set-Cookie: ['PHPSESSID=6pe0rakf3e2euvk4lha9h1hn8n; expires=Fri, 08-May-2020
+          07:51:15 GMT; Max-Age=3600; path=/; domain=magento; HttpOnly']
+      Transfer-Encoding: [chunked]
+      Vary: [Accept-Encoding]
+      X-Frame-Options: [SAMEORIGIN]
+      content-length: ['318']
+    status: {code: 200, message: OK}
+- request:
+    body: null
+    headers:
+      Accept: ['*/*']
+      Accept-Encoding: ['gzip, deflate']
+      Connection: [keep-alive]
+      User-Agent: [python-requests/2.19.1]
+    method: GET
+    uri: http://magento/index.php/rest/default/V1/categories/2
+  response:
+    body: {string: '{"id":2,"parent_id":1,"name":"Default Category","is_active":true,"position":1,"level":1,"children":"3,9,11,20,37,38","created_at":"2020-03-27
+        15:25:28","updated_at":"2020-04-24 10:01:36","path":"1\/2","available_sort_by":[],"include_in_menu":true,"custom_attributes":[{"attribute_code":"display_mode","value":"PRODUCTS"},{"attribute_code":"path","value":"1\/2"},{"attribute_code":"children_count","value":"39"}]}'}
+    headers:
+      Cache-Control: ['no-store, no-cache, must-revalidate']
+      Connection: [keep-alive]
+      Content-Type: [application/json; charset=utf-8]
+      Date: ['Fri, 08 May 2020 06:51:15 GMT']
+      Expires: ['Thu, 19 Nov 1981 08:52:00 GMT']
+      Pragma: [no-cache]
+      Server: [nginx/1.14.0 (Ubuntu)]
+      Set-Cookie: ['PHPSESSID=ou6h63272bvvced4v903hnrp30; expires=Fri, 08-May-2020
+          07:51:15 GMT; Max-Age=3600; path=/; domain=magento; HttpOnly']
+      Transfer-Encoding: [chunked]
+      Vary: [Accept-Encoding]
+      X-Frame-Options: [SAMEORIGIN]
+      content-length: ['412']
+    status: {code: 200, message: OK}
+- request:
+    body: null
+    headers:
+      Accept: ['*/*']
+      Accept-Encoding: ['gzip, deflate']
+      Connection: [keep-alive]
+      User-Agent: [python-requests/2.19.1]
+    method: GET
+    uri: http://magento/index.php/rest/default/V1/categories/11
+  response:
+    body: {string: '{"id":11,"parent_id":2,"name":"Men","is_active":true,"position":3,"level":2,"children":"12,13","created_at":"2020-03-27
+        16:06:36","updated_at":"2020-03-27 16:06:36","path":"1\/2\/11","available_sort_by":[],"include_in_menu":true,"custom_attributes":[{"attribute_code":"display_mode","value":"PAGE"},{"attribute_code":"is_anchor","value":"0"},{"attribute_code":"path","value":"1\/2\/11"},{"attribute_code":"children_count","value":"8"},{"attribute_code":"url_key","value":"men"},{"attribute_code":"url_path","value":"men"}]}'}
+    headers:
+      Cache-Control: ['no-store, no-cache, must-revalidate']
+      Connection: [keep-alive]
+      Content-Type: [application/json; charset=utf-8]
+      Date: ['Fri, 08 May 2020 06:51:15 GMT']
+      Expires: ['Thu, 19 Nov 1981 08:52:00 GMT']
+      Pragma: [no-cache]
+      Server: [nginx/1.14.0 (Ubuntu)]
+      Set-Cookie: ['PHPSESSID=kps6m18ht1a9eef3sinttcoc6h; expires=Fri, 08-May-2020
+          07:51:15 GMT; Max-Age=3600; path=/; domain=magento; HttpOnly']
+      Transfer-Encoding: [chunked]
+      Vary: [Accept-Encoding]
+      X-Frame-Options: [SAMEORIGIN]
+      content-length: ['523']
+    status: {code: 200, message: OK}
+- request:
+    body: null
+    headers:
+      Accept: ['*/*']
+      Accept-Encoding: ['gzip, deflate']
+      Connection: [keep-alive]
+      User-Agent: [python-requests/2.19.1]
+    method: GET
+    uri: http://magento/index.php/rest/default/V1/categories/12
+  response:
+    body: {string: '{"id":12,"parent_id":11,"name":"Tops","is_active":true,"position":1,"level":3,"children":"14,15,16,17","created_at":"2020-03-27
+        16:06:36","updated_at":"2020-03-27 16:06:36","path":"1\/2\/11\/12","available_sort_by":[],"include_in_menu":true,"custom_attributes":[{"attribute_code":"is_anchor","value":"1"},{"attribute_code":"path","value":"1\/2\/11\/12"},{"attribute_code":"children_count","value":"4"},{"attribute_code":"url_key","value":"tops-men"},{"attribute_code":"url_path","value":"men\/tops-men"}]}'}
+    headers:
+      Cache-Control: ['no-store, no-cache, must-revalidate']
+      Connection: [keep-alive]
+      Content-Type: [application/json; charset=utf-8]
+      Date: ['Fri, 08 May 2020 06:51:15 GMT']
+      Expires: ['Thu, 19 Nov 1981 08:52:00 GMT']
+      Pragma: [no-cache]
+      Server: [nginx/1.14.0 (Ubuntu)]
+      Set-Cookie: ['PHPSESSID=3fmqocdbt9843k2afh6n3e8t94; expires=Fri, 08-May-2020
+          07:51:15 GMT; Max-Age=3600; path=/; domain=magento; HttpOnly']
+      Transfer-Encoding: [chunked]
+      Vary: [Accept-Encoding]
+      X-Frame-Options: [SAMEORIGIN]
+      content-length: ['505']
+    status: {code: 200, message: OK}
+- request:
+    body: null
+    headers:
+      Accept: ['*/*']
+      Accept-Encoding: ['gzip, deflate']
+      Connection: [keep-alive]
+      User-Agent: [python-requests/2.19.1]
+    method: GET
+    uri: http://magento/index.php/rest/default/V1/categories/15
+  response:
+    body: {string: '{"id":15,"parent_id":12,"name":"Hoodies & Sweatshirts","is_active":true,"position":2,"level":4,"children":"","created_at":"2020-03-27
+        16:06:36","updated_at":"2020-03-27 16:06:36","path":"1\/2\/11\/12\/15","available_sort_by":[],"include_in_menu":true,"custom_attributes":[{"attribute_code":"is_anchor","value":"1"},{"attribute_code":"path","value":"1\/2\/11\/12\/15"},{"attribute_code":"children_count","value":"0"},{"attribute_code":"url_key","value":"hoodies-and-sweatshirts-men"},{"attribute_code":"url_path","value":"men\/tops-men\/hoodies-and-sweatshirts-men"}]}'}
+    headers:
+      Cache-Control: ['no-store, no-cache, must-revalidate']
+      Connection: [keep-alive]
+      Content-Type: [application/json; charset=utf-8]
+      Date: ['Fri, 08 May 2020 06:51:15 GMT']
+      Expires: ['Thu, 19 Nov 1981 08:52:00 GMT']
+      Pragma: [no-cache]
+      Server: [nginx/1.14.0 (Ubuntu)]
+      Set-Cookie: ['PHPSESSID=aq4v49loct6cq1qe43dmia2kun; expires=Fri, 08-May-2020
+          07:51:15 GMT; Max-Age=3600; path=/; domain=magento; HttpOnly']
+      Transfer-Encoding: [chunked]
+      Vary: [Accept-Encoding]
+      X-Frame-Options: [SAMEORIGIN]
+      content-length: ['567']
+    status: {code: 200, message: OK}
+- request:
+    body: null
+    headers:
+      Accept: ['*/*']
+      Accept-Encoding: ['gzip, deflate']
+      Connection: [keep-alive]
+      User-Agent: [python-requests/2.19.1]
+    method: GET
+    uri: http://magento/index.php/rest/default/V1/products/MH09-XS-Blue
+  response:
+    body: {string: '{"id":181,"sku":"MH09-XS-Blue","name":"Abominable Hoodie-XS-Blue","attribute_set_id":9,"price":69,"status":1,"visibility":1,"type_id":"simple","created_at":"2020-03-27
+        16:06:41","updated_at":"2020-03-27 16:06:41","weight":1,"extension_attributes":{"website_ids":[1],"category_links":[{"position":0,"category_id":"15"}],"stock_item":{"item_id":181,"product_id":181,"stock_id":1,"qty":97,"is_in_stock":true,"is_qty_decimal":false,"show_default_notification_message":false,"use_config_min_qty":true,"min_qty":0,"use_config_min_sale_qty":1,"min_sale_qty":1,"use_config_max_sale_qty":true,"max_sale_qty":10000,"use_config_backorders":true,"backorders":0,"use_config_notify_stock_qty":true,"notify_stock_qty":1,"use_config_qty_increments":true,"qty_increments":0,"use_config_enable_qty_inc":true,"enable_qty_increments":false,"use_config_manage_stock":true,"manage_stock":true,"low_stock_date":null,"is_decimal_divided":false,"stock_status_changed_auto":0}},"product_links":[],"options":[],"media_gallery_entries":[{"id":283,"media_type":"image","label":"","position":1,"disabled":false,"types":["image","small_image","thumbnail"],"file":"\/m\/h\/mh09-blue_main_1.jpg"},{"id":284,"media_type":"image","label":"","position":2,"disabled":false,"types":[],"file":"\/m\/h\/mh09-blue_alt1_1.jpg"},{"id":285,"media_type":"image","label":"","position":3,"disabled":false,"types":[],"file":"\/m\/h\/mh09-blue_back_1.jpg"}],"tier_prices":[],"custom_attributes":[{"attribute_code":"image","value":"\/m\/h\/mh09-blue_main_1.jpg"},{"attribute_code":"small_image","value":"\/m\/h\/mh09-blue_main_1.jpg"},{"attribute_code":"thumbnail","value":"\/m\/h\/mh09-blue_main_1.jpg"},{"attribute_code":"options_container","value":"container2"},{"attribute_code":"msrp_display_actual_price_type","value":"0"},{"attribute_code":"url_key","value":"abominable-hoodie-xs-blue"},{"attribute_code":"required_options","value":"0"},{"attribute_code":"has_options","value":"0"},{"attribute_code":"tax_class_id","value":"2"},{"attribute_code":"category_ids","value":["15"]},{"attribute_code":"description","value":"<p>It
+        took CoolTech&trade; weather apparel know-how and lots of wind-resistant fabric
+        to get the Abominable Hoodie just right. It''s aggressively warm when it needs
+        to be, while maintaining your comfort in milder climes.<\/p>\n<p>&bull; Blue
+        heather hoodie.<br \/>&bull; Relaxed fit. <br \/>&bull; Moisture-wicking.
+        <br \/>&bull; Machine wash\/dry.<\/p>"},{"attribute_code":"size","value":"5593"},{"attribute_code":"color","value":"5477"}]}'}
+    headers:
+      Cache-Control: ['no-store, no-cache, must-revalidate']
+      Connection: [keep-alive]
+      Content-Type: [application/json; charset=utf-8]
+      Date: ['Fri, 08 May 2020 06:51:16 GMT']
+      Expires: ['Thu, 19 Nov 1981 08:52:00 GMT']
+      Pragma: [no-cache]
+      Server: [nginx/1.14.0 (Ubuntu)]
+      Set-Cookie: ['PHPSESSID=781t74qespuj50lckfik9t5i58; expires=Fri, 08-May-2020
+          07:51:16 GMT; Max-Age=3600; path=/; domain=magento; HttpOnly']
+      Transfer-Encoding: [chunked]
+      Vary: [Accept-Encoding]
+      X-Frame-Options: [SAMEORIGIN]
+      content-length: ['2514']
+    status: {code: 200, message: OK}
+- request:
+    body: null
+    headers:
+      Accept: ['*/*']
+      Accept-Encoding: ['gzip, deflate']
+      Connection: [keep-alive]
+      User-Agent: [python-requests/2.19.1]
+    method: GET
+    uri: http://magento/media/catalog/product//m/h/mh09-blue_main_1.jpg
+  response:
+    body:
+      string: !!binary |
+        R0lGODlhAQABAIAAAP///wAAACH5BAEAAAAALAAAAAABAAEAAAICRAEAOw==
+    headers:
+      Accept-Ranges: [bytes]
+      Cache-Control: [max-age=31536000, public]
+      Connection: [keep-alive]
+      Content-Length: ['203443']
+      Content-Type: [image/jpeg]
+      Date: ['Fri, 08 May 2020 06:51:16 GMT']
+      ETag: ['"5e7e2491-31ab3"']
+      Expires: ['Sat, 08 May 2021 06:51:16 GMT']
+      Last-Modified: ['Fri, 27 Mar 2020 16:06:41 GMT']
+      Server: [nginx/1.14.0 (Ubuntu)]
+      X-Frame-Options: [SAMEORIGIN]
+    status: {code: 200, message: OK}
+- request:
+    body: null
+    headers:
+      Accept: ['*/*']
+      Accept-Encoding: ['gzip, deflate']
+      Connection: [keep-alive]
+      User-Agent: [python-requests/2.19.1]
+    method: GET
+    uri: http://magento/index.php/rest/V1/products/RACER
+  response:
+    body: {string: '{"id":2051,"sku":"RACER","name":"Racer Back Maxi Dress","attribute_set_id":4,"price":224,"status":1,"visibility":4,"type_id":"simple","created_at":"2020-04-24
+        11:34:18","updated_at":"2020-04-24 11:39:56","extension_attributes":{"website_ids":[1],"stock_item":{"item_id":2051,"product_id":2051,"stock_id":1,"qty":98,"is_in_stock":true,"is_qty_decimal":false,"show_default_notification_message":false,"use_config_min_qty":true,"min_qty":0,"use_config_min_sale_qty":1,"min_sale_qty":1,"use_config_max_sale_qty":true,"max_sale_qty":10000,"use_config_backorders":true,"backorders":0,"use_config_notify_stock_qty":true,"notify_stock_qty":1,"use_config_qty_increments":true,"qty_increments":0,"use_config_enable_qty_inc":true,"enable_qty_increments":false,"use_config_manage_stock":true,"manage_stock":true,"low_stock_date":null,"is_decimal_divided":false,"stock_status_changed_auto":0}},"product_links":[],"options":[],"media_gallery_entries":[],"tier_prices":[],"custom_attributes":[{"attribute_code":"options_container","value":"container2"},{"attribute_code":"msrp_display_actual_price_type","value":"0"},{"attribute_code":"url_key","value":"racer-back-maxi-dress"},{"attribute_code":"gift_message_available","value":"2"},{"attribute_code":"required_options","value":"0"},{"attribute_code":"has_options","value":"0"},{"attribute_code":"meta_title","value":"Racer
+        Back Maxi Dress"},{"attribute_code":"meta_keyword","value":"Racer Back Maxi
+        Dress"},{"attribute_code":"meta_description","value":"Racer Back Maxi Dress
+        "},{"attribute_code":"tax_class_id","value":"2"},{"attribute_code":"ts_packaging_type","value":"none"},{"attribute_code":"category_ids","value":[]}]}'}
+    headers:
+      Cache-Control: ['no-store, no-cache, must-revalidate']
+      Connection: [keep-alive]
+      Content-Type: [application/json; charset=utf-8]
+      Date: ['Fri, 08 May 2020 06:51:16 GMT']
+      Expires: ['Thu, 19 Nov 1981 08:52:00 GMT']
+      Pragma: [no-cache]
+      Server: [nginx/1.14.0 (Ubuntu)]
+      Set-Cookie: ['PHPSESSID=osrsde8ck3t032efmm9c8trsom; expires=Fri, 08-May-2020
+          07:51:16 GMT; Max-Age=3600; path=/; domain=magento; HttpOnly']
+      Transfer-Encoding: [chunked]
+      Vary: [Accept-Encoding]
+      X-Frame-Options: [SAMEORIGIN]
+      content-length: ['1661']
+    status: {code: 200, message: OK}
+- request:
+    body: null
+    headers:
+      Accept: ['*/*']
+      Accept-Encoding: ['gzip, deflate']
+      Connection: [keep-alive]
+      User-Agent: [python-requests/2.19.1]
+    method: GET
+    uri: http://magento/index.php/rest/default/V1/products/RACER
+  response:
+    body: {string: '{"id":2051,"sku":"RACER","name":"Racer Back Maxi Dress","attribute_set_id":4,"price":224,"status":1,"visibility":4,"type_id":"simple","created_at":"2020-04-24
+        11:34:18","updated_at":"2020-04-24 11:39:56","extension_attributes":{"website_ids":[1],"stock_item":{"item_id":2051,"product_id":2051,"stock_id":1,"qty":98,"is_in_stock":true,"is_qty_decimal":false,"show_default_notification_message":false,"use_config_min_qty":true,"min_qty":0,"use_config_min_sale_qty":1,"min_sale_qty":1,"use_config_max_sale_qty":true,"max_sale_qty":10000,"use_config_backorders":true,"backorders":0,"use_config_notify_stock_qty":true,"notify_stock_qty":1,"use_config_qty_increments":true,"qty_increments":0,"use_config_enable_qty_inc":true,"enable_qty_increments":false,"use_config_manage_stock":true,"manage_stock":true,"low_stock_date":null,"is_decimal_divided":false,"stock_status_changed_auto":0}},"product_links":[],"options":[],"media_gallery_entries":[],"tier_prices":[],"custom_attributes":[{"attribute_code":"options_container","value":"container2"},{"attribute_code":"msrp_display_actual_price_type","value":"0"},{"attribute_code":"url_key","value":"racer-back-maxi-dress"},{"attribute_code":"gift_message_available","value":"2"},{"attribute_code":"required_options","value":"0"},{"attribute_code":"has_options","value":"0"},{"attribute_code":"meta_title","value":"Racer
+        Back Maxi Dress"},{"attribute_code":"meta_keyword","value":"Racer Back Maxi
+        Dress"},{"attribute_code":"meta_description","value":"Racer Back Maxi Dress
+        "},{"attribute_code":"tax_class_id","value":"2"},{"attribute_code":"ts_packaging_type","value":"none"},{"attribute_code":"category_ids","value":[]}]}'}
+    headers:
+      Cache-Control: ['no-store, no-cache, must-revalidate']
+      Connection: [keep-alive]
+      Content-Type: [application/json; charset=utf-8]
+      Date: ['Fri, 08 May 2020 06:51:16 GMT']
+      Expires: ['Thu, 19 Nov 1981 08:52:00 GMT']
+      Pragma: [no-cache]
+      Server: [nginx/1.14.0 (Ubuntu)]
+      Set-Cookie: ['PHPSESSID=rvq1q6699beos3l68f4k0llh9p; expires=Fri, 08-May-2020
+          07:51:16 GMT; Max-Age=3600; path=/; domain=magento; HttpOnly']
+      Transfer-Encoding: [chunked]
+      Vary: [Accept-Encoding]
+      X-Frame-Options: [SAMEORIGIN]
+      content-length: ['1661']
+    status: {code: 200, message: OK}
+version: 1

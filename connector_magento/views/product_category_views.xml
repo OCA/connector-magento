@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="view_product_category_form" model="ir.ui.view">
+        <field name="name">product.category.form.magento</field>
+        <field name="model">product.category</field>
+        <field name="inherit_id" ref="product.product_category_form_view"/>
+        <field name="groups_id"
+               eval="[(4, ref('connector.group_connector_manager'))]"/>
+        <field name="arch" type="xml">
+            <xpath expr="//group[last()]" position="after">
+                <group name="magento" string="Magento Bindings">
+                    <field name="magento_bind_ids" nolabel="1">
+                        <tree>
+                            <field name="backend_id"/>
+                        </tree>
+                    </field>
+                </group>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="view_magento_product_category_form" model="ir.ui.view">
+        <field name="name">magento.product.category.form</field>
+        <field name="model">magento.product.category</field>
+        <field name="arch" type="xml">
+            <form string="Magento Product Category">
+                <group>
+                    <field name="backend_id"/>
+                    <field name="external_id"/>
+                    <field name="description"/>
+                    <field name="magento_parent_id"/>
+                    <field name="magento_child_ids"/>
+                </group>
+            </form>
+        </field>
+    </record>
+
+    <record id="view_magento_product_category_tree" model="ir.ui.view">
+        <field name="name">magento.product.category.tree</field>
+        <field name="model">magento.product.category</field>
+        <field name="arch" type="xml">
+            <tree string="Magento Product Category">
+                <field name="backend_id"/>
+            </tree>
+        </field>
+    </record>
+
+</odoo>

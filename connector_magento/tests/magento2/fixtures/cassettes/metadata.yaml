@@ -1,0 +1,185 @@
+interactions:
+- request:
+    body: null
+    headers:
+      Accept: ['*/*']
+      Accept-Encoding: ['gzip, deflate']
+      Connection: [keep-alive]
+      User-Agent: [python-requests/2.19.1]
+    method: GET
+    uri: http://magento/index.php/rest/V1/store/websites?fields=id
+  response:
+    body: {string: '[{"id":1},{"id":0}]'}
+    headers:
+      Cache-Control: ['no-store, no-cache, must-revalidate']
+      Connection: [keep-alive]
+      Content-Type: [application/json; charset=utf-8]
+      Date: ['Fri, 17 Apr 2020 17:31:08 GMT']
+      Expires: ['Thu, 19 Nov 1981 08:52:00 GMT']
+      Pragma: [no-cache]
+      Server: [nginx/1.14.0 (Ubuntu)]
+      Set-Cookie: ['PHPSESSID=4hhth2u2r5e5t21fk4c3idq2s2; expires=Fri, 17-Apr-2020
+          18:31:08 GMT; Max-Age=3600; path=/; domain=magento; HttpOnly']
+      Transfer-Encoding: [chunked]
+      Vary: [Accept-Encoding]
+      X-Frame-Options: [SAMEORIGIN]
+      content-length: ['19']
+    status: {code: 200, message: OK}
+- request:
+    body: null
+    headers:
+      Accept: ['*/*']
+      Accept-Encoding: ['gzip, deflate']
+      Connection: [keep-alive]
+      User-Agent: [python-requests/2.19.1]
+    method: GET
+    uri: http://magento/index.php/rest/V1/store/websites
+  response:
+    body: {string: '[{"id":1,"code":"base","name":"Main Website","default_group_id":1},{"id":0,"code":"admin","name":"Admin","default_group_id":0}]'}
+    headers:
+      Cache-Control: ['no-store, no-cache, must-revalidate']
+      Connection: [keep-alive]
+      Content-Type: [application/json; charset=utf-8]
+      Date: ['Fri, 17 Apr 2020 17:31:08 GMT']
+      Expires: ['Thu, 19 Nov 1981 08:52:00 GMT']
+      Pragma: [no-cache]
+      Server: [nginx/1.14.0 (Ubuntu)]
+      Set-Cookie: ['PHPSESSID=9235d5p8gvaf4jfkv3dnnun581; expires=Fri, 17-Apr-2020
+          18:31:08 GMT; Max-Age=3600; path=/; domain=magento; HttpOnly']
+      Transfer-Encoding: [chunked]
+      Vary: [Accept-Encoding]
+      X-Frame-Options: [SAMEORIGIN]
+      content-length: ['127']
+    status: {code: 200, message: OK}
+- request:
+    body: null
+    headers:
+      Accept: ['*/*']
+      Accept-Encoding: ['gzip, deflate']
+      Connection: [keep-alive]
+      User-Agent: [python-requests/2.19.1]
+    method: GET
+    uri: http://magento/index.php/rest/V1/store/storeGroups?fields=id
+  response:
+    body: {string: '[{"id":0},{"id":1}]'}
+    headers:
+      Cache-Control: ['no-store, no-cache, must-revalidate']
+      Connection: [keep-alive]
+      Content-Type: [application/json; charset=utf-8]
+      Date: ['Fri, 17 Apr 2020 17:31:08 GMT']
+      Expires: ['Thu, 19 Nov 1981 08:52:00 GMT']
+      Pragma: [no-cache]
+      Server: [nginx/1.14.0 (Ubuntu)]
+      Set-Cookie: ['PHPSESSID=65qd2k44nkg6vkhklim560muic; expires=Fri, 17-Apr-2020
+          18:31:08 GMT; Max-Age=3600; path=/; domain=magento; HttpOnly']
+      Transfer-Encoding: [chunked]
+      Vary: [Accept-Encoding]
+      X-Frame-Options: [SAMEORIGIN]
+      content-length: ['19']
+    status: {code: 200, message: OK}
+- request:
+    body: null
+    headers:
+      Accept: ['*/*']
+      Accept-Encoding: ['gzip, deflate']
+      Connection: [keep-alive]
+      User-Agent: [python-requests/2.19.1]
+    method: GET
+    uri: http://magento/index.php/rest/V1/store/storeGroups
+  response:
+    body: {string: '[{"id":0,"website_id":0,"root_category_id":0,"default_store_id":0,"name":"Default","code":"default"},{"id":1,"website_id":1,"root_category_id":2,"default_store_id":1,"name":"Main
+        Website Store","code":"main_website_store"}]'}
+    headers:
+      Cache-Control: ['no-store, no-cache, must-revalidate']
+      Connection: [keep-alive]
+      Content-Type: [application/json; charset=utf-8]
+      Date: ['Fri, 17 Apr 2020 17:31:08 GMT']
+      Expires: ['Thu, 19 Nov 1981 08:52:00 GMT']
+      Pragma: [no-cache]
+      Server: [nginx/1.14.0 (Ubuntu)]
+      Set-Cookie: ['PHPSESSID=vr1paqb90t55b364anm0932nrc; expires=Fri, 17-Apr-2020
+          18:31:08 GMT; Max-Age=3600; path=/; domain=magento; HttpOnly']
+      Transfer-Encoding: [chunked]
+      Vary: [Accept-Encoding]
+      X-Frame-Options: [SAMEORIGIN]
+      content-length: ['223']
+    status: {code: 200, message: OK}
+- request:
+    body: null
+    headers:
+      Accept: ['*/*']
+      Accept-Encoding: ['gzip, deflate']
+      Connection: [keep-alive]
+      User-Agent: [python-requests/2.19.1]
+    method: GET
+    uri: http://magento/index.php/rest/V1/store/storeConfigs?fields=id
+  response:
+    body: {string: '[{"id":1}]'}
+    headers:
+      Cache-Control: ['no-store, no-cache, must-revalidate']
+      Connection: [keep-alive]
+      Content-Type: [application/json; charset=utf-8]
+      Date: ['Fri, 17 Apr 2020 17:31:09 GMT']
+      Expires: ['Thu, 19 Nov 1981 08:52:00 GMT']
+      Pragma: [no-cache]
+      Server: [nginx/1.14.0 (Ubuntu)]
+      Set-Cookie: ['PHPSESSID=2pv2d5ulnpcpnv59e9ik7rgk4s; expires=Fri, 17-Apr-2020
+          18:31:09 GMT; Max-Age=3600; path=/; domain=magento; HttpOnly']
+      Transfer-Encoding: [chunked]
+      Vary: [Accept-Encoding]
+      X-Frame-Options: [SAMEORIGIN]
+      content-length: ['10']
+    status: {code: 200, message: OK}
+- request:
+    body: null
+    headers:
+      Accept: ['*/*']
+      Accept-Encoding: ['gzip, deflate']
+      Connection: [keep-alive]
+      User-Agent: [python-requests/2.19.1]
+    method: GET
+    uri: http://magento/index.php/rest/V1/store/storeViews
+  response:
+    body: {string: '[{"id":1,"code":"default","name":"Default Store View","website_id":1,"store_group_id":1,"is_active":1},{"id":0,"code":"admin","name":"Admin","website_id":0,"store_group_id":0,"is_active":1}]'}
+    headers:
+      Cache-Control: ['no-store, no-cache, must-revalidate']
+      Connection: [keep-alive]
+      Content-Type: [application/json; charset=utf-8]
+      Date: ['Fri, 17 Apr 2020 17:31:09 GMT']
+      Expires: ['Thu, 19 Nov 1981 08:52:00 GMT']
+      Pragma: [no-cache]
+      Server: [nginx/1.14.0 (Ubuntu)]
+      Set-Cookie: ['PHPSESSID=pnj8h0dsnpfeuufl2nkuvo5kn3; expires=Fri, 17-Apr-2020
+          18:31:09 GMT; Max-Age=3600; path=/; domain=magento; HttpOnly']
+      Transfer-Encoding: [chunked]
+      Vary: [Accept-Encoding]
+      X-Frame-Options: [SAMEORIGIN]
+      content-length: ['190']
+    status: {code: 200, message: OK}
+- request:
+    body: null
+    headers:
+      Accept: ['*/*']
+      Accept-Encoding: ['gzip, deflate']
+      Connection: [keep-alive]
+      User-Agent: [python-requests/2.19.1]
+    method: GET
+    uri: http://magento/index.php/rest/V1/store/storeConfigs
+  response:
+    body: {string: '[{"id":1,"code":"default","website_id":1,"locale":"en_US","base_currency_code":"USD","default_display_currency_code":"USD","timezone":"Europe\/Amsterdam","weight_unit":"lbs","base_url":"http:\/\/magento\/","base_link_url":"http:\/\/magento\/index.php\/","base_static_url":"http:\/\/magento\/static\/version1585325535\/","base_media_url":"http:\/\/magento\/media\/","secure_base_url":"http:\/\/magento\/","secure_base_link_url":"http:\/\/magento\/index.php\/","secure_base_static_url":"http:\/\/magento\/static\/version1585325535\/","secure_base_media_url":"http:\/\/magento\/media\/"}]'}
+    headers:
+      Cache-Control: ['no-store, no-cache, must-revalidate']
+      Connection: [keep-alive]
+      Content-Type: [application/json; charset=utf-8]
+      Date: ['Fri, 17 Apr 2020 17:31:09 GMT']
+      Expires: ['Thu, 19 Nov 1981 08:52:00 GMT']
+      Pragma: [no-cache]
+      Server: [nginx/1.14.0 (Ubuntu)]
+      Set-Cookie: ['PHPSESSID=bjodpjblut2cg3imtc9fck87in; expires=Fri, 17-Apr-2020
+          18:31:09 GMT; Max-Age=3600; path=/; domain=magento; HttpOnly']
+      Transfer-Encoding: [chunked]
+      Vary: [Accept-Encoding]
+      X-Frame-Options: [SAMEORIGIN]
+      content-length: ['657']
+    status: {code: 200, message: OK}
+version: 1

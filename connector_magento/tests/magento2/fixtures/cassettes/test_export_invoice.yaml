@@ -1,0 +1,31 @@
+interactions:
+- request:
+    body: '{"capture": false, "items": [{"orderItemId": "32", "qty": 1.0}], "comment":
+      {"comment": "Invoice Created", "isVisibleOnFront": 0}, "appendComment": false}'
+    headers:
+      Accept: ['*/*']
+      Accept-Encoding: ['gzip, deflate']
+      Connection: [keep-alive]
+      Content-Length: ['154']
+      Content-Type: [application/json]
+      User-Agent: [python-requests/2.19.1]
+    method: POST
+    uri: http://magento/index.php/rest/V1/order/16/invoice
+  response:
+    body: {string: '"4"'}
+    headers:
+      Cache-Control: ['no-store, no-cache, must-revalidate']
+      Connection: [keep-alive]
+      Content-Type: [application/json; charset=utf-8]
+      Date: ['Fri, 08 May 2020 06:59:21 GMT']
+      Expires: ['Thu, 19 Nov 1981 08:52:00 GMT']
+      Pragma: [no-cache]
+      Server: [nginx/1.14.0 (Ubuntu)]
+      Set-Cookie: ['PHPSESSID=ch0f474sjmob975kuq2hs0m2g7; expires=Fri, 08-May-2020
+          07:59:21 GMT; Max-Age=3600; path=/; domain=magento; HttpOnly']
+      Transfer-Encoding: [chunked]
+      Vary: [Accept-Encoding]
+      X-Frame-Options: [SAMEORIGIN]
+      content-length: ['3']
+    status: {code: 200, message: OK}
+version: 1
