@@ -1,0 +1,2 @@
+git+https://github.com/StefanRijnhart/python-magento.git@call_with_http_method
+
