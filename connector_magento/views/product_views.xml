@@ -32,8 +32,8 @@
                 <group>
                     <field name="products_to_publish">
                         <tree create="false">
-                            <field name="id" />
                             <field name="name" />
+                            <field name="default_code" />
                         </tree>
                     </field>
                     <field name="backend_ids" widget="many2many_tags" />
@@ -67,8 +67,8 @@
                 <group>
                     <field name="products_to_publish">
                         <tree create="false">
-                            <field name="id" />
                             <field name="name" />
+                            <field name="default_code" />
                         </tree>
                     </field>
                     <field name="backend_ids" widget="many2many_tags" />
@@ -102,8 +102,8 @@
                 <group>
                     <field name="products_to_sync">
                         <tree create="false">
-                            <field name="id" />
                             <field name="name" />
+                            <field name="default_code" />
                         </tree>
                     </field>
                 </group>
