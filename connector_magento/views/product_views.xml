@@ -59,6 +59,41 @@
         key2="client_action_multi"
         target="new"
     />
+    <record id="wizard_magento_publisher_template_form" model="ir.ui.view">
+        <field name="name">wizard_magento_publisher_template</field>
+        <field name="model">wizard.magento.publisher.template</field>
+        <field name="arch" type="xml">
+            <form string="Link Products To Magento">
+                <group>
+                    <field name="products_to_publish">
+                        <tree create="false">
+                            <field name="id" />
+                            <field name="name" />
+                        </tree>
+                    </field>
+                    <field name="backend_ids" widget="many2many_tags" />
+                </group>
+                <footer>
+                    <button
+                        string="Publish to Magento"
+                        name="action_publish_to_magento"
+                        type="object"
+                    />
+                    <button string="Cancel" class="oe_link" special="cancel" />
+                </footer>
+            </form>
+        </field>
+    </record>
+    <act_window
+        id="wizard_magento_publisher_template_action"
+        multi="False"
+        name="Publish to Magento"
+        src_model="product.template"
+        res_model="wizard.magento.publisher.template"
+        view_mode="form"
+        key2="client_action_multi"
+        target="new"
+    />
     <record id="wizard_content_magento_sync_form" model="ir.ui.view">
         <field name="name">wizard_content_magento_sync</field>
         <field name="model">wizard.content.magento.sync</field>
