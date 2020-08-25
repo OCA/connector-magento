@@ -42,7 +42,7 @@ class MagentoPublisherWizardTemplate(models.TransientModel):
 
         if not product_ids:
             return res
-        assert active_model == "product.product", "Bad context propagation"
+        assert active_model == "product.template", "Bad context propagation"
 
         res["products_to_publish"] = [(6, 0, product_ids)]
 
