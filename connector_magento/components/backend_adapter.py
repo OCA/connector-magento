@@ -4,9 +4,10 @@
 
 import socket
 import logging
-import xmlrpc.client
+import requests
 from urllib.parse import quote_plus
 import urllib
+import xmlrpc.client
 
 from odoo.addons.component.core import AbstractComponent
 from odoo.addons.queue_job.exception import RetryableJobError
@@ -51,6 +52,41 @@ class MagentoLocation(object):
         return location
 
 
+class Magento2Client(object):
+
+    def __init__(self, url, token, verify_ssl=True, use_custom_api_path=False):
+        if not use_custom_api_path:
+            url += '/' if not url.endswith('/') else ''
+            url += 'index.php/rest/V1'
+        self._url = url
+        self._token = token
+        self._verify_ssl = verify_ssl
+
+    def call(self, resource_path, arguments, http_method=None, storeview=None):
+        if resource_path is None:
+            _logger.exception('Magento2 REST API called without resource path')
+            raise NotImplementedError
+        url = '%s/%s' % (self._url, resource_path)
+        if storeview:
+            # https://github.com/magento/magento2/issues/3864
+            url = url.replace('/rest/V1/', '/rest/%s/V1/' % storeview)
+        if http_method is None:
+            http_method = 'get'
+        function = getattr(requests, http_method)
+        headers = {'Authorization': 'Bearer %s' % self._token}
+        kwargs = {'headers': headers}
+        if http_method == 'get':
+            kwargs['params'] = arguments
+        elif arguments is not None:
+            kwargs['json'] = arguments
+        res = function(url, **kwargs)
+        if (res.status_code == 400 and res._content):
+            raise requests.HTTPError(
+                url, res.status_code, res._content, headers, __name__)
+        res.raise_for_status()
+        return res.json()
+
+
 class MagentoAPI(object):
 
     def __init__(self, location):
@@ -64,29 +100,40 @@ class MagentoAPI(object):
     @property
     def api(self):
         if self._api is None:
-            custom_url = self._location.use_custom_api_path
-            protocol = 'rest' if self._location.version == '2.0' else 'xmlrpc'
-            api = magentolib.API(
-                self._location.location,
-                self._location.username,
-                self._location.password,
-                protocol=protocol,
-                full_url=custom_url,
-                verify_ssl=self._location.verify_ssl
-            )
-            api.__enter__()
+            if self._location.version == '1.7':
+                api = magentolib.API(
+                    self._location.location,
+                    self._location.username,
+                    self._location.password,
+                    full_url=self._location.use_custom_api_path
+                )
+                api.__enter__()
+            else:
+                api = Magento2Client(
+                    self._location.location,
+                    self._location.token,
+                    self._location.verify_ssl,
+                    use_custom_api_path=self._location.use_custom_api_path
+                )
             self._api = api
         return self._api
+
+    def api_call(self, method, arguments, http_method=None, storeview=None):
+        """ Adjust available arguments per API """
+        if isinstance(self.api, magentolib.API):
+            return self.api.call(method, arguments)
+        return self.api.call(method, arguments, http_method=http_method,
+                             storeview=storeview)
 
     def __enter__(self):
         # we do nothing, api is lazy
         return self
 
-    def __exit__(self, type, value, traceback):
-        if self._api is not None:
-            self._api.__exit__(type, value, traceback)
+    def __exit__(self, exc_type, exc_value, traceback):
+        if self._api is not None and hasattr(self._api, '__exit__'):
+            self._api.__exit__(exc_type, exc_value, traceback)
 
-    def call(self, method, arguments=None, http_method=None, storeview=None):
+    def call(self, method, arguments, http_method=None, storeview=None):
         try:
             # When Magento is installed on PHP 5.4+, the API
             # may return garble data if the arguments contain
@@ -96,7 +143,7 @@ class MagentoAPI(object):
                     arguments.pop()
             start = datetime.now()
             try:
-                result = self.api.call(
+                result = self.api_call(
                     method, arguments, http_method=http_method,
                     storeview=storeview)
             except Exception:
