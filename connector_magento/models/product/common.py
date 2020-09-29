@@ -368,7 +368,7 @@ class MagentoBindingProductListener(Component):
                         'magento_qty',
                         )
 
-    @skip_if(lambda self, record, **kwargs: self.no_connector_export(record))
+    @skip_if(lambda self, record, fields: self.no_connector_export(record))
     def on_record_write(self, record, fields=None):
         if record.no_stock_sync:
             return
