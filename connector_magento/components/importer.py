@@ -146,12 +146,16 @@ class MagentoImporter(AbstractComponent):
     def _create_data(self, map_record, **kwargs):
         return map_record.values(for_create=True, **kwargs)
 
+    def _create_context(self):
+        return {'connector_no_export': True}
+
     def _create(self, data):
         """ Create the OpenERP record """
         # special check on data before import
         self._validate_data(data)
-        model = self.model.with_context(connector_no_export=True)
-        binding = model.create(data)
+        binding = self.model.with_context(
+            **self._create_context()
+        ).create(data)
         _logger.debug('%d created from magento %s', binding, self.external_id)
         return binding
 
