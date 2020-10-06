@@ -39,6 +39,7 @@ class MagentoLocation(object):
         self.use_auth_basic = False
         self.auth_basic_username = None
         self.auth_basic_password = None
+        self.useragent = None
 
     @property
     def location(self):
@@ -54,15 +55,18 @@ class MagentoLocation(object):
 
 class Magento2Client(object):
 
-    def __init__(self, url, token, verify_ssl=True, use_custom_api_path=False):
+    def __init__(self, url, token, verify_ssl=True, use_custom_api_path=False,
+                 useragent=None):
         if not use_custom_api_path:
             url += '/' if not url.endswith('/') else ''
             url += 'index.php/rest/V1'
         self._url = url
         self._token = token
         self._verify_ssl = verify_ssl
+        self.useragent = useragent
 
-    def call(self, resource_path, arguments, http_method=None, storeview=None):
+    def call(self, resource_path, arguments, http_method=None,
+             storeview=None, headers=None):
         if resource_path is None:
             _logger.exception('Magento2 REST API called without resource path')
             raise NotImplementedError
@@ -73,8 +77,16 @@ class Magento2Client(object):
         if http_method is None:
             http_method = 'get'
         function = getattr(requests, http_method)
-        headers = {'Authorization': 'Bearer %s' % self._token}
-        kwargs = {'headers': headers}
+        base_headers = {
+            'Authorization': 'Bearer %s' % self._token,
+        }
+        if self.useragent:
+            base_headers.update({
+                'User-Agent': self.useragent,
+            })
+        if headers:
+            base_headers.update(headers)
+        kwargs = {'headers': base_headers}
         if http_method == 'get':
             kwargs['params'] = arguments
         elif arguments is not None:
@@ -111,9 +123,10 @@ class MagentoAPI(object):
             else:
                 api = Magento2Client(
                     self._location.location,
-                    self._location.token,
+                    self._location.password,
                     self._location.verify_ssl,
-                    use_custom_api_path=self._location.use_custom_api_path
+                    use_custom_api_path=self._location.use_custom_api_path,
+                    useragent=self._location.useragent,
                 )
             self._api = api
         return self._api
