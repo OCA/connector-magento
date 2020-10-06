@@ -87,6 +87,10 @@ class MagentoBackend(models.Model):
         string='Verify SSL certificate',
         default=True,
         help="Only for Magento 2.0+")
+    user_agent = fields.Char(
+        string='User Agent',
+        help="Custom user agent to use instead of library's one",
+    )
     sale_prefix = fields.Char(
         string='Sale Prefix',
         help="A prefix put before the name of imported sales orders.\n"
@@ -210,6 +214,8 @@ class MagentoBackend(models.Model):
             magento_location.use_auth_basic = True
             magento_location.auth_basic_username = self.auth_basic_username
             magento_location.auth_basic_password = self.auth_basic_password
+        if self.user_agent:
+            magento_location.user_agent = self.user_agent
         # We create a Magento Client API here, so we can create the
         # client once (lazily on the first use) and propagate it
         # through all the sync session, instead of recreating a client

@@ -33,6 +33,7 @@
                                            attrs="{'invisible': [('version', '!=', '1.7')], 'required': [('version', '=', '1.7')]}"/>
                                     <field name="token" password="1" colspan="2"
                                            attrs="{'invisible': [('version', '=', '1.7')], 'required': [('version', '!=', '1.7')]}"/>
+                                    <field name="user_agent" colspan="2"/>
                                 </group>
                             </page>
                             <page string="HTTP Authentication" name="auth" colspan="4" col="4">
