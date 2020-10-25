@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo noupdate="1">
+    <record id="category_no_account" model="res.partner.category">
+        <field name="name">Magento guest users</field>
+    </record>
+</odoo>
