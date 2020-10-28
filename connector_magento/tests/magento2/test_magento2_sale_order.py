@@ -141,6 +141,7 @@ class TestSaleOrder(Magento2SyncTestCase):
         backend models (backend, website, store and storeview)
         """
         binding = self._import_sale_order('9')
+        self.assertEqual(binding.pricelist_id.currency_id.name, 'USD')
         self.assertFalse(binding.analytic_account_id)
         default_fp = self.env['account.fiscal.position'].get_fiscal_position(
             binding.partner_id.id, binding.partner_shipping_id.id)
@@ -305,3 +306,14 @@ class TestSaleOrder(Magento2SyncTestCase):
         self.assertEqual(
             cassette.requests[5].uri,
             'http://magento/index.php/rest/V1/orders/12/comments')
+
+    def test_alternate_currency_pricelist(self):
+        """ An order with an alternate currency selects a matching pricelist
+        """
+        # Ensure a Euro pricelist exists
+        self.env.ref('product.list0').copy({
+            'currency_id': self.env.ref('base.EUR').id,
+            'sequence': 999,
+        })
+        binding = self._import_sale_order('13')
+        self.assertEqual(binding.pricelist_id.currency_id.name, 'EUR')

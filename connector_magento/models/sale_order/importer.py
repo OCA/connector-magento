@@ -276,6 +276,21 @@ class SaleOrderImportMapper(Component):
         return {'partner_id': partner.id}
 
     @mapping
+    def pricelist_id(self, record):
+        """ Assign a pricelist in the correct currency if necessary. """
+        currency = record['order_currency_code']
+        partner = self.binder_for('magento.res.partner').to_internal(
+            record['customer_id'], unwrap=True)
+        if partner.property_product_pricelist.currency_id.name != currency:
+            pricelist = self.env['product.pricelist'].search(
+                [('currency_id.name', '=', currency)], limit=1)
+            if not pricelist:
+                raise FailedJobError(
+                    "Missing pricelist for this order's currency: %s" %
+                    currency)
+            return {'pricelist_id': pricelist.id}
+
+    @mapping
     def payment(self, record):
         record_method = record['payment']['method']
         method = self.env['account.payment.mode'].search(
