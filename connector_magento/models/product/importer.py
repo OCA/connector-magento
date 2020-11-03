@@ -196,12 +196,14 @@ class ProductImportMapper(Component):
     @mapping
     def description(self, record):
         return {'description': html2text.html2text(
-            record.get('description', ''), bodywidth=0)}
+            record.get('description', '').replace('\r\n', '<br>'),
+            bodywidth=0)}
 
     @mapping
     def description_sale(self, record):
         return {'description_sale': html2text.html2text(
-            record.get('short_description', ''), bodywidth=0)}
+            record.get('short_description', '').replace('\r\n', '<br>'),
+            bodywidth=0)}
 
     @mapping
     def is_active(self, record):
