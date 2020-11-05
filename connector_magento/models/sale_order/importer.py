@@ -80,16 +80,18 @@ class SaleImportRule(Component):
     def _rule_paid(self, record, method):
         """ Import the order only if it has received a payment, or if there
         is nothing to pay in the first place. """
-        amount_paid = record.get('payment', {}).get('amount_paid') or 0
-        if record['grand_total'] and amount_paid <= 0:
-            raise OrderImportRuleRetry('The order has not been paid.\n'
-                                       'The import will be retried later.')
+        amount_paid = record.get("payment", {}).get("amount_paid") or 0
+        if record["grand_total"] and amount_paid <= 0:
+            raise OrderImportRuleRetry(
+                "The order has not been paid.\n" "The import will be retried later."
+            )
 
-    _rules = {'always': _rule_always,
-              'paid': _rule_paid,
-              'authorized': _rule_authorized,
-              'never': _rule_never,
-              }
+    _rules = {
+        "always": _rule_always,
+        "paid": _rule_paid,
+        "authorized": _rule_authorized,
+        "never": _rule_never,
+    }
 
     def _rule_global(self, record, method):
         """ Rule always executed, whichever is the selected rule """
@@ -109,7 +111,7 @@ class SaleImportRule(Component):
                 )
 
     def check(self, record):
-        """ Check whether the current sale order should be imported
+        """Check whether the current sale order should be imported
         or not. It will actually use the payment method configuration
         and see if the choosed rule is fullfilled.
 
@@ -155,14 +157,12 @@ class SaleOrderImportMapper(Component):
 
     def _add_shipping_line(self, map_record, values):
         record = map_record.source
-        discount = float(record.get('shipping_discount_amount') or 0.0)
+        discount = float(record.get("shipping_discount_amount") or 0.0)
         if self.options.tax_include:
-            amount = float(
-                record.get('base_shipping_incl_tax') or 0.0) - discount
+            amount = float(record.get("base_shipping_incl_tax") or 0.0) - discount
         else:
-            amount = float(
-                record.get('shipping_amount') or 0.0) - discount
-        line_builder = self.component(usage='order.line.builder.shipping')
+            amount = float(record.get("shipping_amount") or 0.0) - discount
+        line_builder = self.component(usage="order.line.builder.shipping")
         # add even if the price is 0, otherwise odoo will add a shipping
         # line in the order when we ship the picking
         line_builder.price_unit = amount
@@ -290,17 +290,19 @@ class SaleOrderImportMapper(Component):
     @mapping
     def pricelist_id(self, record):
         """ Assign a pricelist in the correct currency if necessary. """
-        currency = record['order_currency_code']
-        partner = self.binder_for('magento.res.partner').to_internal(
-            record['customer_id'], unwrap=True)
+        currency = record["order_currency_code"]
+        partner = self.binder_for("magento.res.partner").to_internal(
+            record["customer_id"], unwrap=True
+        )
         if partner.property_product_pricelist.currency_id.name != currency:
-            pricelist = self.env['product.pricelist'].search(
-                [('currency_id.name', '=', currency)], limit=1)
+            pricelist = self.env["product.pricelist"].search(
+                [("currency_id.name", "=", currency)], limit=1
+            )
             if not pricelist:
                 raise FailedJobError(
-                    "Missing pricelist for this order's currency: %s" %
-                    currency)
-            return {'pricelist_id': pricelist.id}
+                    "Missing pricelist for this order's currency: %s" % currency
+                )
+            return {"pricelist_id": pricelist.id}
 
     @mapping
     def payment(self, record):
@@ -372,7 +374,7 @@ class SaleOrderImportMapper(Component):
 
     @mapping
     def user_id(self, record):
-        """ Do not assign to a Salesperson otherwise sales orders are hidden
+        """Do not assign to a Salesperson otherwise sales orders are hidden
         for the salespersons (access rules)"""
         return {"user_id": False}
 
@@ -383,7 +385,7 @@ class SaleOrderImporter(Component):
     _apply_on = "magento.sale.order"
 
     def _must_skip(self):
-        """ Hook called right after we read the data from the backend.
+        """Hook called right after we read the data from the backend.
 
         If the method returns a message giving a reason for the
         skipping, the import will be interrupted and the message
@@ -470,7 +472,7 @@ class SaleOrderImporter(Component):
         rules.check(self.magento_record)
 
     def _link_parent_orders(self, binding):
-        """ Link the magento.sale.order to its parent orders.
+        """Link the magento.sale.order to its parent orders.
 
         When a Magento sales order is modified, it:
          - cancel the sales order
@@ -815,7 +817,9 @@ class SaleOrderLineImportMapper(Component):
                 if each.startswith('"label"'):
                     split_info = each.split(";")
                     options_label.append(
-                        "{}: {} [{}]".format(split_info[1], split_info[3], record["sku"])
+                        "{}: {} [{}]".format(
+                            split_info[1], split_info[3], record["sku"]
+                        )
                     )
             notes = "".join(options_label).replace('""', "\n").replace('"', "")
             result = {"notes": notes}
@@ -825,14 +829,16 @@ class SaleOrderLineImportMapper(Component):
     def price(self, record):
         """ In Magento 2, base_row_total_incl_tax may not be present
         if no taxes apply """
-        discount_amount = float(record['base_discount_amount'] or 0)
-        base_row_total = float(record['base_row_total'] or 0.)
+        discount_amount = float(record["base_discount_amount"] or 0)
+        base_row_total = float(record["base_row_total"] or 0.0)
         base_row_total_incl_tax = (
-            float(record['base_row_total_incl_tax'] or 0)
-            if 'base_row_total_incl_tax' in record else base_row_total)
-        qty_ordered = float(record['qty_ordered'])
+            float(record["base_row_total_incl_tax"] or 0)
+            if "base_row_total_incl_tax" in record
+            else base_row_total
+        )
+        qty_ordered = float(record["qty_ordered"])
         if self.options.tax_include:
             total = base_row_total_incl_tax
         else:
             total = base_row_total
-        return {'price_unit': (total + discount_amount) / qty_ordered}
+        return {"price_unit": (total + discount_amount) / qty_ordered}

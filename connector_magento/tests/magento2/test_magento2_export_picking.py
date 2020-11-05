@@ -25,8 +25,8 @@ class TestExportPicking(Magento2SyncTestCase):
                 inventory = self.env["stock.inventory"].create(
                     {
                         "name": "Inventory for line %s" % line.name,
-                        "filter": "product",
-                        "product_id": line.product_id.id,
+                        # "filter": "product",
+                        "product_ids": [[6, 0, line.product_id.ids]],
                         "line_ids": [
                             (
                                 0,
@@ -42,6 +42,7 @@ class TestExportPicking(Magento2SyncTestCase):
                         ],
                     }
                 )
+                inventory._action_start()
                 inventory.action_validate()
         self.picking = self.order_binding.picking_ids
         self.assertEqual(len(self.picking), 1)
@@ -193,7 +194,7 @@ class TestExportPicking(Magento2SyncTestCase):
         )
         self.assertDictEqual(
             json.loads(cassette.requests[0].body.decode("utf-8")),
-            {"items": [{"order_item_id": "24", "qty": 1.0},]},
+            {"items": [{"order_item_id": "24", "qty": 1.0}]},
         )
 
         # Check that we have received and bound the magento ID

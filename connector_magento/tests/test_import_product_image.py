@@ -66,19 +66,23 @@ class TestImportProductImage(TransactionComponentRegistryCase):
                 return [
                     {
                         "exclude": "1",
-                        "file": "/i/n/ink-eater-krylon-bombear-destroyed-tee-2.jpg",  # noqa
+                        # noqa
+                        "file": "/i/n/ink-eater-krylon-bombear-destroyed-tee-2.jpg",
                         "label": "",
                         "position": "0",
                         "types": ["thumbnail"],
-                        "url": "http://localhost:9100/media/catalog/product/i/n/ink-eater-krylon-bombear-destroyed-tee-2.jpg",
+                        "url": "http://localhost:9100/media/catalog/product/i/n/"
+                        "ink-eater-krylon-bombear-destroyed-tee-2.jpg",
                     },  # noqa
                     {
                         "exclude": "0",
-                        "file": "/i/n/ink-eater-krylon-bombear-destroyed-tee-1.jpg",  # noqa
+                        # noqa
+                        "file": "/i/n/ink-eater-krylon-bombear-destroyed-tee-1.jpg",
                         "label": "",
                         "position": "3",
                         "types": ["small_image"],
-                        "url": "http://localhost:9100/media/catalog/product/i/n/ink-eater-krylon-bombear-destroyed-tee-1.jpg",
+                        "url": "http://localhost:9100/media/catalog/product/i/n/"
+                        "ink-eater-krylon-bombear-destroyed-tee-1.jpg",
                     },  # noqa
                     {
                         "exclude": "0",
@@ -86,7 +90,8 @@ class TestImportProductImage(TransactionComponentRegistryCase):
                         "label": "",
                         "position": "4",
                         "types": [],
-                        "url": "http://localhost:9100/media/catalog/product/m/a/connector_magento_1.png",
+                        "url": "http://localhost:9100/media/catalog/product/m/a/"
+                        "connector_magento_1.png",
                     },  # noqa
                 ]
 
@@ -160,7 +165,9 @@ class TestImportProductImage(TransactionComponentRegistryCase):
             self.image_importer.run(111, binding)
 
         binding.with_context.assert_called_with(connector_no_export=True)
-        binding_no_export.write.assert_called_with({"image": B64_PNG_IMG_4PX_GREEN})
+        binding_no_export.write.assert_called_with(
+            {"image_1920": B64_PNG_IMG_4PX_GREEN}
+        )
 
     def test_import_images_403(self):
         """ Import a product when an image respond a 403 error, should fail """
