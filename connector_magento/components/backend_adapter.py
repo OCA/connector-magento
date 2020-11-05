@@ -53,7 +53,9 @@ class MagentoLocation(object):
         if not self.use_auth_basic:
             return location
         assert self.auth_basic_username and self.auth_basic_password
-        replacement = "{}:{}@".format(self.auth_basic_username, self.auth_basic_password)
+        replacement = "{}:{}@".format(
+            self.auth_basic_username, self.auth_basic_password
+        )
         location = location.replace("://", "://" + replacement)
         return location
 
@@ -198,8 +200,8 @@ class MagentoCRUDAdapter(AbstractComponent):
     _usage = "backend.adapter"
 
     def search(self, filters=None):
-        """ Search records according to some criterias
-        and returns a list of ids """
+        """Search records according to some criterias
+        and returns a list of ids"""
         raise NotImplementedError
 
     def read(self, external_id, attributes=None, storeview=None):
@@ -207,7 +209,7 @@ class MagentoCRUDAdapter(AbstractComponent):
         raise NotImplementedError
 
     def search_read(self, filters=None):
-        """ Search records according to some criterias
+        """Search records according to some criterias
         and returns their information"""
         raise NotImplementedError
 
@@ -225,7 +227,7 @@ class MagentoCRUDAdapter(AbstractComponent):
 
     def _call(self, method, arguments=None, http_method=None, storeview=None):
         try:
-            magento_api = getattr(self.work, "magento_api")
+            magento_api = getattr(self.work, "magento_api")  # noqa: B009
         except AttributeError:
             raise AttributeError(
                 "You must provide a magento_api attribute with a "
@@ -252,7 +254,7 @@ class GenericAdapter(AbstractComponent):
 
     @staticmethod
     def get_searchCriteria(filters):
-        """ Craft Magento 2.0 searchCriteria from filters, for example:
+        """Craft Magento 2.0 searchCriteria from filters, for example:
         'searchCriteria[filter_groups][0][filters][0][field]': 'website_id',
         'searchCriteria[filter_groups][0][filters][0][value]': '1,2',
         'searchCriteria[filter_groups][0][filters][0][condition_type]': 'in',
@@ -301,7 +303,7 @@ class GenericAdapter(AbstractComponent):
         return res if res else {"searchCriteria": ""}
 
     def search(self, filters=None):
-        """ Search records according to some criterias
+        """Search records according to some criterias
         and returns a list of unique identifiers
 
         In the case of Magento 2.x: query the resource to return the key field
@@ -339,7 +341,7 @@ class GenericAdapter(AbstractComponent):
         return term
 
     def read(self, external_id, attributes=None, storeview=None):
-        """ Returns the information of a record
+        """Returns the information of a record
 
         :rtype: dict
         """
@@ -371,7 +373,7 @@ class GenericAdapter(AbstractComponent):
         return next(record for record in res if record["id"] == external_id)
 
     def search_read(self, filters=None):
-        """ Search records according to some criterias
+        """Search records according to some criterias
         and returns their information"""
         if self.collection.version == "1.7":
             return self._call("%s.list" % self._magento_model, [filters])
@@ -410,7 +412,8 @@ class GenericAdapter(AbstractComponent):
         if not url:
             raise ValueError("No admin URL configured on the backend.")
         if hasattr(self.model, "_get_admin_path"):
-            admin_path = getattr(self.model, "_get_admin_path")(backend, external_id)
+            admin_func = getattr(self.model, "_get_admin_path")  # noqa: B009
+            admin_path = admin_func(backend, external_id)
         else:
             key = "_admin2_path" if backend.version == "2.0" else "_admin_path"
             admin_path = getattr(self, key)

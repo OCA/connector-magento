@@ -60,7 +60,7 @@ class MagentoPickingExporter(Component):
         return item_qty
 
     def _get_picking_mail_option(self, binding):
-        """ Indicates if Magento has to send an email
+        """Indicates if Magento has to send an email
 
         :param binding: magento.stock.picking record
         :returns: value of send_picking_done_mail chosen on magento shop
@@ -117,7 +117,7 @@ class MagentoPickingExporter(Component):
         else:  # Magento 2.x
             arguments = {
                 "items": [
-                    {"order_item_id": key, "qty": val,}
+                    {"order_item_id": key, "qty": val}
                     for key, val in get_lines_info().items()
                 ]
             }

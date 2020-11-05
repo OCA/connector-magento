@@ -113,13 +113,13 @@ Synchronized Models
 Invoice
 =======
 
-.. automodule:: odoo.addons.connector_magento.models.account_invoice.common
+.. automodule:: odoo.addons.connector_magento.models.account_move.common
    :show-inheritance:
    :private-members:
 ..   :members:
    :undoc-members:
 
-.. automodule:: odoo.addons.connector_magento.models.account_invoice.exporter
+.. automodule:: odoo.addons.connector_magento.models.account_move.exporter
    :members:
    :undoc-members:
    :show-inheritance:

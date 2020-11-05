@@ -5,7 +5,7 @@
 import logging
 import xmlrpc.client
 
-from odoo import api, fields, models
+from odoo import fields, models
 
 from odoo.addons.component.core import Component
 from odoo.addons.connector.exception import IDMissingInBackend
@@ -17,16 +17,13 @@ _logger = logging.getLogger(__name__)
 class MagentoAccountInvoice(models.Model):
     """ Binding Model for the Magento Invoice """
 
-    _name = "magento.account.invoice"
+    _name = "magento.account.move"
     _inherit = "magento.binding"
-    _inherits = {"account.invoice": "odoo_id"}
+    _inherits = {"account.move": "odoo_id"}
     _description = "Magento Invoice"
 
     odoo_id = fields.Many2one(
-        comodel_name="account.invoice",
-        string="Invoice",
-        required=True,
-        ondelete="cascade",
+        comodel_name="account.move", string="Invoice", required=True, ondelete="cascade"
     )
     magento_order_id = fields.Many2one(
         comodel_name="magento.sale.order",
@@ -39,12 +36,11 @@ class MagentoAccountInvoice(models.Model):
             "odoo_uniq",
             "unique(backend_id, odoo_id)",
             "A Magento binding for this invoice already exists.",
-        ),
+        )
     ]
 
     @job(default_channel="root.magento")
     @related_action(action="related_action_unwrap_binding")
-    @api.multi
     def export_record(self):
         """ Export a validated or paid invoice. """
         self.ensure_one()
@@ -58,10 +54,10 @@ class AccountInvoice(models.Model):
     (``magento_bind_ids``)
     """
 
-    _inherit = "account.invoice"
+    _inherit = "account.move"
 
     magento_bind_ids = fields.One2many(
-        comodel_name="magento.account.invoice",
+        comodel_name="magento.account.move",
         inverse_name="odoo_id",
         string="Magento Bindings",
     )
@@ -72,7 +68,7 @@ class AccountInvoiceAdapter(Component):
 
     _name = "magento.invoice.adapter"
     _inherit = "magento.adapter"
-    _apply_on = "magento.account.invoice"
+    _apply_on = "magento.account.move"
 
     _magento_model = "sales_order_invoice"
     _admin_path = "sales_invoice/view/invoice_id/{id}"
@@ -107,7 +103,7 @@ class AccountInvoiceAdapter(Component):
             "items": [
                 {"orderItemId": key, "qty": value} for key, value in items.items()
             ],
-            "comment": {"comment": comment, "isVisibleOnFront": 0,},
+            "comment": {"comment": comment, "isVisibleOnFront": 0},
             "appendComment": include_comment,
         }
         return self._call(
@@ -129,18 +125,18 @@ class AccountInvoiceAdapter(Component):
 
 
 class MagentoBindingInvoiceListener(Component):
-    _name = "magento.binding.account.invoice.listener"
+    _name = "magento.binding.account.move.listener"
     _inherit = "base.event.listener"
-    _apply_on = ["magento.account.invoice"]
+    _apply_on = ["magento.account.move"]
 
     def on_record_create(self, record, fields=None):
         record.with_delay().export_record()
 
 
 class MagentoInvoiceListener(Component):
-    _name = "magento.account.invoice.listener"
+    _name = "magento.account.move.listener"
     _inherit = "base.event.listener"
-    _apply_on = ["account.invoice"]
+    _apply_on = ["account.move"]
 
     def on_invoice_paid(self, record):
         self.invoice_create_bindings(record)
@@ -150,7 +146,7 @@ class MagentoInvoiceListener(Component):
 
     def invoice_create_bindings(self, invoice):
         """
-        Create a ``magento.account.invoice`` record. This record will then
+        Create a ``magento.account.move`` record. This record will then
         be exported to Magento.
         """
         # find the magento store to retrieve the backend
@@ -174,8 +170,11 @@ class MagentoInvoiceListener(Component):
                 else:
                     create_invoice = magento_store.create_invoice_on
 
-                if create_invoice == invoice.state:
-                    self.env["magento.account.invoice"].create(
+                if (
+                    create_invoice == "paid"
+                    and invoice.invoice_payment_state == create_invoice
+                ) or (create_invoice == "open" and invoice.state == "posted"):
+                    self.env["magento.account.move"].create(
                         {
                             "backend_id": magento_sale.backend_id.id,
                             "odoo_id": invoice.id,

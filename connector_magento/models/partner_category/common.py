@@ -20,6 +20,7 @@ class ResPartnerCategory(models.Model):
 
 class MagentoResPartnerCategory(models.Model):
     _name = "magento.res.partner.category"
+    _description = "Magento Partner Category"
     _inherit = "magento.binding"
     _inherits = {"res.partner.category": "odoo_id"}
 
