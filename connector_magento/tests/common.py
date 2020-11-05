@@ -20,7 +20,6 @@ from vcr import VCR
 
 import odoo
 from odoo import models
-from odoo.addons.component.tests.common import SavepointComponentCase
 from odoo.tools import mute_logger
 
 from odoo.addons.component.tests.common import SavepointComponentCase
@@ -105,9 +104,15 @@ class MagentoTestCase(SavepointComponentCase):
         )
         # payment method needed to import a sale order
         self.workflow = self.env.ref("sale_automatic_workflow.manual_validation")
-        self.journal = self.env["account.journal"].create(
-            {"name": "Check", "type": "cash", "code": "Check"}
+        check_journal = self.env["account.journal"].search(
+            [("type", "=", "cash"), ("code", "=", "Check")], limit=1
         )
+        if not check_journal:
+            check_journal = self.env["account.journal"].create(
+                {"name": "Check", "type": "cash", "code": "Check"}
+            )
+        self.journal = check_journal
+
         payment_method = self.env.ref("account.account_payment_method_manual_in")
         for name in ["checkmo", "ccsave", "cashondelivery"]:
             self.env["account.payment.mode"].create(
@@ -164,15 +169,12 @@ class MagentoTestCase(SavepointComponentCase):
 
         def run_import():
             with mute_logger(
-                    'odoo.addons.mail.models.mail_mail',
-                    'odoo.models.unlink',
-                    'odoo.tests'):
-                if self.backend.version != '1.7':
-                    return self.env[model_name].import_record(
-                        self.backend, magento_id)
+                "odoo.addons.mail.models.mail_mail", "odoo.models.unlink", "odoo.tests"
+            ):
+                if self.backend.version != "1.7":
+                    return self.env[model_name].import_record(self.backend, magento_id)
                 with mock_urlopen_image():
-                    self.env[model_name].import_record(
-                        self.backend, magento_id)
+                    self.env[model_name].import_record(self.backend, magento_id)
 
         if cassette:
             with self.recorder.use_cassette(filename):
@@ -250,7 +252,8 @@ class MagentoTestCase(SavepointComponentCase):
                 " ✓ {}({})".format(
                     model_name,
                     ", ".join(
-                        "{}: {}".format(field, getattr(record, field)) for field in fields
+                        "{}: {}".format(field, getattr(record, field))
+                        for field in fields
                     ),
                 )
             )
@@ -260,7 +263,8 @@ class MagentoTestCase(SavepointComponentCase):
                 " - {}({})".format(
                     model_name,
                     ", ".join(
-                        "{}: {}".format(k, v) for k, v in list(expected._asdict().items())
+                        "{}: {}".format(k, v)
+                        for k, v in list(expected._asdict().items())
                     ),
                 )
             )
@@ -270,7 +274,8 @@ class MagentoTestCase(SavepointComponentCase):
                 " + {}({})".format(
                     model_name,
                     ", ".join(
-                        "{}: {}".format(field, getattr(record, field)) for field in fields
+                        "{}: {}".format(field, getattr(record, field))
+                        for field in fields
                     ),
                 )
             )
@@ -285,8 +290,7 @@ class MagentoSyncTestCase(MagentoTestCase):
         super(MagentoSyncTestCase, self).setUp()
         # Mute logging of notifications about new checkpoints
         with mute_logger(
-                'odoo.addons.mail.models.mail_mail',
-                'odoo.models.unlink',
-                'odoo.tests'):
-            with recorder.use_cassette('metadata'):
+            "odoo.addons.mail.models.mail_mail", "odoo.models.unlink", "odoo.tests"
+        ):
+            with recorder.use_cassette("metadata"):
                 self.backend.synchronize_metadata()

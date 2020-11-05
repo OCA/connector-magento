@@ -170,7 +170,6 @@ class MagentoBackend(models.Model):
         )
     ]
 
-    @api.multi
     def check_magento_structure(self):
         """ Used in each data import.
 
@@ -183,7 +182,6 @@ class MagentoBackend(models.Model):
         return True
 
     @contextmanager
-    @api.multi
     def work_on(self, model_name, **kwargs):
         self.ensure_one()
         lang = self.default_lang_id
@@ -212,13 +210,11 @@ class MagentoBackend(models.Model):
             with _super.work_on(model_name, magento_api=magento_api, **kwargs) as work:
                 yield work
 
-    @api.multi
     def add_checkpoint(self, record):
         self.ensure_one()
         record.ensure_one()
         return add_checkpoint(self.env, record._name, record.id, self._name, self.id)
 
-    @api.multi
     def synchronize_metadata(self):
         try:
             for backend in self:
@@ -242,7 +238,6 @@ class MagentoBackend(models.Model):
                 % ustr(e)
             )
 
-    @api.multi
     def import_partners(self):
         """ Import partners from all websites """
         for backend in self:
@@ -250,7 +245,6 @@ class MagentoBackend(models.Model):
             backend.website_ids.import_partners()
         return True
 
-    @api.multi
     def import_sale_orders(self):
         """ Import sale orders from all store views """
         storeview_obj = self.env["magento.storeview"]
@@ -258,14 +252,12 @@ class MagentoBackend(models.Model):
         storeviews.import_sale_orders()
         return True
 
-    @api.multi
     def import_customer_groups(self):
         for backend in self:
             backend.check_magento_structure()
             self.env["magento.res.partner.category"].with_delay().import_batch(backend,)
         return True
 
-    @api.multi
     def _import_from_date(self, model, from_date_field):
         import_start_time = datetime.now()
         for backend in self:
@@ -291,19 +283,16 @@ class MagentoBackend(models.Model):
         next_time = fields.Datetime.to_string(next_time)
         self.write({from_date_field: next_time})
 
-    @api.multi
     def import_product_categories(self):
         self._import_from_date(
             "magento.product.category", "import_categories_from_date"
         )
         return True
 
-    @api.multi
     def import_product_product(self):
         self._import_from_date("magento.product.product", "import_products_from_date")
         return True
 
-    @api.multi
     def _domain_for_update_product_stock_qty(self):
         return [
             ("backend_id", "in", self.ids),
@@ -311,7 +300,6 @@ class MagentoBackend(models.Model):
             ("no_stock_sync", "=", False),
         ]
 
-    @api.multi
     def update_product_stock_qty(self):
         mag_product_obj = self.env["magento.product.product"]
         domain = self._domain_for_update_product_stock_qty()
@@ -400,21 +388,18 @@ class MagentoConfigSpecializer(models.AbstractModel):
     def _parent(self):
         return getattr(self, self._parent_name)
 
-    @api.multi
     def _compute_account_analytic_id(self):
         for this in self:
             this.account_analytic_id = (
                 this.specific_account_analytic_id or this._parent.account_analytic_id
             )
 
-    @api.multi
     def _compute_fiscal_position_id(self):
         for this in self:
             this.fiscal_position_id = (
                 this.specific_fiscal_position_id or this._parent.fiscal_position_id
             )
 
-    @api.multi
     def _compute_warehouse_id(self):
         for this in self:
             this.warehouse_id = this.specific_warehouse_id or this._parent.warehouse_id

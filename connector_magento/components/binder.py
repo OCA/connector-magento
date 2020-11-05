@@ -29,5 +29,5 @@ class MagentoModelBinder(Component):
         "magento.stock.picking",
         "magento.sale.order",
         "magento.sale.order.line",
-        "magento.account.invoice",
+        "magento.account.move",
     ]

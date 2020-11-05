@@ -7,7 +7,6 @@ import xmlrpc.client
 
 from odoo import _, api, fields, models
 
-import odoo.addons.decimal_precision as dp
 from odoo.addons.component.core import Component
 from odoo.addons.connector.exception import IDMissingInBackend
 from odoo.addons.queue_job.job import job
@@ -34,12 +33,8 @@ class MagentoSaleOrder(models.Model):
         inverse_name="magento_order_id",
         string="Magento Order Lines",
     )
-    total_amount = fields.Float(
-        string="Total amount", digits=dp.get_precision("Account")
-    )
-    total_amount_tax = fields.Float(
-        string="Total amount w. tax", digits=dp.get_precision("Account")
-    )
+    total_amount = fields.Float(string="Total amount", digits="Account")
+    total_amount_tax = fields.Float(string="Total amount w. tax", digits="Account")
     magento_order_id = fields.Integer(
         string="Magento Order ID", help="'order_id' field in Magento"
     )
@@ -56,7 +51,6 @@ class MagentoSaleOrder(models.Model):
     )
 
     @job(default_channel="root.magento")
-    @api.multi
     def export_state_change(self, allowed_states=None, comment=None, notify=None):
         """ Change state of a sales order on Magento """
         self.ensure_one()
@@ -101,7 +95,7 @@ class SaleOrder(models.Model):
             assert len(order.magento_bind_ids) == 1
             magento_order = order.magento_bind_ids[0]
             if magento_order.magento_parent_id:
-                self.parent_id = magento_order.magento_parent_id.odoo_id
+                order.parent_id = magento_order.magento_parent_id.odoo_id
 
     def _magento_cancel(self):
         """ Cancel sales order on Magento
@@ -119,7 +113,6 @@ class SaleOrder(models.Model):
                     allowed_states=["cancel"]
                 )
 
-    @api.multi
     def write(self, vals):
         if vals.get("state") == "cancel":
             self._magento_cancel()
@@ -140,7 +133,6 @@ class SaleOrder(models.Model):
             job_descr = _("Reopen sales order %s") % (binding.external_id,)
             binding.with_delay(description=job_descr).export_state_change()
 
-    @api.multi
     def copy(self, default=None):
         self_copy = self.with_context(__copy_from_quotation=True)
         new = super(SaleOrder, self_copy).copy(default=default)
@@ -175,7 +167,7 @@ class MagentoSaleOrderLine(models.Model):
         # override 'magento.binding', can't be INSERTed if True:
         required=False,
     )
-    tax_rate = fields.Float(string="Tax Rate", digits=dp.get_precision("Account"))
+    tax_rate = fields.Float(string="Tax Rate", digits="Account")
     notes = fields.Char()
 
     @api.model
@@ -223,7 +215,6 @@ class SaleOrderLine(models.Model):
                 bindings.write({"odoo_id": new_line.id})
         return new_line
 
-    @api.multi
     def copy_data(self, default=None):
         data = super(SaleOrderLine, self).copy_data(default=default)[0]
         if self.env.context.get("__copy_from_quotation"):

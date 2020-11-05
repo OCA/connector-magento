@@ -5,7 +5,7 @@
 
 from datetime import datetime, timedelta
 
-from odoo import api, fields, models
+from odoo import fields, models
 
 from odoo.addons.component.core import Component
 
@@ -37,7 +37,6 @@ class MagentoWebsite(models.Model):
     )
     is_multi_company = fields.Boolean(related="backend_id.is_multi_company")
 
-    @api.multi
     def import_partners(self):
         import_start_time = datetime.now()
         for website in self:

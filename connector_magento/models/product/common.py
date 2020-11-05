@@ -106,7 +106,6 @@ class MagentoProductProduct(models.Model):
 
     @job(default_channel="root.magento")
     @related_action(action="related_action_unwrap_binding")
-    @api.multi
     def export_inventory(self, fields=None):
         """ Export the inventory configuration and quantity of a product. """
         self.ensure_one()
@@ -114,7 +113,6 @@ class MagentoProductProduct(models.Model):
             exporter = work.component(usage="product.inventory.exporter")
             return exporter.run(self, fields)
 
-    @api.multi
     def recompute_magento_qty(self):
         """ Check if the quantity in the stock location configured
         on the backend has changed since the last export.
@@ -135,7 +133,6 @@ class MagentoProductProduct(models.Model):
             self._recompute_magento_qty_backend(backend, self.browse(product_ids))
         return True
 
-    @api.multi
     def _recompute_magento_qty_backend(self, backend, products, read_fields=None):
         """ Recompute the products quantity for one backend.
 
@@ -167,7 +164,6 @@ class MagentoProductProduct(models.Model):
                 if new_qty != product["magento_qty"]:
                     self.browse(product["id"]).magento_qty = new_qty
 
-    @api.multi
     def _magento_qty(self, product, backend, location, stock_field):
         """ Return the current quantity for one product.
 

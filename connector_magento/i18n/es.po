@@ -33,7 +33,7 @@ msgid ""
 msgstr ""
 
 #. module: connector_magento
-#: model:ir.model.fields,help:connector_magento.field_magento_account_invoice__state
+#: model:ir.model.fields,help:connector_magento.field_magento_account_move__state
 msgid ""
 " * The 'Draft' status is used when a user is encoding a new and unconfirmed "
 "Invoice.\n"
@@ -69,7 +69,7 @@ msgid "(recompute)"
 msgstr ""
 
 #. module: connector_magento
-#: sql_constraint:magento.account.invoice:0
+#: sql_constraint:magento.account.move:0
 msgid "A Magento binding for this invoice already exists."
 msgstr ""
 
@@ -79,7 +79,7 @@ msgid "A backend with the same sale prefix already exists"
 msgstr ""
 
 #. module: connector_magento
-#: sql_constraint:magento.account.invoice:0 sql_constraint:magento.address:0
+#: sql_constraint:magento.account.move:0 sql_constraint:magento.address:0
 #: sql_constraint:magento.binding:0 sql_constraint:magento.product.category:0
 #: sql_constraint:magento.product.product:0
 #: sql_constraint:magento.res.partner:0
@@ -143,7 +143,7 @@ msgid "API"
 msgstr ""
 
 #. module: connector_magento
-#: model:ir.model.fields,field_description:connector_magento.field_magento_account_invoice__access_warning
+#: model:ir.model.fields,field_description:connector_magento.field_magento_account_move__access_warning
 #: model:ir.model.fields,field_description:connector_magento.field_magento_sale_order__access_warning
 msgid "Access warning"
 msgstr ""
@@ -162,7 +162,7 @@ msgid ""
 msgstr ""
 
 #. module: connector_magento
-#: model:ir.model.fields,field_description:connector_magento.field_magento_account_invoice__account_id
+#: model:ir.model.fields,field_description:connector_magento.field_magento_account_move__account_id
 msgid "Account"
 msgstr ""
 
@@ -179,12 +179,12 @@ msgid "Account Receivable"
 msgstr ""
 
 #. module: connector_magento
-#: model:ir.model.fields,field_description:connector_magento.field_magento_account_invoice__date
+#: model:ir.model.fields,field_description:connector_magento.field_magento_account_move__date
 msgid "Accounting Date"
 msgstr ""
 
 #. module: connector_magento
-#: model:ir.model.fields,field_description:connector_magento.field_magento_account_invoice__message_needaction
+#: model:ir.model.fields,field_description:connector_magento.field_magento_account_move__message_needaction
 #: model:ir.model.fields,field_description:connector_magento.field_magento_address__message_needaction
 #: model:ir.model.fields,field_description:connector_magento.field_magento_product_product__message_needaction
 #: model:ir.model.fields,field_description:connector_magento.field_magento_res_partner__message_needaction
@@ -194,7 +194,7 @@ msgid "Action Needed"
 msgstr ""
 
 #. module: connector_magento
-#: model:ir.model.fields,help:connector_magento.field_magento_account_invoice__bank_account_required
+#: model:ir.model.fields,help:connector_magento.field_magento_account_move__bank_account_required
 msgid ""
 "Activate this option if this payment method requires you to know the bank "
 "account number of your customer or supplier."
@@ -209,7 +209,7 @@ msgid "Active"
 msgstr ""
 
 #. module: connector_magento
-#: model:ir.model.fields,field_description:connector_magento.field_magento_account_invoice__activity_ids
+#: model:ir.model.fields,field_description:connector_magento.field_magento_account_move__activity_ids
 #: model:ir.model.fields,field_description:connector_magento.field_magento_address__activity_ids
 #: model:ir.model.fields,field_description:connector_magento.field_magento_product_product__activity_ids
 #: model:ir.model.fields,field_description:connector_magento.field_magento_res_partner__activity_ids
@@ -219,7 +219,7 @@ msgid "Activities"
 msgstr ""
 
 #. module: connector_magento
-#: model:ir.model.fields,field_description:connector_magento.field_magento_account_invoice__activity_state
+#: model:ir.model.fields,field_description:connector_magento.field_magento_account_move__activity_state
 #: model:ir.model.fields,field_description:connector_magento.field_magento_address__activity_state
 #: model:ir.model.fields,field_description:connector_magento.field_magento_product_product__activity_state
 #: model:ir.model.fields,field_description:connector_magento.field_magento_res_partner__activity_state
@@ -229,7 +229,7 @@ msgid "Activity State"
 msgstr ""
 
 #. module: connector_magento
-#: model:ir.model.fields,field_description:connector_magento.field_magento_account_invoice__comment
+#: model:ir.model.fields,field_description:connector_magento.field_magento_account_move__comment
 msgid "Additional Information"
 msgstr ""
 
@@ -297,17 +297,17 @@ msgid "Amount Before Discount"
 msgstr ""
 
 #. module: connector_magento
-#: model:ir.model.fields,field_description:connector_magento.field_magento_account_invoice__residual
+#: model:ir.model.fields,field_description:connector_magento.field_magento_account_move__residual
 msgid "Amount Due"
 msgstr ""
 
 #. module: connector_magento
-#: model:ir.model.fields,field_description:connector_magento.field_magento_account_invoice__residual_company_signed
+#: model:ir.model.fields,field_description:connector_magento.field_magento_account_move__residual_company_signed
 msgid "Amount Due in Company Currency"
 msgstr ""
 
 #. module: connector_magento
-#: model:ir.model.fields,field_description:connector_magento.field_magento_account_invoice__residual_signed
+#: model:ir.model.fields,field_description:connector_magento.field_magento_account_move__residual_signed
 msgid "Amount Due in Invoice Currency"
 msgstr ""
 
@@ -345,7 +345,7 @@ msgid "Analytic lines"
 msgstr ""
 
 #. module: connector_magento
-#: model:ir.model.fields,field_description:connector_magento.field_magento_account_invoice__message_attachment_count
+#: model:ir.model.fields,field_description:connector_magento.field_magento_account_move__message_attachment_count
 #: model:ir.model.fields,field_description:connector_magento.field_magento_address__message_attachment_count
 #: model:ir.model.fields,field_description:connector_magento.field_magento_product_product__message_attachment_count
 #: model:ir.model.fields,field_description:connector_magento.field_magento_res_partner__message_attachment_count
@@ -367,13 +367,13 @@ msgid ""
 msgstr ""
 
 #. module: connector_magento
-#: model:ir.model.fields,field_description:connector_magento.field_magento_account_invoice__authorized_transaction_ids
+#: model:ir.model.fields,field_description:connector_magento.field_magento_account_move__authorized_transaction_ids
 #: model:ir.model.fields,field_description:connector_magento.field_magento_sale_order__authorized_transaction_ids
 msgid "Authorized Transactions"
 msgstr ""
 
 #. module: connector_magento
-#: model:ir.model.fields,help:connector_magento.field_magento_account_invoice__vendor_bill_id
+#: model:ir.model.fields,help:connector_magento.field_magento_account_move__vendor_bill_id
 msgid "Auto-complete from a past bill."
 msgstr ""
 
@@ -409,12 +409,12 @@ msgid "Bank"
 msgstr "Banco"
 
 #. module: connector_magento
-#: model:ir.model.fields,field_description:connector_magento.field_magento_account_invoice__partner_bank_id
+#: model:ir.model.fields,field_description:connector_magento.field_magento_account_move__partner_bank_id
 msgid "Bank Account"
 msgstr "Cuenta bancaria"
 
 #. module: connector_magento
-#: model:ir.model.fields,help:connector_magento.field_magento_account_invoice__partner_bank_id
+#: model:ir.model.fields,help:connector_magento.field_magento_account_move__partner_bank_id
 msgid ""
 "Bank Account Number to which the invoice will be paid. A Company bank "
 "account if this is a Customer Invoice or Vendor Credit Note, otherwise a "
@@ -422,7 +422,7 @@ msgid ""
 msgstr ""
 
 #. module: connector_magento
-#: model:ir.model.fields,field_description:connector_magento.field_magento_account_invoice__bank_account_required
+#: model:ir.model.fields,field_description:connector_magento.field_magento_account_move__bank_account_required
 msgid "Bank Account Required"
 msgstr "Cuenta bancaria obligatoria"
 
@@ -568,7 +568,7 @@ msgid "Carrier"
 msgstr ""
 
 #. module: connector_magento
-#: model:ir.model.fields,field_description:connector_magento.field_magento_account_invoice__cash_rounding_id
+#: model:ir.model.fields,field_description:connector_magento.field_magento_account_move__cash_rounding_id
 msgid "Cash Rounding Method"
 msgstr ""
 
@@ -685,7 +685,7 @@ msgid "Color Index"
 msgstr ""
 
 #. module: connector_magento
-#: model:ir.model.fields,field_description:connector_magento.field_magento_account_invoice__commercial_partner_id
+#: model:ir.model.fields,field_description:connector_magento.field_magento_account_move__commercial_partner_id
 #: model:ir.model.fields,field_description:connector_magento.field_magento_address__commercial_partner_id
 #: model:ir.model.fields,field_description:connector_magento.field_magento_res_partner__commercial_partner_id
 msgid "Commercial Entity"
@@ -703,7 +703,7 @@ msgid "Companies that refers to partner"
 msgstr ""
 
 #. module: connector_magento
-#: model:ir.model.fields,field_description:connector_magento.field_magento_account_invoice__company_id
+#: model:ir.model.fields,field_description:connector_magento.field_magento_account_move__company_id
 #: model:ir.model.fields,field_description:connector_magento.field_magento_address__company_id
 #: model:ir.model.fields,field_description:connector_magento.field_magento_backend__company_id
 #: model:ir.model.fields,field_description:connector_magento.field_magento_product_product__company_id
@@ -716,7 +716,7 @@ msgid "Company"
 msgstr ""
 
 #. module: connector_magento
-#: model:ir.model.fields,field_description:connector_magento.field_magento_account_invoice__company_currency_id
+#: model:ir.model.fields,field_description:connector_magento.field_magento_account_move__company_currency_id
 msgid "Company Currency"
 msgstr ""
 
@@ -871,7 +871,7 @@ msgid "Created At (on Magento)"
 msgstr ""
 
 #. module: connector_magento
-#: model:ir.model.fields,field_description:connector_magento.field_magento_account_invoice__create_uid
+#: model:ir.model.fields,field_description:connector_magento.field_magento_account_move__create_uid
 #: model:ir.model.fields,field_description:connector_magento.field_magento_address__create_uid
 #: model:ir.model.fields,field_description:connector_magento.field_magento_backend__create_uid
 #: model:ir.model.fields,field_description:connector_magento.field_magento_binding_backend_read__create_uid
@@ -889,7 +889,7 @@ msgid "Created by"
 msgstr ""
 
 #. module: connector_magento
-#: model:ir.model.fields,field_description:connector_magento.field_magento_account_invoice__create_date
+#: model:ir.model.fields,field_description:connector_magento.field_magento_account_move__create_date
 #: model:ir.model.fields,field_description:connector_magento.field_magento_address__create_date
 #: model:ir.model.fields,field_description:connector_magento.field_magento_backend__create_date
 #: model:ir.model.fields,field_description:connector_magento.field_magento_binding_backend_read__create_date
@@ -923,7 +923,7 @@ msgid "Credit Limit"
 msgstr ""
 
 #. module: connector_magento
-#: model:ir.model.fields,field_description:connector_magento.field_magento_account_invoice__currency_id
+#: model:ir.model.fields,field_description:connector_magento.field_magento_account_move__currency_id
 #: model:ir.model.fields,field_description:connector_magento.field_magento_address__currency_id
 #: model:ir.model.fields,field_description:connector_magento.field_magento_product_product__currency_id
 #: model:ir.model.fields,field_description:connector_magento.field_magento_res_partner__currency_id
@@ -986,7 +986,7 @@ msgid "Customer Payment Terms"
 msgstr ""
 
 #. module: connector_magento
-#: model:ir.model.fields,help:connector_magento.field_magento_account_invoice__access_url
+#: model:ir.model.fields,help:connector_magento.field_magento_account_move__access_url
 #: model:ir.model.fields,help:connector_magento.field_magento_sale_order__access_url
 msgid "Customer Portal URL"
 msgstr ""
@@ -1080,7 +1080,7 @@ msgid "Define vendor pricelists."
 msgstr ""
 
 #. module: connector_magento
-#: model:ir.model.fields,help:connector_magento.field_magento_account_invoice__cash_rounding_id
+#: model:ir.model.fields,help:connector_magento.field_magento_account_move__cash_rounding_id
 msgid ""
 "Defines the smallest coinage of the currency that can be used to pay by cash."
 msgstr ""
@@ -1102,7 +1102,7 @@ msgid "Delivered Quantity"
 msgstr ""
 
 #. module: connector_magento
-#: model:ir.model.fields,field_description:connector_magento.field_magento_account_invoice__partner_shipping_id
+#: model:ir.model.fields,field_description:connector_magento.field_magento_account_move__partner_shipping_id
 #: model:ir.model.fields,field_description:connector_magento.field_magento_sale_order__partner_shipping_id
 msgid "Delivery Address"
 msgstr ""
@@ -1140,7 +1140,7 @@ msgid "Delivery Rating Success"
 msgstr ""
 
 #. module: connector_magento
-#: model:ir.model.fields,help:connector_magento.field_magento_account_invoice__partner_shipping_id
+#: model:ir.model.fields,help:connector_magento.field_magento_account_move__partner_shipping_id
 msgid "Delivery address for current invoice."
 msgstr ""
 
@@ -1203,7 +1203,7 @@ msgid "Discount (%)"
 msgstr ""
 
 #. module: connector_magento
-#: model:ir.model.fields,field_description:connector_magento.field_magento_account_invoice__display_name
+#: model:ir.model.fields,field_description:connector_magento.field_magento_account_move__display_name
 #: model:ir.model.fields,field_description:connector_magento.field_magento_address__display_name
 #: model:ir.model.fields,field_description:connector_magento.field_magento_backend__display_name
 #: model:ir.model.fields,field_description:connector_magento.field_magento_binding__display_name
@@ -1254,7 +1254,7 @@ msgid ""
 msgstr ""
 
 #. module: connector_magento
-#: model:ir.model.fields,field_description:connector_magento.field_magento_account_invoice__date_due
+#: model:ir.model.fields,field_description:connector_magento.field_magento_account_move__date_due
 msgid "Due Date"
 msgstr ""
 
@@ -1359,7 +1359,7 @@ msgid "Fill this field if you plan to invoice the shipping based on picking."
 msgstr ""
 
 #. module: connector_magento
-#: model:ir.model.fields,field_description:connector_magento.field_magento_account_invoice__fiscal_position_id
+#: model:ir.model.fields,field_description:connector_magento.field_magento_account_move__fiscal_position_id
 #: model:ir.model.fields,field_description:connector_magento.field_magento_address__property_account_position_id
 #: model:ir.model.fields,field_description:connector_magento.field_magento_res_partner__property_account_position_id
 #: model:ir.model.fields,field_description:connector_magento.field_magento_sale_order__fiscal_position_id
@@ -1376,7 +1376,7 @@ msgid "Fiscal position"
 msgstr ""
 
 #. module: connector_magento
-#: model:ir.model.fields,field_description:connector_magento.field_magento_account_invoice__message_follower_ids
+#: model:ir.model.fields,field_description:connector_magento.field_magento_account_move__message_follower_ids
 #: model:ir.model.fields,field_description:connector_magento.field_magento_address__message_follower_ids
 #: model:ir.model.fields,field_description:connector_magento.field_magento_product_product__message_follower_ids
 #: model:ir.model.fields,field_description:connector_magento.field_magento_res_partner__message_follower_ids
@@ -1386,7 +1386,7 @@ msgid "Followers"
 msgstr ""
 
 #. module: connector_magento
-#: model:ir.model.fields,field_description:connector_magento.field_magento_account_invoice__message_channel_ids
+#: model:ir.model.fields,field_description:connector_magento.field_magento_account_move__message_channel_ids
 #: model:ir.model.fields,field_description:connector_magento.field_magento_address__message_channel_ids
 #: model:ir.model.fields,field_description:connector_magento.field_magento_product_product__message_channel_ids
 #: model:ir.model.fields,field_description:connector_magento.field_magento_res_partner__message_channel_ids
@@ -1396,7 +1396,7 @@ msgid "Followers (Channels)"
 msgstr ""
 
 #. module: connector_magento
-#: model:ir.model.fields,field_description:connector_magento.field_magento_account_invoice__message_partner_ids
+#: model:ir.model.fields,field_description:connector_magento.field_magento_account_move__message_partner_ids
 #: model:ir.model.fields,field_description:connector_magento.field_magento_address__message_partner_ids
 #: model:ir.model.fields,field_description:connector_magento.field_magento_product_product__message_partner_ids
 #: model:ir.model.fields,field_description:connector_magento.field_magento_res_partner__message_partner_ids
@@ -1475,7 +1475,7 @@ msgid "Has Checkpoint"
 msgstr ""
 
 #. module: connector_magento
-#: model:ir.model.fields,field_description:connector_magento.field_magento_account_invoice__has_outstanding
+#: model:ir.model.fields,field_description:connector_magento.field_magento_account_move__has_outstanding
 msgid "Has Outstanding"
 msgstr ""
 
@@ -1521,7 +1521,7 @@ msgid "Hide Expense Policy"
 msgstr ""
 
 #. module: connector_magento
-#: model:ir.model.fields,field_description:connector_magento.field_magento_account_invoice__id
+#: model:ir.model.fields,field_description:connector_magento.field_magento_account_move__id
 #: model:ir.model.fields,field_description:connector_magento.field_magento_address__id
 #: model:ir.model.fields,field_description:connector_magento.field_magento_backend__id
 #: model:ir.model.fields,field_description:connector_magento.field_magento_binding__id
@@ -1541,7 +1541,7 @@ msgid "ID"
 msgstr ""
 
 #. module: connector_magento
-#: model:ir.model.fields,field_description:connector_magento.field_magento_account_invoice__external_id
+#: model:ir.model.fields,field_description:connector_magento.field_magento_account_move__external_id
 #: model:ir.model.fields,field_description:connector_magento.field_magento_address__external_id
 #: model:ir.model.fields,field_description:connector_magento.field_magento_binding__external_id
 #: model:ir.model.fields,field_description:connector_magento.field_magento_product_category__external_id
@@ -1579,7 +1579,7 @@ msgid ""
 msgstr ""
 
 #. module: connector_magento
-#: model:ir.model.fields,help:connector_magento.field_magento_account_invoice__message_unread
+#: model:ir.model.fields,help:connector_magento.field_magento_account_move__message_unread
 #: model:ir.model.fields,help:connector_magento.field_magento_address__message_unread
 #: model:ir.model.fields,help:connector_magento.field_magento_product_product__message_unread
 #: model:ir.model.fields,help:connector_magento.field_magento_res_partner__message_unread
@@ -1589,7 +1589,7 @@ msgid "If checked new messages require your attention."
 msgstr ""
 
 #. module: connector_magento
-#: model:ir.model.fields,help:connector_magento.field_magento_account_invoice__message_needaction
+#: model:ir.model.fields,help:connector_magento.field_magento_account_move__message_needaction
 #: model:ir.model.fields,help:connector_magento.field_magento_address__message_needaction
 #: model:ir.model.fields,help:connector_magento.field_magento_product_product__message_needaction
 #: model:ir.model.fields,help:connector_magento.field_magento_res_partner__message_needaction
@@ -1599,7 +1599,7 @@ msgid "If checked, new messages require your attention."
 msgstr ""
 
 #. module: connector_magento
-#: model:ir.model.fields,help:connector_magento.field_magento_account_invoice__message_has_error
+#: model:ir.model.fields,help:connector_magento.field_magento_account_move__message_has_error
 #: model:ir.model.fields,help:connector_magento.field_magento_address__message_has_error
 #: model:ir.model.fields,help:connector_magento.field_magento_product_product__message_has_error
 #: model:ir.model.fields,help:connector_magento.field_magento_res_partner__message_has_error
@@ -1703,7 +1703,7 @@ msgid ""
 msgstr ""
 
 #. module: connector_magento
-#: model:ir.model.fields,help:connector_magento.field_magento_account_invoice__payment_term_id
+#: model:ir.model.fields,help:connector_magento.field_magento_account_move__payment_term_id
 msgid ""
 "If you use payment terms, the due date will be computed automatically at the "
 "generation of accounting entries. If you keep the payment terms and the due "
@@ -1712,7 +1712,7 @@ msgid ""
 msgstr ""
 
 #. module: connector_magento
-#: model:ir.model.fields,help:connector_magento.field_magento_account_invoice__date_due
+#: model:ir.model.fields,help:connector_magento.field_magento_account_move__date_due
 msgid ""
 "If you use payment terms, the due date will be computed automatically at the "
 "generation of accounting entries. The Payment terms may compute several due "
@@ -1854,18 +1854,18 @@ msgid "Incoming"
 msgstr ""
 
 #. module: connector_magento
-#: model:ir.model.fields,field_description:connector_magento.field_magento_account_invoice__incoterm_id
+#: model:ir.model.fields,field_description:connector_magento.field_magento_account_move__incoterm_id
 msgid "Incoterm"
 msgstr ""
 
 #. module: connector_magento
-#: model:ir.model.fields,field_description:connector_magento.field_magento_account_invoice__incoterms_id
+#: model:ir.model.fields,field_description:connector_magento.field_magento_account_move__incoterms_id
 #: model:ir.model.fields,field_description:connector_magento.field_magento_sale_order__incoterm
 msgid "Incoterms"
 msgstr ""
 
 #. module: connector_magento
-#: model:ir.model.fields,help:connector_magento.field_magento_account_invoice__incoterms_id
+#: model:ir.model.fields,help:connector_magento.field_magento_account_move__incoterms_id
 msgid ""
 "Incoterms are series of sales terms. They are used to divide transaction "
 "costs and responsibilities between buyer and seller and reflect state-of-the-"
@@ -1898,7 +1898,7 @@ msgid "International Article Number used for product identification."
 msgstr ""
 
 #. module: connector_magento
-#: model:ir.model.fields,help:connector_magento.field_magento_account_invoice__incoterm_id
+#: model:ir.model.fields,help:connector_magento.field_magento_account_move__incoterm_id
 #: model:ir.model.fields,help:connector_magento.field_magento_sale_order__incoterm
 msgid ""
 "International Commercial Terms are a series of predefined commercial terms "
@@ -1922,8 +1922,8 @@ msgid "Inventory Valuation"
 msgstr ""
 
 #. module: connector_magento
-#: model:ir.model,name:connector_magento.model_account_invoice
-#: model:ir.model.fields,field_description:connector_magento.field_magento_account_invoice__odoo_id
+#: model:ir.model,name:connector_magento.model_account_move
+#: model:ir.model.fields,field_description:connector_magento.field_magento_account_move__odoo_id
 #: model:ir.model.fields,field_description:connector_magento.field_magento_address__invoice_warn
 #: model:ir.model.fields,field_description:connector_magento.field_magento_res_partner__invoice_warn
 msgid "Invoice"
@@ -1940,23 +1940,23 @@ msgid "Invoice Count"
 msgstr ""
 
 #. module: connector_magento
-#: code:addons/connector_magento/models/account_invoice/exporter.py:25
+#: code:addons/connector_magento/models/account_move/exporter.py:25
 #, python-format
 msgid "Invoice Created"
 msgstr ""
 
 #. module: connector_magento
-#: model:ir.model.fields,field_description:connector_magento.field_magento_account_invoice__date_invoice
+#: model:ir.model.fields,field_description:connector_magento.field_magento_account_move__date_invoice
 msgid "Invoice Date"
 msgstr ""
 
 #. module: connector_magento
-#: model:ir.model.fields,field_description:connector_magento.field_magento_account_invoice__invoice_icon
+#: model:ir.model.fields,field_description:connector_magento.field_magento_account_move__invoice_icon
 msgid "Invoice Icon"
 msgstr ""
 
 #. module: connector_magento
-#: model:ir.model.fields,field_description:connector_magento.field_magento_account_invoice__invoice_line_ids
+#: model:ir.model.fields,field_description:connector_magento.field_magento_account_move__invoice_line_ids
 #: model:ir.model.fields,field_description:connector_magento.field_magento_sale_order_line__invoice_lines
 msgid "Invoice Lines"
 msgstr ""
@@ -1978,7 +1978,7 @@ msgid "Invoice address for current sales order."
 msgstr ""
 
 #. module: connector_magento
-#: model:ir.model.fields,field_description:connector_magento.field_magento_account_invoice__refund_invoice_id
+#: model:ir.model.fields,field_description:connector_magento.field_magento_account_move__refund_invoice_id
 msgid "Invoice for which this invoice is the credit note"
 msgstr ""
 
@@ -2008,7 +2008,7 @@ msgid "Is Backend Multi-Company"
 msgstr ""
 
 #. module: connector_magento
-#: model:ir.model.fields,field_description:connector_magento.field_magento_account_invoice__message_is_follower
+#: model:ir.model.fields,field_description:connector_magento.field_magento_account_move__message_is_follower
 #: model:ir.model.fields,field_description:connector_magento.field_magento_address__message_is_follower
 #: model:ir.model.fields,field_description:connector_magento.field_magento_product_product__message_is_follower
 #: model:ir.model.fields,field_description:connector_magento.field_magento_res_partner__message_is_follower
@@ -2071,14 +2071,14 @@ msgid "Is true if the sales order line comes from an expense or a vendor bills"
 msgstr ""
 
 #. module: connector_magento
-#: model:ir.model.fields,help:connector_magento.field_magento_account_invoice__reconciled
+#: model:ir.model.fields,help:connector_magento.field_magento_account_move__reconciled
 msgid ""
 "It indicates that the invoice has been paid and the journal entry of the "
 "invoice has been reconciled with one or several journal entries of payment."
 msgstr ""
 
 #. module: connector_magento
-#: model:ir.model.fields,help:connector_magento.field_magento_account_invoice__sent
+#: model:ir.model.fields,help:connector_magento.field_magento_account_move__sent
 msgid "It indicates that the invoice has been sent."
 msgstr ""
 
@@ -2094,17 +2094,17 @@ msgid "Job Position"
 msgstr ""
 
 #. module: connector_magento
-#: model:ir.model.fields,field_description:connector_magento.field_magento_account_invoice__journal_id
+#: model:ir.model.fields,field_description:connector_magento.field_magento_account_move__journal_id
 msgid "Journal"
 msgstr ""
 
 #. module: connector_magento
-#: model:ir.model.fields,field_description:connector_magento.field_magento_account_invoice__move_id
+#: model:ir.model.fields,field_description:connector_magento.field_magento_account_move__move_id
 msgid "Journal Entry"
 msgstr ""
 
 #. module: connector_magento
-#: model:ir.model.fields,field_description:connector_magento.field_magento_account_invoice__move_name
+#: model:ir.model.fields,field_description:connector_magento.field_magento_account_move__move_name
 msgid "Journal Entry Name"
 msgstr ""
 
@@ -2115,12 +2115,12 @@ msgid "Journal Items"
 msgstr ""
 
 #. module: connector_magento
-#: model:ir.model.fields,help:connector_magento.field_magento_account_invoice__date_invoice
+#: model:ir.model.fields,help:connector_magento.field_magento_account_move__date_invoice
 msgid "Keep empty to use the current date"
 msgstr ""
 
 #. module: connector_magento
-#: model:ir.model.fields,help:connector_magento.field_magento_account_invoice__date
+#: model:ir.model.fields,help:connector_magento.field_magento_account_move__date
 msgid "Keep empty to use the invoice date."
 msgstr ""
 
@@ -2146,7 +2146,7 @@ msgid "Language"
 msgstr ""
 
 #. module: connector_magento
-#: model:ir.model.fields,field_description:connector_magento.field_magento_account_invoice____last_update
+#: model:ir.model.fields,field_description:connector_magento.field_magento_account_move____last_update
 #: model:ir.model.fields,field_description:connector_magento.field_magento_address____last_update
 #: model:ir.model.fields,field_description:connector_magento.field_magento_backend____last_update
 #: model:ir.model.fields,field_description:connector_magento.field_magento_binding____last_update
@@ -2166,7 +2166,7 @@ msgid "Last Modified on"
 msgstr ""
 
 #. module: connector_magento
-#: model:ir.model.fields,field_description:connector_magento.field_magento_account_invoice__write_uid
+#: model:ir.model.fields,field_description:connector_magento.field_magento_account_move__write_uid
 #: model:ir.model.fields,field_description:connector_magento.field_magento_address__write_uid
 #: model:ir.model.fields,field_description:connector_magento.field_magento_backend__write_uid
 #: model:ir.model.fields,field_description:connector_magento.field_magento_binding_backend_read__write_uid
@@ -2184,7 +2184,7 @@ msgid "Last Updated by"
 msgstr ""
 
 #. module: connector_magento
-#: model:ir.model.fields,field_description:connector_magento.field_magento_account_invoice__write_date
+#: model:ir.model.fields,field_description:connector_magento.field_magento_account_move__write_date
 #: model:ir.model.fields,field_description:connector_magento.field_magento_address__write_date
 #: model:ir.model.fields,field_description:connector_magento.field_magento_backend__write_date
 #: model:ir.model.fields,field_description:connector_magento.field_magento_binding_backend_read__write_date
@@ -2207,7 +2207,7 @@ msgid "Last computed quantity to send on Magento."
 msgstr ""
 
 #. module: connector_magento
-#: model:ir.model.fields,field_description:connector_magento.field_magento_account_invoice__sync_date
+#: model:ir.model.fields,field_description:connector_magento.field_magento_account_move__sync_date
 #: model:ir.model.fields,field_description:connector_magento.field_magento_address__sync_date
 #: model:ir.model.fields,field_description:connector_magento.field_magento_binding__sync_date
 #: model:ir.model.fields,field_description:connector_magento.field_magento_product_category__sync_date
@@ -2239,7 +2239,7 @@ msgid "Latest Invoices & Payments Matching Date"
 msgstr ""
 
 #. module: connector_magento
-#: model:ir.model.fields,help:connector_magento.field_magento_account_invoice__move_id
+#: model:ir.model.fields,help:connector_magento.field_magento_account_move__move_id
 msgid "Link to the automatically generated Journal Items."
 msgstr ""
 
@@ -2317,7 +2317,7 @@ msgstr ""
 
 #. module: connector_magento
 #: model:ir.model,name:connector_magento.model_magento_backend
-#: model:ir.model.fields,field_description:connector_magento.field_magento_account_invoice__backend_id
+#: model:ir.model.fields,field_description:connector_magento.field_magento_account_move__backend_id
 #: model:ir.model.fields,field_description:connector_magento.field_magento_address__backend_id
 #: model:ir.model.fields,field_description:connector_magento.field_magento_binding__backend_id
 #: model:ir.model.fields,field_description:connector_magento.field_magento_binding_backend_read__magento_backend_id
@@ -2357,8 +2357,8 @@ msgid "Magento Binding Model"
 msgstr ""
 
 #. module: connector_magento
-#: model:ir.model.fields,field_description:connector_magento.field_account_invoice__magento_bind_ids
-#: model:ir.model.fields,field_description:connector_magento.field_magento_account_invoice__magento_bind_ids
+#: model:ir.model.fields,field_description:connector_magento.field_account_move__magento_bind_ids
+#: model:ir.model.fields,field_description:connector_magento.field_magento_account_move__magento_bind_ids
 #: model:ir.model.fields,field_description:connector_magento.field_magento_address__magento_bind_ids
 #: model:ir.model.fields,field_description:connector_magento.field_magento_product_category__magento_bind_ids
 #: model:ir.model.fields,field_description:connector_magento.field_magento_product_product__magento_bind_ids
@@ -2432,9 +2432,9 @@ msgid "Magento Internal"
 msgstr ""
 
 #. module: connector_magento
-#: model:ir.model,name:connector_magento.model_magento_account_invoice
-#: model_terms:ir.ui.view,arch_db:connector_magento.view_magento_account_invoice_form
-#: model_terms:ir.ui.view,arch_db:connector_magento.view_magento_account_invoice_tree
+#: model:ir.model,name:connector_magento.model_magento_account_move
+#: model_terms:ir.ui.view,arch_db:connector_magento.view_magento_account_move_form
+#: model_terms:ir.ui.view,arch_db:connector_magento.view_magento_account_move_tree
 msgid "Magento Invoice"
 msgstr ""
 
@@ -2494,7 +2494,7 @@ msgstr ""
 
 #. module: connector_magento
 #: model:ir.model,name:connector_magento.model_magento_sale_order
-#: model:ir.model.fields,field_description:connector_magento.field_magento_account_invoice__magento_order_id
+#: model:ir.model.fields,field_description:connector_magento.field_magento_account_move__magento_order_id
 #: model:ir.model.fields,field_description:connector_magento.field_magento_sale_order_line__magento_order_id
 #: model:ir.model.fields,field_description:connector_magento.field_magento_stock_picking__magento_order_id
 msgid "Magento Sale Order"
@@ -2579,7 +2579,7 @@ msgid "Magento sales order is already in state %s"
 msgstr ""
 
 #. module: connector_magento
-#: model:ir.model.fields,field_description:connector_magento.field_magento_account_invoice__message_main_attachment_id
+#: model:ir.model.fields,field_description:connector_magento.field_magento_account_move__message_main_attachment_id
 #: model:ir.model.fields,field_description:connector_magento.field_magento_address__message_main_attachment_id
 #: model:ir.model.fields,field_description:connector_magento.field_magento_product_product__message_main_attachment_id
 #: model:ir.model.fields,field_description:connector_magento.field_magento_res_partner__message_main_attachment_id
@@ -2660,7 +2660,7 @@ msgid ""
 msgstr ""
 
 #. module: connector_magento
-#: model:ir.model.fields,field_description:connector_magento.field_magento_account_invoice__message_has_error
+#: model:ir.model.fields,field_description:connector_magento.field_magento_account_move__message_has_error
 #: model:ir.model.fields,field_description:connector_magento.field_magento_address__message_has_error
 #: model:ir.model.fields,field_description:connector_magento.field_magento_product_product__message_has_error
 #: model:ir.model.fields,field_description:connector_magento.field_magento_res_partner__message_has_error
@@ -2693,7 +2693,7 @@ msgid "Message for Stock Picking"
 msgstr ""
 
 #. module: connector_magento
-#: model:ir.model.fields,field_description:connector_magento.field_magento_account_invoice__message_ids
+#: model:ir.model.fields,field_description:connector_magento.field_magento_account_move__message_ids
 #: model:ir.model.fields,field_description:connector_magento.field_magento_address__message_ids
 #: model:ir.model.fields,field_description:connector_magento.field_magento_product_product__message_ids
 #: model:ir.model.fields,field_description:connector_magento.field_magento_res_partner__message_ids
@@ -2751,7 +2751,7 @@ msgid "Newsletter"
 msgstr ""
 
 #. module: connector_magento
-#: model:ir.model.fields,field_description:connector_magento.field_magento_account_invoice__activity_date_deadline
+#: model:ir.model.fields,field_description:connector_magento.field_magento_account_move__activity_date_deadline
 #: model:ir.model.fields,field_description:connector_magento.field_magento_address__activity_date_deadline
 #: model:ir.model.fields,field_description:connector_magento.field_magento_product_product__activity_date_deadline
 #: model:ir.model.fields,field_description:connector_magento.field_magento_res_partner__activity_date_deadline
@@ -2761,7 +2761,7 @@ msgid "Next Activity Deadline"
 msgstr ""
 
 #. module: connector_magento
-#: model:ir.model.fields,field_description:connector_magento.field_magento_account_invoice__activity_summary
+#: model:ir.model.fields,field_description:connector_magento.field_magento_account_move__activity_summary
 #: model:ir.model.fields,field_description:connector_magento.field_magento_address__activity_summary
 #: model:ir.model.fields,field_description:connector_magento.field_magento_product_product__activity_summary
 #: model:ir.model.fields,field_description:connector_magento.field_magento_res_partner__activity_summary
@@ -2771,7 +2771,7 @@ msgid "Next Activity Summary"
 msgstr ""
 
 #. module: connector_magento
-#: model:ir.model.fields,field_description:connector_magento.field_magento_account_invoice__activity_type_id
+#: model:ir.model.fields,field_description:connector_magento.field_magento_account_move__activity_type_id
 #: model:ir.model.fields,field_description:connector_magento.field_magento_address__activity_type_id
 #: model:ir.model.fields,field_description:connector_magento.field_magento_product_product__activity_type_id
 #: model:ir.model.fields,field_description:connector_magento.field_magento_res_partner__activity_type_id
@@ -2781,12 +2781,12 @@ msgid "Next Activity Type"
 msgstr ""
 
 #. module: connector_magento
-#: model:ir.model.fields,field_description:connector_magento.field_magento_account_invoice__sequence_number_next
+#: model:ir.model.fields,field_description:connector_magento.field_magento_account_move__sequence_number_next
 msgid "Next Number"
 msgstr ""
 
 #. module: connector_magento
-#: model:ir.model.fields,field_description:connector_magento.field_magento_account_invoice__sequence_number_next_prefix
+#: model:ir.model.fields,field_description:connector_magento.field_magento_account_move__sequence_number_next_prefix
 msgid "Next Number Prefix"
 msgstr ""
 
@@ -2835,12 +2835,12 @@ msgid "Nothing to export."
 msgstr ""
 
 #. module: connector_magento
-#: model:ir.model.fields,field_description:connector_magento.field_magento_account_invoice__number
+#: model:ir.model.fields,field_description:connector_magento.field_magento_account_move__number
 msgid "Number"
 msgstr ""
 
 #. module: connector_magento
-#: model:ir.model.fields,field_description:connector_magento.field_magento_account_invoice__message_needaction_counter
+#: model:ir.model.fields,field_description:connector_magento.field_magento_account_move__message_needaction_counter
 #: model:ir.model.fields,field_description:connector_magento.field_magento_address__message_needaction_counter
 #: model:ir.model.fields,field_description:connector_magento.field_magento_product_product__message_needaction_counter
 #: model:ir.model.fields,field_description:connector_magento.field_magento_res_partner__message_needaction_counter
@@ -2857,7 +2857,7 @@ msgid ""
 msgstr ""
 
 #. module: connector_magento
-#: model:ir.model.fields,field_description:connector_magento.field_magento_account_invoice__message_has_error_counter
+#: model:ir.model.fields,field_description:connector_magento.field_magento_account_move__message_has_error_counter
 #: model:ir.model.fields,field_description:connector_magento.field_magento_address__message_has_error_counter
 #: model:ir.model.fields,field_description:connector_magento.field_magento_product_product__message_has_error_counter
 #: model:ir.model.fields,field_description:connector_magento.field_magento_res_partner__message_has_error_counter
@@ -2867,7 +2867,7 @@ msgid "Number of error"
 msgstr ""
 
 #. module: connector_magento
-#: model:ir.model.fields,help:connector_magento.field_magento_account_invoice__message_needaction_counter
+#: model:ir.model.fields,help:connector_magento.field_magento_account_move__message_needaction_counter
 #: model:ir.model.fields,help:connector_magento.field_magento_address__message_needaction_counter
 #: model:ir.model.fields,help:connector_magento.field_magento_product_product__message_needaction_counter
 #: model:ir.model.fields,help:connector_magento.field_magento_res_partner__message_needaction_counter
@@ -2877,7 +2877,7 @@ msgid "Number of messages which requires an action"
 msgstr ""
 
 #. module: connector_magento
-#: model:ir.model.fields,help:connector_magento.field_magento_account_invoice__message_has_error_counter
+#: model:ir.model.fields,help:connector_magento.field_magento_account_move__message_has_error_counter
 #: model:ir.model.fields,help:connector_magento.field_magento_address__message_has_error_counter
 #: model:ir.model.fields,help:connector_magento.field_magento_product_product__message_has_error_counter
 #: model:ir.model.fields,help:connector_magento.field_magento_res_partner__message_has_error_counter
@@ -2887,7 +2887,7 @@ msgid "Number of messages with delivery error"
 msgstr ""
 
 #. module: connector_magento
-#: model:ir.model.fields,help:connector_magento.field_magento_account_invoice__message_unread_counter
+#: model:ir.model.fields,help:connector_magento.field_magento_account_move__message_unread_counter
 #: model:ir.model.fields,help:connector_magento.field_magento_address__message_unread_counter
 #: model:ir.model.fields,help:connector_magento.field_magento_product_product__message_unread_counter
 #: model:ir.model.fields,help:connector_magento.field_magento_res_partner__message_unread_counter
@@ -3007,7 +3007,7 @@ msgid "Outgoing"
 msgstr ""
 
 #. module: connector_magento
-#: model:ir.model.fields,field_description:connector_magento.field_magento_account_invoice__outstanding_credits_debits_widget
+#: model:ir.model.fields,field_description:connector_magento.field_magento_account_move__outstanding_credits_debits_widget
 msgid "Outstanding Credits Debits Widget"
 msgstr ""
 
@@ -3043,7 +3043,7 @@ msgid "Paid"
 msgstr ""
 
 #. module: connector_magento
-#: model:ir.model.fields,field_description:connector_magento.field_magento_account_invoice__reconciled
+#: model:ir.model.fields,field_description:connector_magento.field_magento_account_move__reconciled
 msgid "Paid/Reconciled"
 msgstr ""
 
@@ -3081,7 +3081,7 @@ msgid "Partial"
 msgstr ""
 
 #. module: connector_magento
-#: model:ir.model.fields,field_description:connector_magento.field_magento_account_invoice__partner_id
+#: model:ir.model.fields,field_description:connector_magento.field_magento_account_move__partner_id
 #: model:ir.model.fields,field_description:connector_magento.field_magento_address__odoo_id
 #: model:ir.model.fields,field_description:connector_magento.field_magento_res_partner__odoo_id
 #: model:ir.model.fields,field_description:connector_magento.field_magento_stock_picking__partner_id
@@ -3121,7 +3121,7 @@ msgid "Payable Limit"
 msgstr ""
 
 #. module: connector_magento
-#: model:ir.model.fields,field_description:connector_magento.field_magento_account_invoice__payment_mode_id
+#: model:ir.model.fields,field_description:connector_magento.field_magento_account_move__payment_mode_id
 #: model:ir.model.fields,field_description:connector_magento.field_magento_sale_order__payment_mode_id
 msgid "Payment Mode"
 msgstr ""
@@ -3132,18 +3132,18 @@ msgid "Payment Modes"
 msgstr ""
 
 #. module: connector_magento
-#: model:ir.model.fields,field_description:connector_magento.field_magento_account_invoice__payment_move_line_ids
+#: model:ir.model.fields,field_description:connector_magento.field_magento_account_move__payment_move_line_ids
 msgid "Payment Move Lines"
 msgstr ""
 
 #. module: connector_magento
-#: model:ir.model.fields,field_description:connector_magento.field_magento_account_invoice__reference
+#: model:ir.model.fields,field_description:connector_magento.field_magento_account_move__reference
 #: model:ir.model.fields,field_description:connector_magento.field_magento_sale_order__reference
 msgid "Payment Ref."
 msgstr ""
 
 #. module: connector_magento
-#: model:ir.model.fields,field_description:connector_magento.field_magento_account_invoice__payment_term_id
+#: model:ir.model.fields,field_description:connector_magento.field_magento_account_move__payment_term_id
 #: model:ir.model.fields,field_description:connector_magento.field_magento_sale_order__payment_term_id
 msgid "Payment Terms"
 msgstr ""
@@ -3155,12 +3155,12 @@ msgid "Payment Tokens"
 msgstr ""
 
 #. module: connector_magento
-#: model:ir.model.fields,field_description:connector_magento.field_magento_account_invoice__payment_ids
+#: model:ir.model.fields,field_description:connector_magento.field_magento_account_move__payment_ids
 msgid "Payments"
 msgstr ""
 
 #. module: connector_magento
-#: model:ir.model.fields,field_description:connector_magento.field_magento_account_invoice__payments_widget
+#: model:ir.model.fields,field_description:connector_magento.field_magento_account_move__payments_widget
 msgid "Payments Widget"
 msgstr ""
 
@@ -3181,7 +3181,7 @@ msgid "Pickings"
 msgstr ""
 
 #. module: connector_magento
-#: model:ir.model.fields,field_description:connector_magento.field_magento_account_invoice__access_url
+#: model:ir.model.fields,field_description:connector_magento.field_magento_account_move__access_url
 #: model:ir.model.fields,field_description:connector_magento.field_magento_sale_order__access_url
 msgid "Portal Access URL"
 msgstr ""
@@ -3431,17 +3431,17 @@ msgid "Reference of the document that generated this sales order request."
 msgstr ""
 
 #. module: connector_magento
-#: model:ir.model.fields,help:connector_magento.field_magento_account_invoice__origin
+#: model:ir.model.fields,help:connector_magento.field_magento_account_move__origin
 msgid "Reference of the document that produced this invoice."
 msgstr ""
 
 #. module: connector_magento
-#: model:ir.model.fields,field_description:connector_magento.field_magento_account_invoice__name
+#: model:ir.model.fields,field_description:connector_magento.field_magento_account_move__name
 msgid "Reference/Description"
 msgstr ""
 
 #. module: connector_magento
-#: model:ir.model.fields,field_description:connector_magento.field_magento_account_invoice__refund_invoice_ids
+#: model:ir.model.fields,field_description:connector_magento.field_magento_account_move__refund_invoice_ids
 msgid "Refund Invoices"
 msgstr ""
 
@@ -3462,17 +3462,17 @@ msgid "Remaining Validity Days"
 msgstr ""
 
 #. module: connector_magento
-#: model:ir.model.fields,help:connector_magento.field_magento_account_invoice__residual_company_signed
+#: model:ir.model.fields,help:connector_magento.field_magento_account_move__residual_company_signed
 msgid "Remaining amount due in the currency of the company."
 msgstr ""
 
 #. module: connector_magento
-#: model:ir.model.fields,help:connector_magento.field_magento_account_invoice__residual_signed
+#: model:ir.model.fields,help:connector_magento.field_magento_account_move__residual_signed
 msgid "Remaining amount due in the currency of the invoice."
 msgstr ""
 
 #. module: connector_magento
-#: model:ir.model.fields,help:connector_magento.field_magento_account_invoice__residual
+#: model:ir.model.fields,help:connector_magento.field_magento_account_move__residual
 msgid "Remaining amount due."
 msgstr ""
 
@@ -3517,7 +3517,7 @@ msgid "Responsible"
 msgstr ""
 
 #. module: connector_magento
-#: model:ir.model.fields,field_description:connector_magento.field_magento_account_invoice__activity_user_id
+#: model:ir.model.fields,field_description:connector_magento.field_magento_account_move__activity_user_id
 #: model:ir.model.fields,field_description:connector_magento.field_magento_address__activity_user_id
 #: model:ir.model.fields,field_description:connector_magento.field_magento_product_product__activity_user_id
 #: model:ir.model.fields,field_description:connector_magento.field_magento_res_partner__activity_user_id
@@ -3570,7 +3570,7 @@ msgid "Sale Price"
 msgstr ""
 
 #. module: connector_magento
-#: model:ir.model.fields,field_description:connector_magento.field_magento_account_invoice__workflow_process_id
+#: model:ir.model.fields,field_description:connector_magento.field_magento_account_move__workflow_process_id
 #: model:ir.model.fields,field_description:connector_magento.field_magento_stock_picking__workflow_process_id
 msgid "Sale Workflow Process"
 msgstr ""
@@ -3600,7 +3600,7 @@ msgid "Sales Price"
 msgstr ""
 
 #. module: connector_magento
-#: model:ir.model.fields,field_description:connector_magento.field_magento_account_invoice__team_id
+#: model:ir.model.fields,field_description:connector_magento.field_magento_account_move__team_id
 #: model:ir.model.fields,field_description:connector_magento.field_magento_address__team_id
 #: model:ir.model.fields,field_description:connector_magento.field_magento_res_partner__team_id
 #: model:ir.model.fields,field_description:connector_magento.field_magento_sale_order__team_id
@@ -3615,7 +3615,7 @@ msgid "Sales Warnings"
 msgstr ""
 
 #. module: connector_magento
-#: model:ir.model.fields,field_description:connector_magento.field_magento_account_invoice__user_id
+#: model:ir.model.fields,field_description:connector_magento.field_magento_account_move__user_id
 #: model:ir.model.fields,field_description:connector_magento.field_magento_address__user_id
 #: model:ir.model.fields,field_description:connector_magento.field_magento_res_partner__user_id
 #: model:ir.model.fields,field_description:connector_magento.field_magento_sale_order__user_id
@@ -3636,7 +3636,7 @@ msgid ""
 msgstr ""
 
 #. module: connector_magento
-#: model:ir.model.fields,field_description:connector_magento.field_magento_account_invoice__access_token
+#: model:ir.model.fields,field_description:connector_magento.field_magento_account_move__access_token
 #: model:ir.model.fields,field_description:connector_magento.field_magento_sale_order__access_token
 msgid "Security Token"
 msgstr ""
@@ -3699,7 +3699,7 @@ msgid "Send email notification on picking done"
 msgstr ""
 
 #. module: connector_magento
-#: model:ir.model.fields,field_description:connector_magento.field_magento_account_invoice__sent
+#: model:ir.model.fields,field_description:connector_magento.field_magento_account_move__sent
 msgid "Sent"
 msgstr ""
 
@@ -3855,14 +3855,14 @@ msgid "Sort Order"
 msgstr ""
 
 #. module: connector_magento
-#: model:ir.model.fields,field_description:connector_magento.field_magento_account_invoice__origin
+#: model:ir.model.fields,field_description:connector_magento.field_magento_account_move__origin
 #: model:ir.model.fields,field_description:connector_magento.field_magento_sale_order__origin
 #: model:ir.model.fields,field_description:connector_magento.field_magento_stock_picking__origin
 msgid "Source Document"
 msgstr ""
 
 #. module: connector_magento
-#: model:ir.model.fields,field_description:connector_magento.field_magento_account_invoice__source_email
+#: model:ir.model.fields,field_description:connector_magento.field_magento_account_move__source_email
 msgid "Source Email"
 msgstr ""
 
@@ -3939,14 +3939,14 @@ msgid "State %s is not exported."
 msgstr ""
 
 #. module: connector_magento
-#: model:ir.model.fields,field_description:connector_magento.field_magento_account_invoice__state
+#: model:ir.model.fields,field_description:connector_magento.field_magento_account_move__state
 #: model:ir.model.fields,field_description:connector_magento.field_magento_sale_order__state
 #: model:ir.model.fields,field_description:connector_magento.field_magento_stock_picking__state
 msgid "Status"
 msgstr ""
 
 #. module: connector_magento
-#: model:ir.model.fields,help:connector_magento.field_magento_account_invoice__activity_state
+#: model:ir.model.fields,help:connector_magento.field_magento_account_move__activity_state
 #: model:ir.model.fields,help:connector_magento.field_magento_address__activity_state
 #: model:ir.model.fields,help:connector_magento.field_magento_product_product__activity_state
 #: model:ir.model.fields,help:connector_magento.field_magento_res_partner__activity_state
@@ -4093,7 +4093,7 @@ msgid "Tags"
 msgstr ""
 
 #. module: connector_magento
-#: model:ir.model.fields,field_description:connector_magento.field_magento_account_invoice__amount_tax
+#: model:ir.model.fields,field_description:connector_magento.field_magento_account_move__amount_tax
 msgid "Tax"
 msgstr ""
 
@@ -4114,7 +4114,7 @@ msgid "Tax ID"
 msgstr ""
 
 #. module: connector_magento
-#: model:ir.model.fields,field_description:connector_magento.field_magento_account_invoice__tax_line_ids
+#: model:ir.model.fields,field_description:connector_magento.field_magento_account_move__tax_line_ids
 msgid "Tax Lines"
 msgstr ""
 
@@ -4124,7 +4124,7 @@ msgid "Tax Rate"
 msgstr ""
 
 #. module: connector_magento
-#: model:ir.model.fields,field_description:connector_magento.field_magento_account_invoice__amount_by_group
+#: model:ir.model.fields,field_description:connector_magento.field_magento_account_move__amount_by_group
 #: model:ir.model.fields,field_description:connector_magento.field_magento_sale_order__amount_by_group
 msgid "Tax amount by group"
 msgstr ""
@@ -4135,7 +4135,7 @@ msgid "Tax groups are used with some external system like Prestashop"
 msgstr ""
 
 #. module: connector_magento
-#: model:ir.model.fields,field_description:connector_magento.field_magento_account_invoice__amount_tax_signed
+#: model:ir.model.fields,field_description:connector_magento.field_magento_account_move__amount_tax_signed
 msgid "Tax in Invoice Currency"
 msgstr ""
 
@@ -4163,7 +4163,7 @@ msgid "Technical field for UX purpose."
 msgstr ""
 
 #. module: connector_magento
-#: model:ir.model.fields,help:connector_magento.field_magento_account_invoice__move_name
+#: model:ir.model.fields,help:connector_magento.field_magento_account_move__move_name
 msgid ""
 "Technical field holding the number given to the invoice, automatically set "
 "when the invoice is validated then stored to set the same number again if "
@@ -4250,7 +4250,7 @@ msgid "The carrier %s does not export tracking numbers."
 msgstr ""
 
 #. module: connector_magento
-#: model:ir.model.fields,help:connector_magento.field_magento_account_invoice__commercial_partner_id
+#: model:ir.model.fields,help:connector_magento.field_magento_account_move__commercial_partner_id
 msgid ""
 "The commercial entity that will be used on Journal Entries for this invoice"
 msgstr ""
@@ -4299,7 +4299,7 @@ msgid "The internal user in charge of this contact."
 msgstr ""
 
 #. module: connector_magento
-#: model:ir.model.fields,help:connector_magento.field_magento_account_invoice__name
+#: model:ir.model.fields,help:connector_magento.field_magento_account_move__name
 msgid "The name that will be used on account move lines"
 msgstr ""
 
@@ -4311,7 +4311,7 @@ msgid ""
 msgstr ""
 
 #. module: connector_magento
-#: model:ir.model.fields,help:connector_magento.field_magento_account_invoice__account_id
+#: model:ir.model.fields,help:connector_magento.field_magento_account_move__account_id
 msgid "The partner account used for this invoice."
 msgstr ""
 
@@ -4339,7 +4339,7 @@ msgid "The payment communication of this sale order."
 msgstr ""
 
 #. module: connector_magento
-#: model:ir.model.fields,help:connector_magento.field_magento_account_invoice__reference
+#: model:ir.model.fields,help:connector_magento.field_magento_account_move__reference
 msgid ""
 "The payment communication that will be automatically populated once the "
 "invoice validation. You can also write a free communication."
@@ -4543,7 +4543,7 @@ msgid "Token"
 msgstr ""
 
 #. module: connector_magento
-#: model:ir.model.fields,field_description:connector_magento.field_magento_account_invoice__amount_total
+#: model:ir.model.fields,field_description:connector_magento.field_magento_account_move__amount_total
 #: model:ir.model.fields,field_description:connector_magento.field_magento_sale_order__amount_total
 #: model:ir.model.fields,field_description:connector_magento.field_magento_sale_order_line__price_total
 msgid "Total"
@@ -4588,12 +4588,12 @@ msgid "Total amount"
 msgstr ""
 
 #. module: connector_magento
-#: model:ir.model.fields,help:connector_magento.field_magento_account_invoice__amount_total_company_signed
+#: model:ir.model.fields,help:connector_magento.field_magento_account_move__amount_total_company_signed
 msgid "Total amount in the currency of the company, negative for credit notes."
 msgstr ""
 
 #. module: connector_magento
-#: model:ir.model.fields,help:connector_magento.field_magento_account_invoice__amount_total_signed
+#: model:ir.model.fields,help:connector_magento.field_magento_account_move__amount_total_signed
 msgid "Total amount in the currency of the invoice, negative for credit notes."
 msgstr ""
 
@@ -4615,12 +4615,12 @@ msgid "Total amount you have to pay to this vendor."
 msgstr ""
 
 #. module: connector_magento
-#: model:ir.model.fields,field_description:connector_magento.field_magento_account_invoice__amount_total_company_signed
+#: model:ir.model.fields,field_description:connector_magento.field_magento_account_move__amount_total_company_signed
 msgid "Total in Company Currency"
 msgstr ""
 
 #. module: connector_magento
-#: model:ir.model.fields,field_description:connector_magento.field_magento_account_invoice__amount_total_signed
+#: model:ir.model.fields,field_description:connector_magento.field_magento_account_move__amount_total_signed
 msgid "Total in Invoice Currency"
 msgstr ""
 
@@ -4650,7 +4650,7 @@ msgid "Tracking URL"
 msgstr ""
 
 #. module: connector_magento
-#: model:ir.model.fields,field_description:connector_magento.field_magento_account_invoice__transaction_ids
+#: model:ir.model.fields,field_description:connector_magento.field_magento_account_move__transaction_ids
 #: model:ir.model.fields,field_description:connector_magento.field_magento_sale_order__transaction_ids
 msgid "Transactions"
 msgstr ""
@@ -4661,7 +4661,7 @@ msgid "Transfer"
 msgstr ""
 
 #. module: connector_magento
-#: model:ir.model.fields,field_description:connector_magento.field_magento_account_invoice__type
+#: model:ir.model.fields,field_description:connector_magento.field_magento_account_move__type
 msgid "Type"
 msgstr ""
 
@@ -4712,7 +4712,7 @@ msgid "Unit(s)"
 msgstr ""
 
 #. module: connector_magento
-#: model:ir.model.fields,field_description:connector_magento.field_magento_account_invoice__message_unread
+#: model:ir.model.fields,field_description:connector_magento.field_magento_account_move__message_unread
 #: model:ir.model.fields,field_description:connector_magento.field_magento_address__message_unread
 #: model:ir.model.fields,field_description:connector_magento.field_magento_product_product__message_unread
 #: model:ir.model.fields,field_description:connector_magento.field_magento_res_partner__message_unread
@@ -4722,7 +4722,7 @@ msgid "Unread Messages"
 msgstr ""
 
 #. module: connector_magento
-#: model:ir.model.fields,field_description:connector_magento.field_magento_account_invoice__message_unread_counter
+#: model:ir.model.fields,field_description:connector_magento.field_magento_account_move__message_unread_counter
 #: model:ir.model.fields,field_description:connector_magento.field_magento_address__message_unread_counter
 #: model:ir.model.fields,field_description:connector_magento.field_magento_product_product__message_unread_counter
 #: model:ir.model.fields,field_description:connector_magento.field_magento_res_partner__message_unread_counter
@@ -4732,7 +4732,7 @@ msgid "Unread Messages Counter"
 msgstr ""
 
 #. module: connector_magento
-#: model:ir.model.fields,field_description:connector_magento.field_magento_account_invoice__amount_untaxed
+#: model:ir.model.fields,field_description:connector_magento.field_magento_account_move__amount_untaxed
 #: model:ir.model.fields,field_description:connector_magento.field_magento_sale_order__amount_untaxed
 msgid "Untaxed Amount"
 msgstr ""
@@ -4743,12 +4743,12 @@ msgid "Untaxed Amount To Invoice"
 msgstr ""
 
 #. module: connector_magento
-#: model:ir.model.fields,field_description:connector_magento.field_magento_account_invoice__amount_untaxed_signed
+#: model:ir.model.fields,field_description:connector_magento.field_magento_account_move__amount_untaxed_signed
 msgid "Untaxed Amount in Company Currency"
 msgstr ""
 
 #. module: connector_magento
-#: model:ir.model.fields,field_description:connector_magento.field_magento_account_invoice__amount_untaxed_invoice_signed
+#: model:ir.model.fields,field_description:connector_magento.field_magento_account_move__amount_untaxed_invoice_signed
 msgid "Untaxed Amount in Invoice Currency"
 msgstr ""
 
@@ -4918,12 +4918,12 @@ msgid "Variant Seller"
 msgstr ""
 
 #. module: connector_magento
-#: model:ir.model.fields,field_description:connector_magento.field_magento_account_invoice__vendor_bill_id
+#: model:ir.model.fields,field_description:connector_magento.field_magento_account_move__vendor_bill_id
 msgid "Vendor Bill"
 msgstr ""
 
 #. module: connector_magento
-#: model:ir.model.fields,field_description:connector_magento.field_magento_account_invoice__vendor_display_name
+#: model:ir.model.fields,field_description:connector_magento.field_magento_account_move__vendor_display_name
 msgid "Vendor Display Name"
 msgstr ""
 
@@ -5002,7 +5002,7 @@ msgid "Website"
 msgstr ""
 
 #. module: connector_magento
-#: model:ir.model.fields,field_description:connector_magento.field_magento_account_invoice__website_message_ids
+#: model:ir.model.fields,field_description:connector_magento.field_magento_account_move__website_message_ids
 #: model:ir.model.fields,field_description:connector_magento.field_magento_address__website_message_ids
 #: model:ir.model.fields,field_description:connector_magento.field_magento_product_product__website_message_ids
 #: model:ir.model.fields,field_description:connector_magento.field_magento_res_partner__website_message_ids
@@ -5012,7 +5012,7 @@ msgid "Website Messages"
 msgstr ""
 
 #. module: connector_magento
-#: model:ir.model.fields,help:connector_magento.field_magento_account_invoice__website_message_ids
+#: model:ir.model.fields,help:connector_magento.field_magento_account_move__website_message_ids
 #: model:ir.model.fields,help:connector_magento.field_magento_address__website_message_ids
 #: model:ir.model.fields,help:connector_magento.field_magento_product_product__website_message_ids
 #: model:ir.model.fields,help:connector_magento.field_magento_res_partner__website_message_ids
@@ -5116,7 +5116,7 @@ msgid ""
 msgstr ""
 
 #. module: connector_magento
-#: model:ir.model.fields,help:connector_magento.field_magento_account_invoice__partner_id
+#: model:ir.model.fields,help:connector_magento.field_magento_account_move__partner_id
 msgid "You can find a contact by its Name, TIN, Email or Internal Reference."
 msgstr ""
 
@@ -5178,7 +5178,7 @@ msgid "magento.res.partner.category"
 msgstr ""
 
 #. module: connector_magento
-#: model:ir.model.fields,help:connector_magento.field_magento_account_invoice__amount_by_group
+#: model:ir.model.fields,help:connector_magento.field_magento_account_move__amount_by_group
 #: model:ir.model.fields,help:connector_magento.field_magento_sale_order__amount_by_group
 msgid "type: [(name, amount, base, formated amount, formated base)]"
 msgstr ""

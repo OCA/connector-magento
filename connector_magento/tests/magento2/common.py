@@ -15,6 +15,7 @@ from os.path import dirname, join
 from vcr import VCR
 
 from odoo.tools import mute_logger
+
 from ..common import MagentoTestCase
 
 recorder = VCR(
@@ -31,7 +32,7 @@ class Magento2TestCase(MagentoTestCase):
         super(Magento2TestCase, self).setUp()
         self.recorder = recorder
         self.backend.write(
-            {"version": "2.0", "token": "m59qseoztake3xm1zcvkiv8qnuj09da0",}
+            {"version": "2.0", "token": "m59qseoztake3xm1zcvkiv8qnuj09da0"}
         )
 
 
@@ -39,8 +40,7 @@ class Magento2SyncTestCase(Magento2TestCase):
     def setUp(self):
         super(Magento2SyncTestCase, self).setUp()
         with mute_logger(
-                'odoo.addons.mail.models.mail_mail',
-                'odoo.models.unlink',
-                'odoo.tests'):
-            with recorder.use_cassette('metadata'):
+            "odoo.addons.mail.models.mail_mail", "odoo.models.unlink", "odoo.tests"
+        ):
+            with recorder.use_cassette("metadata"):
                 self.backend.synchronize_metadata()

@@ -9,9 +9,20 @@ class TestUpdateStockQty(MagentoSyncTestCase):
 
     def _product_change_qty(self, product, new_qty, location_id=False):
         wizard_model = self.env["stock.change.product.qty"]
-        data = {"product_id": product.id, "new_quantity": new_qty}
+        data = {
+            "product_id": product.id,
+            "product_tmpl_id": product.product_tmpl_id.id,
+            "new_quantity": new_qty,
+        }
         if location_id:
-            data["location_id"] = location_id
+            self.env["stock.quant"].with_context(inventory_mode=True).create(
+                {
+                    "product_id": product.id,
+                    "location_id": location_id,
+                    "inventory_quantity": new_qty,
+                }
+            )
+            return
         wizard = wizard_model.create(data)
         wizard.change_product_qty()
 
@@ -146,8 +157,7 @@ class TestUpdateStockQty(MagentoSyncTestCase):
             self.assertFalse(cargs)
             self.assertEqual(set(ckwargs.keys()), {"fields"})
             self.assertEqual(
-                set(ckwargs["fields"]),
-                {"manage_stock", "backorders", "magento_qty"},
+                set(ckwargs["fields"]), {"manage_stock", "backorders", "magento_qty"},
             )
 
     def test_export_product_inventory_write_job(self):
@@ -213,6 +223,7 @@ class TestUpdateStockQty(MagentoSyncTestCase):
         # we mock the job so we can check it .delay() is called on it
         # when the quantity is changed
         with self.mock_with_delay() as (delayable_cls, delayable):
+            binding.refresh()
             binding.recompute_magento_qty()
             self.assertEqual(binding.magento_qty, 5.0)
 

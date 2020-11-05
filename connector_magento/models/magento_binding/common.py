@@ -26,7 +26,7 @@ class MagentoBinding(models.AbstractModel):
         ondelete="restrict",
     )
     # fields.Char because 0 is a valid Magento ID
-    external_id = fields.Char(string="ID on Magento", oldname="magento_id")
+    external_id = fields.Char(string="ID on Magento")
 
     _sql_constraints = [
         (
@@ -57,7 +57,6 @@ class MagentoBinding(models.AbstractModel):
 
     @job(default_channel="root.magento")
     @related_action(action="related_action_unwrap_binding")
-    @api.multi
     def export_record(self, fields=None):
         """ Export a record on Magento """
         self.ensure_one()
