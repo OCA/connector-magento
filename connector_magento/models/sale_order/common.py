@@ -56,7 +56,6 @@ class MagentoSaleOrder(models.Model):
     )
 
     @job(default_channel="root.magento")
-    @api.multi
     def export_state_change(self, allowed_states=None, comment=None, notify=None):
         """ Change state of a sales order on Magento """
         self.ensure_one()
@@ -119,7 +118,6 @@ class SaleOrder(models.Model):
                     allowed_states=["cancel"]
                 )
 
-    @api.multi
     def write(self, vals):
         if vals.get("state") == "cancel":
             self._magento_cancel()
@@ -140,7 +138,6 @@ class SaleOrder(models.Model):
             job_descr = _("Reopen sales order %s") % (binding.external_id,)
             binding.with_delay(description=job_descr).export_state_change()
 
-    @api.multi
     def copy(self, default=None):
         self_copy = self.with_context(__copy_from_quotation=True)
         new = super(SaleOrder, self_copy).copy(default=default)
@@ -223,7 +220,6 @@ class SaleOrderLine(models.Model):
                 bindings.write({"odoo_id": new_line.id})
         return new_line
 
-    @api.multi
     def copy_data(self, default=None):
         data = super(SaleOrderLine, self).copy_data(default=default)[0]
         if self.env.context.get("__copy_from_quotation"):

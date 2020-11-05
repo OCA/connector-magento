@@ -2,7 +2,7 @@
 # Copyright 2020 Opener B.V.
 # License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl.html)
 
-from openerp.addons.connector.exception import InvalidDataError
+from odoo.addons.connector.exception import InvalidDataError
 
 from .common import Magento2SyncTestCase, recorder
 

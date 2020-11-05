@@ -5,7 +5,7 @@
 import logging
 import xmlrpc.client
 
-from odoo import api, fields, models
+from odoo import fields, models
 
 from odoo.addons.component.core import Component
 from odoo.addons.connector.exception import IDMissingInBackend
@@ -44,7 +44,6 @@ class MagentoAccountInvoice(models.Model):
 
     @job(default_channel="root.magento")
     @related_action(action="related_action_unwrap_binding")
-    @api.multi
     def export_record(self):
         """ Export a validated or paid invoice. """
         self.ensure_one()
@@ -107,7 +106,7 @@ class AccountInvoiceAdapter(Component):
             "items": [
                 {"orderItemId": key, "qty": value} for key, value in items.items()
             ],
-            "comment": {"comment": comment, "isVisibleOnFront": 0,},
+            "comment": {"comment": comment, "isVisibleOnFront": 0},
             "appendComment": include_comment,
         }
         return self._call(

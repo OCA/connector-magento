@@ -242,7 +242,6 @@
     <record id="action_magento_backend" model="ir.actions.act_window">
         <field name="name">Magento Backends</field>
         <field name="res_model">magento.backend</field>
-        <field name="view_type">form</field>
         <field name="view_mode">tree,form</field>
         <field name="view_id" ref="view_magento_backend_tree" />
     </record>
@@ -337,7 +336,6 @@
     <record id="action_magento_website" model="ir.actions.act_window">
         <field name="name">Magento Websites</field>
         <field name="res_model">magento.website</field>
-        <field name="view_type">form</field>
         <field name="view_mode">tree,form</field>
         <field name="view_id" ref="view_magento_website_tree" />
     </record>
@@ -408,7 +406,6 @@
     <record id="action_magento_store" model="ir.actions.act_window">
         <field name="name">Magento Stores</field>
         <field name="res_model">magento.store</field>
-        <field name="view_type">form</field>
         <field name="view_mode">tree,form</field>
         <field name="view_id" ref="view_magento_store_tree" />
     </record>
@@ -516,7 +513,6 @@
     <record id="action_magento_storeview" model="ir.actions.act_window">
         <field name="name">Magento Storeviews</field>
         <field name="res_model">magento.storeview</field>
-        <field name="view_type">form</field>
         <field name="view_mode">tree,form</field>
         <field name="view_id" ref="view_magento_storeview_tree" />
     </record>
