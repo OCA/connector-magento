@@ -12,7 +12,7 @@ class TestRelatedActionStorage(MagentoSyncTestCase):
     """ Test related actions on stored jobs """
 
     def setUp(self):
-        super(TestRelatedActionStorage, self).setUp()
+        super().setUp()
         self.MagentoProduct = self.env["magento.product.product"]
         self.QueueJob = self.env["queue.job"]
 

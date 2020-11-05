@@ -8,7 +8,7 @@ class TestImportProductImageMagento2(TestImportProductImage):
     """ Test the imports of the image of the products. """
 
     def setUp(self):
-        super(TestImportProductImageMagento2, self).setUp()
+        super().setUp()
         warehouse = self.env.ref("stock.warehouse0")
         self.backend = self.backend_model.create(
             {

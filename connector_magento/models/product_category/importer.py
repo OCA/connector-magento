@@ -21,9 +21,7 @@ class ProductCategoryBatchImporter(Component):
 
     def _import_record(self, external_id, job_options=None):
         """ Delay a job for the import """
-        super(ProductCategoryBatchImporter, self)._import_record(
-            external_id, job_options=job_options
-        )
+        super()._import_record(external_id, job_options=job_options)
 
     def run(self, filters=None):
         """ Run the synchronization """
@@ -71,7 +69,7 @@ class ProductCategoryImporter(Component):
         self._import_dependency(record.get("parent_id"), self.model)
 
     def _create(self, data):
-        binding = super(ProductCategoryImporter, self)._create(data)
+        binding = super()._create(data)
         self.backend_record.add_checkpoint(binding)
         return binding
 

@@ -219,7 +219,7 @@ class ProductProductAdapter(Component):
 
     def _call(self, method, arguments, http_method=None, storeview=None):
         try:
-            return super(ProductProductAdapter, self)._call(
+            return super()._call(
                 method, arguments, http_method=http_method, storeview=storeview
             )
         except xmlrpc.client.Fault as err:
@@ -253,7 +253,7 @@ class ProductProductAdapter(Component):
                     "%s.list" % self._magento_model, [filters] if filters else [{}]
                 )
             ]
-        return super(ProductProductAdapter, self).search(filters=filters)
+        return super().search(filters=filters)
 
     def read(self, external_id, storeview_id=None, attributes=None):
         """ Returns the information of a record
@@ -266,9 +266,7 @@ class ProductProductAdapter(Component):
                 "ol_catalog_product.info",
                 [int(external_id), storeview_id, attributes, "id"],
             )
-        res = super(ProductProductAdapter, self).read(
-            external_id, attributes=attributes, storeview=storeview_id
-        )
+        res = super().read(external_id, attributes=attributes, storeview=storeview_id)
         if res:
             for attr in res.get("custom_attributes", []):
                 res[attr["attribute_code"]] = attr["value"]

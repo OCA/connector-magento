@@ -27,6 +27,6 @@ class StoreImporter(Component):
     _apply_on = "magento.store"
 
     def _create(self, data):
-        binding = super(StoreImporter, self)._create(data)
+        binding = super()._create(data)
         self.backend_record.add_checkpoint(binding)
         return binding

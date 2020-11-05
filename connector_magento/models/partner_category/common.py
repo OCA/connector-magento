@@ -61,4 +61,4 @@ class PartnerCategoryAdapter(Component):
                     "%s.list" % self._magento_model, [filters] if filters else [{}]
                 )
             ]
-        return super(PartnerCategoryAdapter, self).search(filters=filters)
+        return super().search(filters=filters)

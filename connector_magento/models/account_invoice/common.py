@@ -77,9 +77,7 @@ class AccountInvoiceAdapter(Component):
 
     def _call(self, method, arguments, http_method=None):
         try:
-            return super(AccountInvoiceAdapter, self)._call(
-                method, arguments, http_method=http_method
-            )
+            return super()._call(method, arguments, http_method=http_method)
         except xmlrpc.client.Fault as err:
             # this is the error in the Magento API
             # when the invoice does not exist
@@ -121,7 +119,7 @@ class AccountInvoiceAdapter(Component):
             filters = {}
         if order_id is not None:
             filters["order_id"] = {"eq": order_id}
-        return super(AccountInvoiceAdapter, self).search_read(filters=filters)
+        return super().search_read(filters=filters)
 
 
 class MagentoBindingInvoiceListener(Component):

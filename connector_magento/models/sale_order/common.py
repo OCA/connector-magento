@@ -67,8 +67,7 @@ class MagentoSaleOrder(models.Model):
         assert "magento_storeview_id" in filters, (
             "Missing information about " "Magento Storeview"
         )
-        _super = super(MagentoSaleOrder, self)
-        return _super.import_batch(backend, filters=filters)
+        return super().import_batch(backend, filters=filters)
 
 
 class SaleOrder(models.Model):
@@ -87,7 +86,7 @@ class SaleOrder(models.Model):
         For Magento sales orders, the magento parent order is stored
         in the binding, get it from there.
         """
-        super(SaleOrder, self).get_parent_id()
+        super().get_parent_id()
         for order in self:
             if not order.magento_bind_ids:
                 continue
@@ -116,7 +115,7 @@ class SaleOrder(models.Model):
     def write(self, vals):
         if vals.get("state") == "cancel":
             self._magento_cancel()
-        return super(SaleOrder, self).write(vals)
+        return super().write(vals)
 
     def _magento_link_binding_of_copy(self, new):
         # link binding of the canceled order to the new order, so the
@@ -175,7 +174,7 @@ class MagentoSaleOrderLine(models.Model):
         magento_order_id = vals["magento_order_id"]
         binding = self.env["magento.sale.order"].browse(magento_order_id)
         vals["order_id"] = binding.odoo_id.id
-        binding = super(MagentoSaleOrderLine, self).create(vals)
+        binding = super().create(vals)
         # FIXME triggers function field
         # The amounts (amount_total, ...) computed fields on 'sale.order' are
         # not triggered when magento.sale.order.line are created.
@@ -204,7 +203,7 @@ class SaleOrderLine(models.Model):
             # the id of the copied line is inserted in the vals
             # in `copy_data`.
             old_line_id = vals.pop("__copy_from_line_id", None)
-        new_line = super(SaleOrderLine, self).create(vals)
+        new_line = super().create(vals)
         if old_line_id:
             # link binding of the canceled order lines to the new order
             # lines, happens when we are using the 'New Copy of
@@ -216,7 +215,7 @@ class SaleOrderLine(models.Model):
         return new_line
 
     def copy_data(self, default=None):
-        data = super(SaleOrderLine, self).copy_data(default=default)[0]
+        data = super().copy_data(default=default)[0]
         if self.env.context.get("__copy_from_quotation"):
             # copy_data is called by `copy` of the sale.order which
             # builds a dict for the full new sale order, so we lose the
@@ -243,7 +242,7 @@ class SaleOrderAdapter(Component):
 
     def _call(self, method, arguments, http_method=None, storeview=None):
         try:
-            return super(SaleOrderAdapter, self)._call(
+            return super()._call(
                 method, arguments, http_method=http_method, storeview=storeview
             )
         except xmlrpc.client.Fault as err:
@@ -282,7 +281,7 @@ class SaleOrderAdapter(Component):
             }
         else:
             arguments = filters
-        return super(SaleOrderAdapter, self).search(arguments)
+        return super().search(arguments)
 
     def read(self, external_id, attributes=None):
         """ Returns the information of a record
@@ -294,7 +293,7 @@ class SaleOrderAdapter(Component):
             return self._call(
                 "%s.info" % self._magento_model, [external_id, attributes]
             )
-        return super(SaleOrderAdapter, self).read(external_id, attributes=attributes)
+        return super().read(external_id, attributes=attributes)
 
     def get_parent(self, external_id):
         if self.collection.version == "2.0":

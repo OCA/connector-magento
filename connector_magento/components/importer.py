@@ -33,7 +33,7 @@ class MagentoImporter(AbstractComponent):
     _usage = "record.importer"
 
     def __init__(self, work_context):
-        super(MagentoImporter, self).__init__(work_context)
+        super().__init__(work_context)
         self.external_id = None
         self.magento_record = None
 

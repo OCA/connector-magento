@@ -7,7 +7,7 @@ from .common import Magento2SyncTestCase, recorder
 
 class TestImportPartner(Magento2SyncTestCase):
     def setUp(self):
-        super(TestImportPartner, self).setUp()
+        super().setUp()
         category_model = self.env["res.partner.category"]
         existing_category = category_model.create({"name": "General"})
         self.create_binding_no_export(

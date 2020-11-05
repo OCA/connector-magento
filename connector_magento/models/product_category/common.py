@@ -64,7 +64,7 @@ class ProductCategoryAdapter(Component):
 
     def _call(self, method, arguments, http_method=None, storeview=None):
         try:
-            return super(ProductCategoryAdapter, self)._call(
+            return super()._call(
                 method, arguments, http_method=http_method, storeview=storeview
             )
         except xmlrpc.client.Fault as err:
@@ -96,7 +96,7 @@ class ProductCategoryAdapter(Component):
             return self._call(
                 "oerp_catalog_category.search", [filters] if filters else [{}]
             )
-        return super(ProductCategoryAdapter, self).search(filters=filters)
+        return super().search(filters=filters)
 
     def read(self, external_id, storeview_id=None, attributes=None):
         """Returns the information of a record
@@ -109,9 +109,7 @@ class ProductCategoryAdapter(Component):
                 "%s.info" % self._magento_model,
                 [int(external_id), storeview_id, attributes],
             )
-        return super(ProductCategoryAdapter, self).read(
-            external_id, attributes, storeview=storeview_id
-        )
+        return super().read(external_id, attributes, storeview=storeview_id)
 
     def tree(self, parent_id=None, storeview_id=None):
         """Returns a tree of product categories

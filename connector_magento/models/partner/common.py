@@ -38,7 +38,7 @@ class ResPartner(models.Model):
         parent.
 
         """
-        fields = super(ResPartner, self)._address_fields()
+        fields = super()._address_fields()
         fields.append("company")
         return fields
 
@@ -48,7 +48,7 @@ class ResPartner(models.Model):
         assert (
             "magento_website_id" in filters
         ), "Missing information about Magento Website"
-        return super(ResPartner, self).import_batch(backend, filters=filters)
+        return super().import_batch(backend, filters=filters)
 
 
 class MagentoResPartner(models.Model):
@@ -159,7 +159,7 @@ class PartnerAdapter(Component):
 
     def _call(self, method, arguments, http_method=None, storeview=None):
         try:
-            return super(PartnerAdapter, self)._call(
+            return super()._call(
                 method, arguments, http_method=http_method, storeview=storeview
             )
         except xmlrpc.client.Fault as err:
@@ -195,7 +195,7 @@ class PartnerAdapter(Component):
         if self.collection.version == "1.7":
             # the search method is on ol_customer instead of customer
             return self._call("ol_customer.search", [filters] if filters else [{}])
-        return super(PartnerAdapter, self).search(filters=filters)
+        return super().search(filters=filters)
 
 
 class AddressAdapter(Component):

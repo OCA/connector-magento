@@ -99,8 +99,7 @@ Check your taxes and fiscal positions configuration and correct them if necessar
             <field name="model">sale.order</field>
             <field
                 name="code"
-            >if sale.magento_bind_ids and abs(sale.amount_total - sale.magento_bind_ids[0].total_amount) >= 0.01:
-    failed = True</field>
+            >failed=(obj.magento_bind_ids and abs(obj.amount_total - obj.magento_bind_ids[0].total_amount) >= 0.01)</field>
             <field name="active" eval="True" />
         </record>
         <record id="excep_wrong_total_amount_tax" model="exception.rule">
@@ -118,9 +117,7 @@ Check your taxes and fiscal positions configuration and correct them if necessar
             <field name="model">sale.order</field>
             <field
                 name="code"
-            ># By default, a cent of difference for the tax amount is allowed, feel free to customise it in your own module
-if sale.magento_bind_ids and abs(sale.amount_tax - sale.magento_bind_ids[0].total_amount_tax) > 0.01:
-    failed = True</field>
+            >failed=(obj.magento_bind_ids and abs(obj.amount_tax - obj.magento_bind_ids[0].total_amount_tax) > 0.01)</field>
             <field name="active" eval="True" />
         </record>
         <record id="product_product_store_credit" model="product.product">

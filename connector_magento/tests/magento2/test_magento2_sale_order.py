@@ -13,7 +13,7 @@ ExpectedOrderLine = namedtuple(
 
 class TestSaleOrder(Magento2SyncTestCase):
     def setUp(self):
-        super(TestSaleOrder, self).setUp()
+        super().setUp()
 
     def _import_sale_order(self, increment_id, cassette=True):
         return self._import_record(
@@ -333,8 +333,14 @@ class TestSaleOrder(Magento2SyncTestCase):
         binding = self._import_sale_order("17")
         self.assertFalse(binding.total_amount)
         # Product line discount is 100 percent
-        self.assertEqual(binding.order_line[0].price_unit, 44)
-        self.assertEqual(binding.order_line[0].discount, 100)
+        line_sybil = binding.order_line.filtered(
+            lambda x: x.name == "Sybil Running Short-29-Purple"
+        )
+        self.assertEqual(line_sybil.price_unit, 44)
+        self.assertEqual(line_sybil.discount, 100)
         # Shipping line discount is included in the unit price
-        self.assertFalse(binding.order_line[1].price_unit)
-        self.assertFalse(binding.order_line[1].discount)
+        line_shipping = binding.order_line.filtered(
+            lambda x: x.name == "Shipping Costs"
+        )
+        self.assertFalse(line_shipping.price_unit)
+        self.assertFalse(line_shipping.discount)

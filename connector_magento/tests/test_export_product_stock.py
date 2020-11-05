@@ -27,7 +27,7 @@ class TestUpdateStockQty(MagentoSyncTestCase):
         wizard.change_product_qty()
 
     def setUp(self):
-        super(TestUpdateStockQty, self).setUp()
+        super().setUp()
         self.binding_product = self._import_record("magento.product.product", 879)
 
     def test_compute_new_qty(self):

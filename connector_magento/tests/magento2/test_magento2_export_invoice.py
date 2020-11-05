@@ -14,7 +14,7 @@ class TestExportInvoice(Magento2SyncTestCase):
     """ Test the export of an invoice to Magento """
 
     def setUp(self):
-        super(TestExportInvoice, self).setUp()
+        super().setUp()
         self.sale_binding_model = self.env["magento.sale.order"]
         self.payment_mode = self.env["account.payment.mode"].search(
             [("name", "=", "checkmo")], limit=1,

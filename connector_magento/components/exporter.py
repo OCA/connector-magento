@@ -39,7 +39,7 @@ class MagentoBaseExporter(AbstractComponent):
     _usage = "record.exporter"
 
     def __init__(self, working_context):
-        super(MagentoBaseExporter, self).__init__(working_context)
+        super().__init__(working_context)
         self.binding = None
         self.external_id = None
 
@@ -122,7 +122,7 @@ class MagentoExporter(AbstractComponent):
     _inherit = "magento.base.exporter"
 
     def __init__(self, working_context):
-        super(MagentoExporter, self).__init__(working_context)
+        super().__init__(working_context)
         self.binding = None
 
     def _lock(self):

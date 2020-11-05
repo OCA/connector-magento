@@ -85,7 +85,7 @@ class MagentoTestCase(SavepointComponentCase):
     """
 
     def setUp(self):
-        super(MagentoTestCase, self).setUp()
+        super().setUp()
         self.recorder = recorder
         # disable commits when run from pytest/nosetest
         odoo.tools.config["test_enable"] = True
@@ -287,7 +287,7 @@ class MagentoTestCase(SavepointComponentCase):
 
 class MagentoSyncTestCase(MagentoTestCase):
     def setUp(self):
-        super(MagentoSyncTestCase, self).setUp()
+        super().setUp()
         # Mute logging of notifications about new checkpoints
         with mute_logger(
             "odoo.addons.mail.models.mail_mail", "odoo.models.unlink", "odoo.tests"

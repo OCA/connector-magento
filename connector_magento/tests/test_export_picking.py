@@ -8,7 +8,7 @@ class TestExportPicking(MagentoSyncTestCase):
     """ Test the export of pickings to Magento """
 
     def setUp(self):
-        super(TestExportPicking, self).setUp()
+        super().setUp()
         # import a sales order
         self.order_binding = self._import_record("magento.sale.order", 100000201)
         self.order_binding.ignore_exception = True

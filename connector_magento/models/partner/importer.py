@@ -392,7 +392,7 @@ class CompanyImportMapper(Component):
 
     @property
     def direct(self):
-        fields = super(CompanyImportMapper, self).direct[:]
+        fields = super().direct[:]
         return fields + [("company", "name")]
 
     @mapping
@@ -413,7 +413,7 @@ class AddressImporter(Component):
             self.address_infos = AddressInfos(None, None, None)
         else:
             self.address_infos = address_infos
-        return super(AddressImporter, self).run(external_id, force=force)
+        return super().run(external_id, force=force)
 
     def _get_magento_data(self):
         """ Return the raw Magento data for ``self.external_id`` """
@@ -421,7 +421,7 @@ class AddressImporter(Component):
         if self.address_infos.magento_record:
             return self.address_infos.magento_record
         else:
-            return super(AddressImporter, self)._get_magento_data()
+            return super()._get_magento_data()
 
     def _define_partner_relationship(self, data):
         """ Link address with partner or parent company. """
@@ -444,7 +444,7 @@ class AddressImporter(Component):
 
     def _create(self, data):
         data = self._define_partner_relationship(data)
-        return super(AddressImporter, self)._create(data)
+        return super()._create(data)
 
 
 class AddressImportMapper(Component):
@@ -455,7 +455,7 @@ class AddressImportMapper(Component):
 
     @property
     def direct(self):
-        fields = super(AddressImportMapper, self).direct[:]
+        fields = super().direct[:]
         fields += [
             # ('created_at', 'created_at'),
             ("updated_at", "updated_at"),

@@ -138,4 +138,4 @@ class StoreviewAdapter(Component):
                 )
             )
             return storeview
-        return super(StoreviewAdapter, self).read(external_id, attributes=attributes)
+        return super().read(external_id, attributes=attributes)

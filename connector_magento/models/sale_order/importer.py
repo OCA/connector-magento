@@ -27,9 +27,7 @@ class SaleOrderBatchImporter(Component):
             "max_retries": 0,
             "priority": 5,
         }
-        return super(SaleOrderBatchImporter, self)._import_record(
-            external_id, job_options=job_options
-        )
+        return super()._import_record(external_id, job_options=job_options)
 
     def run(self, filters=None):
         """ Run the synchronization """
@@ -507,7 +505,7 @@ class SaleOrderImporter(Component):
             current_binding = parent_binding
 
     def _create(self, data):
-        binding = super(SaleOrderImporter, self)._create(data)
+        binding = super()._create(data)
         if binding.fiscal_position_id:
             binding.odoo_id._compute_tax_id()
         return binding
@@ -524,7 +522,7 @@ class SaleOrderImporter(Component):
 
     def _get_magento_data(self):
         """ Return the raw Magento data for ``self.external_id`` """
-        record = super(SaleOrderImporter, self)._get_magento_data()
+        record = super()._get_magento_data()
         # sometimes we don't have website_id...
         # we fix the record!
         if not record.get("website_id"):
@@ -703,7 +701,7 @@ class SaleOrderImporter(Component):
     def _create_data(self, map_record, **kwargs):
         storeview = self._get_storeview(map_record.source)
         self._check_special_fields()
-        return super(SaleOrderImporter, self)._create_data(
+        return super()._create_data(
             map_record,
             tax_include=storeview.catalog_price_tax_included,
             partner_id=self.partner_id,
@@ -716,7 +714,7 @@ class SaleOrderImporter(Component):
     def _update_data(self, map_record, **kwargs):
         storeview = self._get_storeview(map_record.source)
         self._check_special_fields()
-        return super(SaleOrderImporter, self)._update_data(
+        return super()._update_data(
             map_record,
             tax_include=storeview.catalog_price_tax_included,
             partner_id=self.partner_id,
@@ -756,6 +754,9 @@ class SaleOrderLineImportMapper(Component):
 
     @mapping
     def discount_amount(self, record):
+        discount_percent = float(record.get("discount_percent") or 0)
+        if discount_percent > 0:
+            return {"discount": discount_percent}
         discount_value = float(record.get("discount_amount") or 0)
         if self.options.tax_include:
             row_total = float(record.get("row_total_incl_tax") or 0)
@@ -764,8 +765,7 @@ class SaleOrderLineImportMapper(Component):
         discount = 0
         if discount_value > 0 and row_total > 0:
             discount = 100 * discount_value / row_total
-        result = {"discount": discount}
-        return result
+        return {"discount": discount}
 
     @mapping
     def product_id(self, record):

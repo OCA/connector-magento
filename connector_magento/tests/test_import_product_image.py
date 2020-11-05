@@ -35,7 +35,7 @@ class TestImportProductImage(TransactionComponentRegistryCase):
     """ Test the imports of the image of the products. """
 
     def setUp(self):
-        super(TestImportProductImage, self).setUp()
+        super().setUp()
         self.backend_model = self.env["magento.backend"]
         warehouse = self.env.ref("stock.warehouse0")
         self.backend = self.backend_model.create(

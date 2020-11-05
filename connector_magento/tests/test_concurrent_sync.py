@@ -15,7 +15,7 @@ from .common import MagentoTestCase
 
 class TestConcurrentSync(MagentoTestCase):
     def setUp(self):
-        super(TestConcurrentSync, self).setUp()
+        super().setUp()
         self.registry2 = Registry.registries.get(common.get_db_name())
         self.cr2 = self.registry2.cursor()
         self.env2 = api.Environment(self.cr2, self.env.uid, {})

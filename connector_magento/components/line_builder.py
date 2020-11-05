@@ -18,7 +18,7 @@ class StoreCreditLineBuilder(Component):
     _usage = "order.line.builder.magento.store_credit"
 
     def __init__(self, work_context):
-        super(StoreCreditLineBuilder, self).__init__(work_context)
+        super().__init__(work_context)
         self.product_ref = ("connector_magento", "product_product_store_credit")
         self.sign = -1
         self.sequence = 991
@@ -32,7 +32,7 @@ class RewardsLineBuilder(Component):
     _usage = "order.line.builder.magento.rewards"
 
     def __init__(self, work_context):
-        super(RewardsLineBuilder, self).__init__(work_context)
+        super().__init__(work_context)
         self.product_ref = ("connector_magento", "product_product_rewards")
         self.sign = -1
         self.sequence = 992
