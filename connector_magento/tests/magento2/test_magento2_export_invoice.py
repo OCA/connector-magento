@@ -27,7 +27,7 @@ class TestExportInvoice(Magento2SyncTestCase):
         self.order_binding.odoo_id.action_confirm()
         invoice_ids = self.order_binding.odoo_id.action_invoice_create()
         assert invoice_ids
-        self.invoice_model = self.env["account.invoice"]
+        self.invoice_model = self.env["account.move"]
         self.invoice = self.invoice_model.browse(invoice_ids)
 
     def test_export_invoice_on_validate_trigger(self):

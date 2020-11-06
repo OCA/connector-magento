@@ -14,9 +14,9 @@ _logger = logging.getLogger(__name__)
 class MagentoInvoiceExporter(Component):
     """ Export invoices to Magento """
 
-    _name = "magento.account.invoice.exporter"
+    _name = "magento.account.move.exporter"
     _inherit = "magento.exporter"
-    _apply_on = ["magento.account.invoice"]
+    _apply_on = ["magento.account.move"]
 
     def _export_invoice(self, external_id, lines_info, mail_notification):
         if not lines_info:  # invoice without any line for the sale order
@@ -30,7 +30,7 @@ class MagentoInvoiceExporter(Component):
         Get the line to export to Magento. In case some lines doesn't have a
         matching on Magento, we ignore them. This allow to add lines manually.
 
-        :param invoice: invoice is an magento.account.invoice record
+        :param invoice: invoice is an magento.account.move record
         :type invoice: browse_record
         :return: dict of {magento_product_id: quantity}
         :rtype: dict
