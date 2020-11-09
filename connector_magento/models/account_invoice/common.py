@@ -36,7 +36,7 @@ class MagentoAccountInvoice(models.Model):
             "odoo_uniq",
             "unique(backend_id, odoo_id)",
             "A Magento binding for this invoice already exists.",
-        ),
+        )
     ]
 
     @job(default_channel="root.magento")
@@ -170,7 +170,10 @@ class MagentoInvoiceListener(Component):
                 else:
                     create_invoice = magento_store.create_invoice_on
 
-                if create_invoice == invoice.state:
+                if (
+                    create_invoice == "paid"
+                    and invoice.invoice_payment_state == create_invoice
+                ) or (create_invoice == "open" and invoice.state == "posted"):
                     self.env["magento.account.move"].create(
                         {
                             "backend_id": magento_sale.backend_id.id,
