@@ -149,19 +149,8 @@ class TestExportInvoice(MagentoSyncTestCase):
         return payment_form.save()
 
     def _pay_and_reconcile(self):
-        # payment = (
-        #    self.env["account.payment"]
-        #    .with_context(active_ids=self.invoice.ids, active_model=self.invoice._name)
-        #    .create(
-        #        {"journal_id": self.journal.id, "amount": self.invoice.amount_total}
-        #    )
-        # )
         payment = self._init_payment()
-        payment.post(
-            # self.journal,
-            # pay_amount=self.invoice.amount_total,
-            # writeoff_acc=self.pay_account,
-        )
+        payment.post()
 
     def test_export_invoice_job(self):
         """ Exporting an invoice: call towards the Magento API """

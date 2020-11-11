@@ -67,7 +67,6 @@ class PartnerImportMapper(Component):
 
     @mapping
     def default_created_at(self, record):
-        # import pdb;pdb.set_trace()
         if record.get("created_at"):
             return {"created_at": parse(record["created_at"]).strftime(DATETIME_FORMAT)}
 
