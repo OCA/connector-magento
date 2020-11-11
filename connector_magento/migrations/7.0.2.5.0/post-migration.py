@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 ##############################################################################
 #
 #    Author: Ondřej Kuzník
@@ -21,7 +20,7 @@
 
 import logging
 
-logger = logging.getLogger('upgrade')
+logger = logging.getLogger("upgrade")
 
 
 def migrate(cr, version):
@@ -30,10 +29,14 @@ def migrate(cr, version):
     """
     if version:  # do not run on a fresh DB, see lp:1259975
         logger.info("Migrating connector_magento from version %s", version)
-        cr.execute("UPDATE magento_storeview msw "
-                   "SET catalog_price_tax_included = "
-                   "    (SELECT mb.catalog_price_tax_included "
-                   "            FROM magento_backend mb WHERE "
-                   "                mb.id = msw.backend_id)")
-        cr.execute("ALTER TABLE magento_backend DROP "
-                   "      COLUMN catalog_price_tax_included")
+        cr.execute(
+            "UPDATE magento_storeview msw "
+            "SET catalog_price_tax_included = "
+            "    (SELECT mb.catalog_price_tax_included "
+            "            FROM magento_backend mb WHERE "
+            "                mb.id = msw.backend_id)"
+        )
+        cr.execute(
+            "ALTER TABLE magento_backend DROP "
+            "      COLUMN catalog_price_tax_included"
+        )

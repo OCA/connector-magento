@@ -10,9 +10,7 @@ class TestExportPicking(MagentoSyncTestCase):
     def setUp(self):
         super(TestExportPicking, self).setUp()
         # import a sales order
-        self.order_binding = self._import_record(
-            'magento.sale.order', 100000201
-        )
+        self.order_binding = self._import_record("magento.sale.order", 100000201)
         self.order_binding.ignore_exception = True
         # generate sale's picking
         self.order_binding.odoo_id.action_confirm()
@@ -20,18 +18,27 @@ class TestExportPicking(MagentoSyncTestCase):
         # With this commit https://goo.gl/fRTLM3 the moves that where
         # force-assigned are not transferred in the picking
         for line in self.order_binding.odoo_id.order_line:
-            if line.product_id.type == 'product':
-                inventory = self.env['stock.inventory'].create({
-                    'name': 'Inventory for line %s' % line.name,
-                    'filter': 'product',
-                    'product_id': line.product_id.id,
-                    'line_ids': [(0, 0, {
-                        'product_id': line.product_id.id,
-                        'product_qty': line.product_uom_qty,
-                        'location_id':
-                        self.env.ref('stock.stock_location_stock').id
-                    })]
-                })
+            if line.product_id.type == "product":
+                inventory = self.env["stock.inventory"].create(
+                    {
+                        "name": "Inventory for line %s" % line.name,
+                        "filter": "product",
+                        "product_id": line.product_id.id,
+                        "line_ids": [
+                            (
+                                0,
+                                0,
+                                {
+                                    "product_id": line.product_id.id,
+                                    "product_qty": line.product_uom_qty,
+                                    "location_id": self.env.ref(
+                                        "stock.stock_location_stock"
+                                    ).id,
+                                },
+                            )
+                        ],
+                    }
+                )
                 inventory.action_validate()
         self.picking = self.order_binding.picking_ids
         self.assertEqual(len(self.picking), 1)
@@ -46,24 +53,25 @@ class TestExportPicking(MagentoSyncTestCase):
             # should be created, then a job is generated that will export
             # the picking. Here the job is not created because we mock
             # 'with_delay()'
-            self.env['stock.immediate.transfer'].create(
-                {'pick_ids': [(4, self.picking.id)]}).process()
-            self.assertEqual(self.picking.state, 'done')
+            self.env["stock.immediate.transfer"].create(
+                {"pick_ids": [(4, self.picking.id)]}
+            ).process()
+            self.assertEqual(self.picking.state, "done")
 
-            picking_binding = self.env['magento.stock.picking'].search(
-                [('odoo_id', '=', self.picking.id),
-                 ('backend_id', '=', self.backend.id)],
+            picking_binding = self.env["magento.stock.picking"].search(
+                [
+                    ("odoo_id", "=", self.picking.id),
+                    ("backend_id", "=", self.backend.id),
+                ],
             )
             self.assertEqual(1, len(picking_binding))
-            self.assertEqual('complete', picking_binding.picking_method)
+            self.assertEqual("complete", picking_binding.picking_method)
 
             self.assertEqual(1, delayable_cls.call_count)
             delay_args, delay_kwargs = delayable_cls.call_args
             self.assertEqual((picking_binding,), delay_args)
 
-            delayable.export_picking_done.assert_called_with(
-                with_tracking=False
-            )
+            delayable.export_picking_done.assert_called_with(with_tracking=False)
 
     def test_export_complete_picking_job(self):
         """ Exporting a complete picking """
@@ -73,17 +81,19 @@ class TestExportPicking(MagentoSyncTestCase):
             # should be created, then a job is generated that will export
             # the picking. Here the job is not created because we mock
             # 'with_delay()'
-            self.env['stock.immediate.transfer'].create(
-                {'pick_ids': [(4, self.picking.id)]}).process()
-            self.assertEqual(self.picking.state, 'done')
-            picking_binding = self.env['magento.stock.picking'].search(
-                [('odoo_id', '=', self.picking.id),
-                 ('backend_id', '=', self.backend.id)],
+            self.env["stock.immediate.transfer"].create(
+                {"pick_ids": [(4, self.picking.id)]}
+            ).process()
+            self.assertEqual(self.picking.state, "done")
+            picking_binding = self.env["magento.stock.picking"].search(
+                [
+                    ("odoo_id", "=", self.picking.id),
+                    ("backend_id", "=", self.backend.id),
+                ],
             )
             self.assertEqual(1, len(picking_binding))
 
-        with recorder.use_cassette(
-                'test_export_picking_complete') as cassette:
+        with recorder.use_cassette("test_export_picking_complete") as cassette:
             picking_binding.export_picking_done(with_tracking=False)
 
         # 1. login, 2. sales_order_shipment.create,
@@ -91,13 +101,15 @@ class TestExportPicking(MagentoSyncTestCase):
         self.assertEqual(3, len(cassette.requests))
 
         self.assertEqual(
-            ('sales_order_shipment.create',
-             ['100000201', {}, 'Shipping Created', True, True]),
-            self.parse_cassette_request(cassette.requests[1].body)
+            (
+                "sales_order_shipment.create",
+                ["100000201", {}, "Shipping Created", True, True],
+            ),
+            self.parse_cassette_request(cassette.requests[1].body),
         )
 
         # Check that we have received and bound the magento ID
-        self.assertEqual(picking_binding.external_id, '987654321')
+        self.assertEqual(picking_binding.external_id, "987654321")
 
     def test_export_partial_picking_trigger(self):
         """ Trigger export of a partial picking """
@@ -116,28 +128,31 @@ class TestExportPicking(MagentoSyncTestCase):
             # 'with_delay()'
             backorder_action = self.picking.button_validate()
             self.assertEqual(
-                backorder_action['res_model'], 'stock.backorder.confirmation',
-                'A backorder confirmation wizard action must be created')
+                backorder_action["res_model"],
+                "stock.backorder.confirmation",
+                "A backorder confirmation wizard action must be created",
+            )
             # Confirm backorder creation
-            self.env['stock.backorder.confirmation'].browse(
-                backorder_action['res_id']).process()
+            self.env["stock.backorder.confirmation"].browse(
+                backorder_action["res_id"]
+            ).process()
 
-            self.assertEqual(self.picking.state, 'done')
+            self.assertEqual(self.picking.state, "done")
 
-            picking_binding = self.env['magento.stock.picking'].search(
-                [('odoo_id', '=', self.picking.id),
-                 ('backend_id', '=', self.backend.id)],
+            picking_binding = self.env["magento.stock.picking"].search(
+                [
+                    ("odoo_id", "=", self.picking.id),
+                    ("backend_id", "=", self.backend.id),
+                ],
             )
             self.assertEqual(1, len(picking_binding))
-            self.assertEqual('partial', picking_binding.picking_method)
+            self.assertEqual("partial", picking_binding.picking_method)
 
             self.assertEqual(1, delayable_cls.call_count)
             delay_args, delay_kwargs = delayable_cls.call_args
             self.assertEqual((picking_binding,), delay_args)
 
-            delayable.export_picking_done.assert_called_with(
-                with_tracking=False
-            )
+            delayable.export_picking_done.assert_called_with(with_tracking=False)
 
     def test_export_partial_picking_job(self):
         """ Exporting a partial picking """
@@ -152,17 +167,19 @@ class TestExportPicking(MagentoSyncTestCase):
             # should be created, then a job is generated that will export
             # the picking. Here the job is not created because we mock
             # 'with_delay()'
-            self.env['stock.backorder.confirmation'].create(
-                {'pick_ids': [(4, self.picking.id)]}).process()
-            self.assertEqual(self.picking.state, 'done')
-            picking_binding = self.env['magento.stock.picking'].search(
-                [('odoo_id', '=', self.picking.id),
-                 ('backend_id', '=', self.backend.id)],
+            self.env["stock.backorder.confirmation"].create(
+                {"pick_ids": [(4, self.picking.id)]}
+            ).process()
+            self.assertEqual(self.picking.state, "done")
+            picking_binding = self.env["magento.stock.picking"].search(
+                [
+                    ("odoo_id", "=", self.picking.id),
+                    ("backend_id", "=", self.backend.id),
+                ],
             )
             self.assertEqual(1, len(picking_binding))
 
-        with recorder.use_cassette(
-                'test_export_picking_partial') as cassette:
+        with recorder.use_cassette("test_export_picking_partial") as cassette:
             picking_binding.export_picking_done(with_tracking=False)
 
         # 1. login, 2. sales_order_shipment.create,
@@ -170,31 +187,33 @@ class TestExportPicking(MagentoSyncTestCase):
         self.assertEqual(3, len(cassette.requests))
 
         self.assertEqual(
-            ('sales_order_shipment.create',
-             ['100000201', {'543': 1.0}, 'Shipping Created', True, True]),
-            self.parse_cassette_request(cassette.requests[1].body)
+            (
+                "sales_order_shipment.create",
+                ["100000201", {"543": 1.0}, "Shipping Created", True, True],
+            ),
+            self.parse_cassette_request(cassette.requests[1].body),
         )
 
         # Check that we have received and bound the magento ID
-        self.assertEqual(picking_binding.external_id, '987654321')
+        self.assertEqual(picking_binding.external_id, "987654321")
 
     def test_export_tracking_after_done_trigger(self):
         """ Trigger export of a tracking number """
         self.picking.action_assign()
 
         with self.mock_with_delay():
-            self.env['stock.immediate.transfer'].create(
-                {'pick_ids': [(4, self.picking.id)]}).process()
-            self.assertEqual(self.picking.state, 'done')
+            self.env["stock.immediate.transfer"].create(
+                {"pick_ids": [(4, self.picking.id)]}
+            ).process()
+            self.assertEqual(self.picking.state, "done")
 
-        picking_binding = self.env['magento.stock.picking'].search(
-            [('odoo_id', '=', self.picking.id),
-             ('backend_id', '=', self.backend.id)],
+        picking_binding = self.env["magento.stock.picking"].search(
+            [("odoo_id", "=", self.picking.id), ("backend_id", "=", self.backend.id)],
         )
         self.assertEqual(1, len(picking_binding))
 
         with self.mock_with_delay() as (delayable_cls, delayable):
-            self.picking.carrier_tracking_ref = 'XYZ'
+            self.picking.carrier_tracking_ref = "XYZ"
 
             self.assertEqual(1, delayable_cls.call_count)
             delay_args, delay_kwargs = delayable_cls.call_args
@@ -207,20 +226,19 @@ class TestExportPicking(MagentoSyncTestCase):
         self.picking.action_assign()
 
         with self.mock_with_delay():
-            self.env['stock.immediate.transfer'].create(
-                {'pick_ids': [(4, self.picking.id)]}).process()
-            self.assertEqual(self.picking.state, 'done')
-            self.picking.carrier_tracking_ref = 'XYZ'
+            self.env["stock.immediate.transfer"].create(
+                {"pick_ids": [(4, self.picking.id)]}
+            ).process()
+            self.assertEqual(self.picking.state, "done")
+            self.picking.carrier_tracking_ref = "XYZ"
 
-        picking_binding = self.env['magento.stock.picking'].search(
-            [('odoo_id', '=', self.picking.id),
-             ('backend_id', '=', self.backend.id)],
+        picking_binding = self.env["magento.stock.picking"].search(
+            [("odoo_id", "=", self.picking.id), ("backend_id", "=", self.backend.id)],
         )
         self.assertEqual(1, len(picking_binding))
-        picking_binding.external_id = '100000035'
+        picking_binding.external_id = "100000035"
 
-        with recorder.use_cassette(
-                'test_export_tracking_number') as cassette:
+        with recorder.use_cassette("test_export_tracking_number") as cassette:
             picking_binding.export_tracking_number()
 
         # 1. login, 2. sales_order_shipment.getCarriers,
@@ -228,11 +246,11 @@ class TestExportPicking(MagentoSyncTestCase):
         self.assertEqual(4, len(cassette.requests))
 
         self.assertEqual(
-            ('sales_order_shipment.getCarriers', ['100000201']),
-            self.parse_cassette_request(cassette.requests[1].body)
+            ("sales_order_shipment.getCarriers", ["100000201"]),
+            self.parse_cassette_request(cassette.requests[1].body),
         )
 
         self.assertEqual(
-            ('sales_order_shipment.addTrack', ['100000035', 'ups', '', 'XYZ']),
-            self.parse_cassette_request(cassette.requests[2].body)
+            ("sales_order_shipment.addTrack", ["100000035", "ups", "", "XYZ"]),
+            self.parse_cassette_request(cassette.requests[2].body),
         )

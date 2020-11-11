@@ -6,25 +6,25 @@ from odoo.addons.connector.components.mapper import mapping
 
 
 class StoreImportMapper(Component):
-    _name = 'magento.store.mapper'
-    _inherit = 'magento.import.mapper'
-    _apply_on = 'magento.store'
+    _name = "magento.store.mapper"
+    _inherit = "magento.import.mapper"
+    _apply_on = "magento.store"
 
-    direct = [('name', 'name')]
+    direct = [("name", "name")]
 
     @mapping
     def website_id(self, record):
-        binder = self.binder_for(model='magento.website')
-        binding = binder.to_internal(record['website_id'])
-        return {'website_id': binding.id}
+        binder = self.binder_for(model="magento.website")
+        binding = binder.to_internal(record["website_id"])
+        return {"website_id": binding.id}
 
 
 class StoreImporter(Component):
     """ Import one Magento Store (create a sale.shop via _inherits) """
 
-    _name = 'magento.store.importer'
-    _inherit = 'magento.importer'
-    _apply_on = 'magento.store'
+    _name = "magento.store.importer"
+    _inherit = "magento.importer"
+    _apply_on = "magento.store"
 
     def _create(self, data):
         binding = super(StoreImporter, self)._create(data)
