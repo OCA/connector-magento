@@ -15,7 +15,9 @@ are already bound, to update the last sync date.
 """
 
 import logging
-from odoo import fields, _
+
+from odoo import _, fields
+
 from odoo.addons.component.core import AbstractComponent, Component
 from odoo.addons.connector.exception import IDMissingInBackend
 from odoo.addons.queue_job.exception import NothingToDoJob
@@ -26,9 +28,9 @@ _logger = logging.getLogger(__name__)
 class MagentoImporter(AbstractComponent):
     """ Base importer for Magento """
 
-    _name = 'magento.importer'
-    _inherit = ['base.importer', 'base.magento.connector']
-    _usage = 'record.importer'
+    _name = "magento.importer"
+    _inherit = ["base.importer", "base.magento.connector"]
+    _usage = "record.importer"
 
     def __init__(self, work_context):
         super(MagentoImporter, self).__init__(work_context)
@@ -47,7 +49,7 @@ class MagentoImporter(AbstractComponent):
         """Return True if the import should be skipped because
         it is already up-to-date in OpenERP"""
         assert self.magento_record
-        if not self.magento_record.get('updated_at'):
+        if not self.magento_record.get("updated_at"):
             return  # no update date on Magento, always import it.
         if not binding:
             return  # it does not exist so it should not be skipped
@@ -56,7 +58,7 @@ class MagentoImporter(AbstractComponent):
             return
         from_string = fields.Datetime.from_string
         sync_date = from_string(sync)
-        magento_date = from_string(self.magento_record['updated_at'])
+        magento_date = from_string(self.magento_record["updated_at"])
         # if the last synchronization date is greater than the last
         # update in magento, we skip the import.
         # Important: at the beginning of the exporters flows, we have to
@@ -65,8 +67,9 @@ class MagentoImporter(AbstractComponent):
         # miss changes done in Magento
         return magento_date < sync_date
 
-    def _import_dependency(self, external_id, binding_model,
-                           importer=None, always=False):
+    def _import_dependency(
+        self, external_id, binding_model, importer=None, always=False
+    ):
         """ Import a dependency.
 
         The importer class is a class or subclass of
@@ -90,14 +93,16 @@ class MagentoImporter(AbstractComponent):
         binder = self.binder_for(binding_model)
         if always or not binder.to_internal(external_id):
             if importer is None:
-                importer = self.component(usage='record.importer',
-                                          model_name=binding_model)
+                importer = self.component(
+                    usage="record.importer", model_name=binding_model
+                )
             try:
                 importer.run(external_id)
             except NothingToDoJob:
                 _logger.info(
-                    'Dependency import of %s(%s) has been ignored.',
-                    binding_model._name, external_id
+                    "Dependency import of %s(%s) has been ignored.",
+                    binding_model._name,
+                    external_id,
                 )
 
     def _import_dependencies(self):
@@ -151,7 +156,7 @@ class MagentoImporter(AbstractComponent):
         self._validate_data(data)
         model = self.model.with_context(connector_no_export=True)
         binding = model.create(data)
-        _logger.debug('%d created from magento %s', binding, self.external_id)
+        _logger.debug("%d created from magento %s", binding, self.external_id)
         return binding
 
     def _update_data(self, map_record, **kwargs):
@@ -162,7 +167,7 @@ class MagentoImporter(AbstractComponent):
         # special check on data before import
         self._validate_data(data)
         binding.with_context(connector_no_export=True).write(data)
-        _logger.debug('%d updated from magento %s', binding, self.external_id)
+        _logger.debug("%d updated from magento %s", binding, self.external_id)
         return
 
     def _after_import(self, binding):
@@ -175,7 +180,7 @@ class MagentoImporter(AbstractComponent):
         :param external_id: identifier of the record on Magento
         """
         self.external_id = external_id
-        lock_name = 'import({}, {}, {}, {})'.format(
+        lock_name = "import({}, {}, {}, {})".format(
             self.backend_record._name,
             self.backend_record.id,
             self.work.model_name,
@@ -188,16 +193,16 @@ class MagentoImporter(AbstractComponent):
             try:
                 self.magento_record = self._get_magento_data()
             except IDMissingInBackend:
-                return _('Record does no longer exist in Magento')
+                return _("Record does no longer exist in Magento")
 
-        skip = self._must_skip()    # pylint: disable=assignment-from-none
+        skip = self._must_skip()  # pylint: disable=assignment-from-none
         if skip:
             return skip
 
         binding = self._get_binding()
 
         if not force and self._is_uptodate(binding):
-            return _('Already up-to-date.')
+            return _("Already up-to-date.")
 
         # Keep a lock on this import until the transaction is committed
         # The lock is kept since we have detected that the informations
@@ -228,9 +233,9 @@ class BatchImporter(AbstractComponent):
     the import of each item separately.
     """
 
-    _name = 'magento.batch.importer'
-    _inherit = ['base.importer', 'base.magento.connector']
-    _usage = 'batch.importer'
+    _name = "magento.batch.importer"
+    _inherit = ["base.importer", "base.magento.connector"]
+    _usage = "batch.importer"
 
     def run(self, filters=None):
         """ Run the synchronization """
@@ -249,8 +254,8 @@ class BatchImporter(AbstractComponent):
 class DirectBatchImporter(AbstractComponent):
     """ Import the records directly, without delaying the jobs. """
 
-    _name = 'magento.direct.batch.importer'
-    _inherit = 'magento.batch.importer'
+    _name = "magento.direct.batch.importer"
+    _inherit = "magento.batch.importer"
 
     def _import_record(self, external_id):
         """ Import the record directly """
@@ -260,8 +265,8 @@ class DirectBatchImporter(AbstractComponent):
 class DelayedBatchImporter(AbstractComponent):
     """ Delay import of the records """
 
-    _name = 'magento.delayed.batch.importer'
-    _inherit = 'magento.batch.importer'
+    _name = "magento.delayed.batch.importer"
+    _inherit = "magento.batch.importer"
 
     def _import_record(self, external_id, job_options=None, **kwargs):
         """ Delay the import of the records"""
@@ -272,10 +277,10 @@ class DelayedBatchImporter(AbstractComponent):
 class SimpleRecordImporter(Component):
     """ Import one Magento Website """
 
-    _name = 'magento.simple.record.importer'
-    _inherit = 'magento.importer'
+    _name = "magento.simple.record.importer"
+    _inherit = "magento.importer"
     _apply_on = [
-        'magento.res.partner.category',
+        "magento.res.partner.category",
     ]
 
 
@@ -286,15 +291,15 @@ class TranslationImporter(Component):
     For instance from the products and products' categories importers.
     """
 
-    _name = 'magento.translation.importer'
-    _inherit = 'magento.importer'
-    _usage = 'translation.importer'
+    _name = "magento.translation.importer"
+    _inherit = "magento.importer"
+    _usage = "translation.importer"
 
     def _get_magento_data(self, storeview=None):
         """ Return the raw Magento data for ``self.external_id`` """
         if storeview is None:
             storeview_id = None
-        elif self.collection.version == '2.0':
+        elif self.collection.version == "2.0":
             storeview_id = storeview.code
         else:
             storeview_id = storeview.id
@@ -303,18 +308,24 @@ class TranslationImporter(Component):
     def run(self, external_id, binding, mapper=None):
         self.external_id = external_id
         default_lang = self.backend_record.default_lang_id
-        storeviews = self.env['magento.storeview'].search(
-            [('backend_id', '=', self.backend_record.id),
-             ('lang_id', '!=', False), ('lang_id', '!=', default_lang.id)])
+        storeviews = self.env["magento.storeview"].search(
+            [
+                ("backend_id", "=", self.backend_record.id),
+                ("lang_id", "!=", False),
+                ("lang_id", "!=", default_lang.id),
+            ]
+        )
         if not storeviews:
             return
-        lang2storeview = dict(
-            (storeview.lang_id, storeview) for storeview in storeviews)
+        lang2storeview = {
+            storeview.lang_id: storeview for storeview in storeviews
+        }
 
         # find the translatable fields of the model
         fields = self.model.fields_get()
-        translatable_fields = [field for field, attrs in list(fields.items())
-                               if attrs.get('translate')]
+        translatable_fields = [
+            field for field, attrs in list(fields.items()) if attrs.get("translate")
+        ]
 
         if mapper is None:
             mapper = self.mapper
@@ -326,8 +337,12 @@ class TranslationImporter(Component):
             map_record = mapper.map_record(lang_record)
             record = map_record.values()
 
-            data = dict((field, value) for field, value in list(record.items())
-                        if field in translatable_fields)
+            data = {
+                field: value
+                for field, value in list(record.items())
+                if field in translatable_fields
+            }
 
-            binding.with_context(connector_no_export=True,
-                                 lang=storeview.lang_id.code).write(data)
+            binding.with_context(
+                connector_no_export=True, lang=storeview.lang_id.code
+            ).write(data)

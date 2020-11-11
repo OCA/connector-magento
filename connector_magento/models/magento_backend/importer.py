@@ -15,10 +15,10 @@ class MetadataBatchImporter(Component):
 
     """
 
-    _name = 'magento.metadata.batch.importer'
-    _inherit = 'magento.direct.batch.importer'
+    _name = "magento.metadata.batch.importer"
+    _inherit = "magento.direct.batch.importer"
     _apply_on = [
-        'magento.website',
-        'magento.store',
-        'magento.storeview',
+        "magento.website",
+        "magento.store",
+        "magento.storeview",
     ]

@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 ##############################################################################
 #
 #    Author: Ondřej Kuzník
@@ -21,7 +20,7 @@
 
 import logging
 
-logger = logging.getLogger('upgrade')
+logger = logging.getLogger("upgrade")
 
 
 def migrate(cr, version):
@@ -31,18 +30,19 @@ def migrate(cr, version):
     if version:  # do not run on a fresh DB, see lp:1259975
         logger.info("Migrating connector_magento from version %s", version)
 
-        old = 'magento_stock_picking_out'
-        new = 'magento_stock_picking'
+        old = "magento_stock_picking_out"
+        new = "magento_stock_picking"
         logger.info("model %s: renaming to %s", old, new)
-        cr.execute("ALTER TABLE %s RENAME TO %s" % (old, new))
-        cr.execute("ALTER SEQUENCE %s_id_seq RENAME TO %s_id_seq" % (old, new))
-        cr.execute('UPDATE ir_model SET model = %s '
-                   'WHERE model = %s', (new, old,))
-        cr.execute('UPDATE ir_model_fields SET relation = %s '
-                   'WHERE relation = %s', (new, old,))
-        cr.execute('UPDATE ir_model_data SET model = %s '
-                   'WHERE model = %s', (new, old,))
-        cr.execute('ALTER INDEX %s_pkey RENAME to %s_fkey' % (old, new))
+        cr.execute("ALTER TABLE {} RENAME TO {}".format(old, new))
+        cr.execute("ALTER SEQUENCE {}_id_seq RENAME TO {}_id_seq".format(old, new))
+        cr.execute("UPDATE ir_model SET model = %s " "WHERE model = %s", (new, old,))
+        cr.execute(
+            "UPDATE ir_model_fields SET relation = %s " "WHERE relation = %s",
+            (new, old,),
+        )
+        cr.execute(
+            "UPDATE ir_model_data SET model = %s " "WHERE model = %s", (new, old,)
+        )
+        cr.execute("ALTER INDEX {}_pkey RENAME to {}_fkey".format(old, new))
         # the constraint will be created again on update
-        cr.execute('ALTER TABLE %s DROP CONSTRAINT '
-                   '%s_magento_uniq' % (new, old))
+        cr.execute("ALTER TABLE %s DROP CONSTRAINT " "%s_magento_uniq" % (new, old))

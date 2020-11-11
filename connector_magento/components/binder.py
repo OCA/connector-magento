@@ -14,19 +14,20 @@ class MagentoModelBinder(Component):
     the Magento ID, the ID of the Magento Backend and the additional
     fields belonging to the Magento instance.
     """
-    _name = 'magento.binder'
-    _inherit = ['base.binder', 'base.magento.connector']
+
+    _name = "magento.binder"
+    _inherit = ["base.binder", "base.magento.connector"]
     _apply_on = [
-        'magento.website',
-        'magento.store',
-        'magento.storeview',
-        'magento.res.partner',
-        'magento.address',
-        'magento.res.partner.category',
-        'magento.product.category',
-        'magento.product.product',
-        'magento.stock.picking',
-        'magento.sale.order',
-        'magento.sale.order.line',
-        'magento.account.invoice',
+        "magento.website",
+        "magento.store",
+        "magento.storeview",
+        "magento.res.partner",
+        "magento.address",
+        "magento.res.partner.category",
+        "magento.product.category",
+        "magento.product.product",
+        "magento.stock.picking",
+        "magento.sale.order",
+        "magento.sale.order.line",
+        "magento.account.invoice",
     ]
