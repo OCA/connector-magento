@@ -1,6 +1,9 @@
 # Copyright 2013-2019 Camptocamp SA
 # License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl.html)
 
+from odoo import fields
+from odoo.tests.common import Form
+
 from .common import MagentoSyncTestCase, recorder
 
 
@@ -11,10 +14,10 @@ class TestExportInvoice(MagentoSyncTestCase):
         super(TestExportInvoice, self).setUp()
         self.sale_binding_model = self.env["magento.sale.order"]
         self.payment_mode = self.env["account.payment.mode"].search(
-            [("name", "=", "checkmo")], limit=1,
+            [("name", "=", "checkmo")], limit=1
         )
         self.pay_account = self.env["account.account"].search(
-            [("code", "=", "101501")], limit=1,
+            [("code", "=", "101501")], limit=1
         )
         self.order_binding = self._import_record("magento.sale.order", "145000008")
         self.order_binding.payment_mode_id = self.payment_mode
@@ -22,10 +25,10 @@ class TestExportInvoice(MagentoSyncTestCase):
         # ignore exceptions on the sale order
         self.order_binding.ignore_exception = True
         self.order_binding.odoo_id.action_confirm()
-        invoice_ids = self.order_binding.odoo_id.action_invoice_create()
+        invoice_ids = self.order_binding.odoo_id._create_invoices()
         assert invoice_ids
         self.invoice_model = self.env["account.move"]
-        self.invoice = self.invoice_model.browse(invoice_ids)
+        self.invoice = invoice_ids
 
     def test_export_invoice_on_validate_trigger(self):
         """ Trigger export of an invoice: when it is validated """
@@ -35,7 +38,7 @@ class TestExportInvoice(MagentoSyncTestCase):
         # prevent to create the job
         with self.mock_with_delay() as (delayable_cls, delayable):
             self._invoice_open()
-            self.assertEqual(self.invoice.state, "open")
+            self.assertEqual(self.invoice.state, "posted")
 
             self.assertEqual(len(self.invoice.magento_bind_ids), 1)
 
@@ -48,7 +51,7 @@ class TestExportInvoice(MagentoSyncTestCase):
         # pay and verify it is NOT called
         with self.mock_with_delay() as (delayable_cls, delayable):
             self._pay_and_reconcile()
-            self.assertEqual(self.invoice.state, "paid")
+            self.assertEqual(self.invoice.invoice_payment_state, "paid")
             self.assertEqual(0, delayable_cls.call_count)
 
     def test_export_invoice_on_paid_trigger(self):
@@ -59,7 +62,7 @@ class TestExportInvoice(MagentoSyncTestCase):
         # prevent to create the job
         with self.mock_with_delay() as (delayable_cls, delayable):
             self._invoice_open()
-            self.assertEqual(self.invoice.state, "open")
+            self.assertEqual(self.invoice.state, "posted")
 
             self.assertEqual(0, delayable_cls.call_count)
 
@@ -67,7 +70,7 @@ class TestExportInvoice(MagentoSyncTestCase):
         with self.mock_with_delay() as (delayable_cls, delayable):
             self._pay_and_reconcile()
 
-            self.assertEqual(self.invoice.state, "paid")
+            self.assertEqual(self.invoice.invoice_payment_state, "paid")
             self.assertEqual(len(self.invoice.magento_bind_ids), 1)
 
             self.assertEqual(1, delayable_cls.call_count)
@@ -86,7 +89,7 @@ class TestExportInvoice(MagentoSyncTestCase):
         self.stores.write({"create_invoice_on": "paid"})
         with self.mock_with_delay() as (delayable_cls, delayable):
             self._invoice_open()
-            self.assertEqual(self.invoice.state, "open")
+            self.assertEqual(self.invoice.state, "posted")
 
             self.assertEqual(len(self.invoice.magento_bind_ids), 1)
 
@@ -99,7 +102,7 @@ class TestExportInvoice(MagentoSyncTestCase):
         # pay and verify it is NOT called
         with self.mock_with_delay() as (delayable_cls, delayable):
             self._pay_and_reconcile()
-            self.assertEqual(self.invoice.state, "paid")
+            self.assertEqual(self.invoice.invoice_payment_state, "paid")
             self.assertEqual(0, delayable_cls.call_count)
 
     def test_export_invoice_on_payment_mode_paid_trigger(self):
@@ -111,13 +114,13 @@ class TestExportInvoice(MagentoSyncTestCase):
         self.stores.write({"create_invoice_on": "open"})
         with self.mock_with_delay() as (delayable_cls, delayable):
             self._invoice_open()
-            self.assertEqual(self.invoice.state, "open")
+            self.assertEqual(self.invoice.state, "posted")
             self.assertEqual(0, delayable_cls.call_count)
 
         # pay and verify it is NOT called
         with self.mock_with_delay() as (delayable_cls, delayable):
             self._pay_and_reconcile()
-            self.assertEqual(self.invoice.state, "paid")
+            self.assertEqual(self.invoice.invoice_payment_state, "paid")
 
             self.assertEqual(len(self.invoice.magento_bind_ids), 1)
 
@@ -129,13 +132,35 @@ class TestExportInvoice(MagentoSyncTestCase):
             delayable.export_record.assert_called_with()
 
     def _invoice_open(self):
-        self.invoice.action_invoice_open()
+        self.invoice.action_post()
+
+    def _init_payment(self):
+        payment_form = Form(
+            self.env["account.payment"].with_context(
+                active_ids=self.invoice.ids, active_model=self.invoice._name
+            )
+        )
+        payment_form.journal_id = self.journal
+        payment_form.payment_date = fields.Date.from_string("2019-01-01")
+        payment_form.amount = self.invoice.amount_total
+        payment_form.partner_type = "customer"
+        payment_form.partner_id = self.invoice.partner_id
+        payment_form.payment_type = "inbound"
+        return payment_form.save()
 
     def _pay_and_reconcile(self):
-        self.invoice.pay_and_reconcile(
-            self.journal,
-            pay_amount=self.invoice.amount_total,
-            writeoff_acc=self.pay_account,
+        # payment = (
+        #    self.env["account.payment"]
+        #    .with_context(active_ids=self.invoice.ids, active_model=self.invoice._name)
+        #    .create(
+        #        {"journal_id": self.journal.id, "amount": self.invoice.amount_total}
+        #    )
+        # )
+        payment = self._init_payment()
+        payment.post(
+            # self.journal,
+            # pay_amount=self.invoice.amount_total,
+            # writeoff_acc=self.pay_account,
         )
 
     def test_export_invoice_job(self):

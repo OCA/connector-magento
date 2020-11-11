@@ -22,8 +22,8 @@ class TestExportPicking(MagentoSyncTestCase):
                 inventory = self.env["stock.inventory"].create(
                     {
                         "name": "Inventory for line %s" % line.name,
-                        "filter": "product",
-                        "product_id": line.product_id.id,
+                        # 'filter': 'product',
+                        "product_ids": [[6, 0, line.product_id.ids]],
                         "line_ids": [
                             (
                                 0,
@@ -39,6 +39,7 @@ class TestExportPicking(MagentoSyncTestCase):
                         ],
                     }
                 )
+                inventory._action_start()
                 inventory.action_validate()
         self.picking = self.order_binding.picking_ids
         self.assertEqual(len(self.picking), 1)

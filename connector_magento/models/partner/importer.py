@@ -4,6 +4,10 @@
 import logging
 from collections import namedtuple
 
+from dateutil.parser import parse
+
+from odoo.tools import DEFAULT_SERVER_DATETIME_FORMAT as DATETIME_FORMAT
+
 from odoo.addons.component.core import AbstractComponent, Component
 from odoo.addons.connector.components.mapper import mapping, only_create
 from odoo.addons.connector.exception import MappingError
@@ -47,7 +51,7 @@ class PartnerImportMapper(Component):
     direct = [
         ("email", "email"),
         ("dob", "birthday"),
-        (normalize_datetime("created_at"), "created_at"),
+        # (normalize_datetime('created_at'), 'created_at'),
         (normalize_datetime("updated_at"), "updated_at"),
         ("email", "emailid"),
         ("taxvat", "taxvat"),
@@ -60,6 +64,12 @@ class PartnerImportMapper(Component):
         # partners are companies so we can bind
         # addresses on them
         return {"is_company": True}
+
+    @mapping
+    def default_created_at(self, record):
+        # import pdb;pdb.set_trace()
+        if record.get("created_at"):
+            return {"created_at": parse(record["created_at"]).strftime(DATETIME_FORMAT)}
 
     @mapping
     def names(self, record):
@@ -443,7 +453,7 @@ class AddressImportMapper(Component):
     def direct(self):
         fields = super(AddressImportMapper, self).direct[:]
         fields += [
-            ("created_at", "created_at"),
+            # ('created_at', 'created_at'),
             ("updated_at", "updated_at"),
             ("company", "company"),
         ]
@@ -460,6 +470,11 @@ class AddressImportMapper(Component):
         return record.get("default_shipping") or record.get(  # Magento 2.x
             "is_default_shipping"
         )  # Magento 1.x
+
+    @mapping
+    def default_created_at(self, record):
+        if record.get("created_at"):
+            return {"created_at": parse(record["created_at"]).strftime(DATETIME_FORMAT)}
 
     @mapping
     def default_billing(self, record):

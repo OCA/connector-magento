@@ -317,9 +317,7 @@ class TranslationImporter(Component):
         )
         if not storeviews:
             return
-        lang2storeview = {
-            storeview.lang_id: storeview for storeview in storeviews
-        }
+        lang2storeview = {storeview.lang_id: storeview for storeview in storeviews}
 
         # find the translatable fields of the model
         fields = self.model.fields_get()
