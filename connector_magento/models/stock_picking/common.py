@@ -4,44 +4,51 @@
 
 import logging
 import xmlrpc.client
-from odoo import api, models, fields
-from odoo.addons.queue_job.job import job, related_action
-from odoo.addons.connector.exception import IDMissingInBackend
+
+from odoo import api, fields, models
+
 from odoo.addons.component.core import Component
+from odoo.addons.connector.exception import IDMissingInBackend
+from odoo.addons.queue_job.job import job, related_action
 
 _logger = logging.getLogger(__name__)
 
 
 class MagentoStockPicking(models.Model):
-    _name = 'magento.stock.picking'
-    _inherit = 'magento.binding'
-    _inherits = {'stock.picking': 'odoo_id'}
-    _description = 'Magento Delivery Order'
+    _name = "magento.stock.picking"
+    _inherit = "magento.binding"
+    _inherits = {"stock.picking": "odoo_id"}
+    _description = "Magento Delivery Order"
 
-    odoo_id = fields.Many2one(comodel_name='stock.picking',
-                              string='Stock Picking',
-                              required=True,
-                              ondelete='cascade')
-    magento_order_id = fields.Many2one(comodel_name='magento.sale.order',
-                                       string='Magento Sale Order',
-                                       ondelete='set null')
-    picking_method = fields.Selection(selection=[('complete', 'Complete'),
-                                                 ('partial', 'Partial')],
-                                      string='Picking Method',
-                                      required=True)
+    odoo_id = fields.Many2one(
+        comodel_name="stock.picking",
+        string="Stock Picking",
+        required=True,
+        ondelete="cascade",
+    )
+    magento_order_id = fields.Many2one(
+        comodel_name="magento.sale.order",
+        string="Magento Sale Order",
+        ondelete="set null",
+    )
+    picking_method = fields.Selection(
+        selection=[("complete", "Complete"), ("partial", "Partial")],
+        string="Picking Method",
+        required=True,
+    )
 
-    @job(default_channel='root.magento')
-    @related_action(action='related_action_unwrap_binding')
+    @job(default_channel="root.magento")
+    @related_action(action="related_action_unwrap_binding")
     @api.multi
     def export_tracking_number(self):
         """ Export the tracking number of a delivery order. """
         self.ensure_one()
         with self.backend_id.work_on(self._name) as work:
-            exporter = work.component(usage='tracking.exporter')
+            exporter = work.component(usage="tracking.exporter")
             return exporter.run(self)
 
-    @job(default_channel='root.magento')
-    @related_action(action='related_action_unwrap_binding')
+    @job(default_channel="root.magento")
+    @related_action(action="related_action_unwrap_binding")
     @api.multi
     def export_picking_done(self, with_tracking=True):
         """ Export a complete or partial delivery order. """
@@ -51,7 +58,7 @@ class MagentoStockPicking(models.Model):
         # is True when the job is created.
         self.ensure_one()
         with self.backend_id.work_on(self._name) as work:
-            exporter = work.component(usage='record.exporter')
+            exporter = work.component(usage="record.exporter")
             res = exporter.run(self)
             if with_tracking and self.carrier_tracking_ref:
                 self.with_delay().export_tracking_number()
@@ -59,28 +66,28 @@ class MagentoStockPicking(models.Model):
 
 
 class StockPicking(models.Model):
-    _inherit = 'stock.picking'
+    _inherit = "stock.picking"
 
     magento_bind_ids = fields.One2many(
-        comodel_name='magento.stock.picking',
-        inverse_name='odoo_id',
+        comodel_name="magento.stock.picking",
+        inverse_name="odoo_id",
         string="Magento Bindings",
     )
 
 
 class StockPickingAdapter(Component):
-    _name = 'magento.stock.picking.adapter'
-    _inherit = 'magento.adapter'
-    _apply_on = 'magento.stock.picking'
+    _name = "magento.stock.picking.adapter"
+    _inherit = "magento.adapter"
+    _apply_on = "magento.stock.picking"
 
-    _magento_model = 'sales_order_shipment'
-    _admin_path = 'sales_shipment/view/shipment_id/{id}'
+    _magento_model = "sales_order_shipment"
+    _admin_path = "sales_shipment/view/shipment_id/{id}"
 
     def _call(self, method, arguments, http_method=None, storeview=None):
         try:
             return super(StockPickingAdapter, self)._call(
-                method, arguments, http_method=http_method,
-                storeview=storeview)
+                method, arguments, http_method=http_method, storeview=storeview
+            )
         except xmlrpc.client.Fault as err:
             # this is the error in the Magento API
             # when the shipment does not exist
@@ -92,8 +99,10 @@ class StockPickingAdapter(Component):
     def create(self, order_id, items, comment, email, include_comment):
         """ Create a record on the external system """
         # pylint: disable=method-required-super
-        return self._call('%s.create' % self._magento_model,
-                          [order_id, items, comment, email, include_comment])
+        return self._call(
+            "%s.create" % self._magento_model,
+            [order_id, items, comment, email, include_comment],
+        )
 
     def add_tracking_number(self, *arguments):
         """ Add new tracking number.
@@ -106,12 +115,10 @@ class StockPickingAdapter(Component):
 
         In the case of Magento 2.x its only member is a json dict
         """
-        if self.collection.version == '2.0':
+        if self.collection.version == "2.0":
             _external_id, json_data = arguments
-            return self._call(
-                'shipment/track', json_data, http_method='post')
-        return self._call('%s.addTrack' % self._magento_model,
-                          arguments)
+            return self._call("shipment/track", json_data, http_method="post")
+        return self._call("%s.addTrack" % self._magento_model, arguments)
 
     def get_carriers(self, external_id):
         """ Get the list of carrier codes allowed for the shipping.
@@ -119,14 +126,13 @@ class StockPickingAdapter(Component):
         :param external_id: order increment id
         :rtype: list
         """
-        return self._call('%s.getCarriers' % self._magento_model,
-                          [external_id])
+        return self._call("%s.getCarriers" % self._magento_model, [external_id])
 
 
 class MagentoBindingStockPickingListener(Component):
-    _name = 'magento.binding.stock.picking.listener'
-    _inherit = 'base.event.listener'
-    _apply_on = ['magento.stock.picking']
+    _name = "magento.binding.stock.picking.listener"
+    _inherit = "base.event.listener"
+    _apply_on = ["magento.stock.picking"]
 
     def on_record_create(self, record, fields=None):
         # tracking number is sent when:
@@ -142,9 +148,9 @@ class MagentoBindingStockPickingListener(Component):
 
 
 class MagentoStockPickingListener(Component):
-    _name = 'magento.stock.picking.listener'
-    _inherit = 'base.event.listener'
-    _apply_on = ['stock.picking']
+    _name = "magento.stock.picking.listener"
+    _inherit = "base.event.listener"
+    _apply_on = ["stock.picking"]
 
     def on_tracking_number_added(self, record):
         for binding in record.magento_bind_ids:
@@ -167,8 +173,11 @@ class MagentoStockPickingListener(Component):
         if not sale:
             return
         for magento_sale in sale.magento_bind_ids:
-            self.env['magento.stock.picking'].create({
-                'backend_id': magento_sale.backend_id.id,
-                'odoo_id': record.id,
-                'magento_order_id': magento_sale.id,
-                'picking_method': picking_method})
+            self.env["magento.stock.picking"].create(
+                {
+                    "backend_id": magento_sale.backend_id.id,
+                    "odoo_id": record.id,
+                    "magento_order_id": magento_sale.id,
+                    "picking_method": picking_method,
+                }
+            )

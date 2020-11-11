@@ -2,11 +2,12 @@
 # License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl.html)
 
 import logging
-
 from collections import namedtuple
+
 from odoo.addons.component.core import AbstractComponent, Component
-from odoo.addons.connector.exception import MappingError
 from odoo.addons.connector.components.mapper import mapping, only_create
+from odoo.addons.connector.exception import MappingError
+
 from ...components.mapper import normalize_datetime
 
 _logger = logging.getLogger(__name__)
@@ -17,39 +18,40 @@ class PartnerBatchImporter(Component):
 
     For every partner in the list, a delayed job is created.
     """
-    _name = 'magento.partner.batch.importer'
-    _inherit = 'magento.delayed.batch.importer'
-    _apply_on = 'magento.res.partner'
+
+    _name = "magento.partner.batch.importer"
+    _inherit = "magento.delayed.batch.importer"
+    _apply_on = "magento.res.partner"
 
     def run(self, filters=None):
         """ Run the synchronization """
-        from_date = filters.pop('from_date', None)
-        to_date = filters.pop('to_date', None)
-        magento_website_ids = [filters.pop('magento_website_id')]
+        from_date = filters.pop("from_date", None)
+        to_date = filters.pop("to_date", None)
+        magento_website_ids = [filters.pop("magento_website_id")]
         record_ids = self.backend_adapter.search(
             filters,
             from_date=from_date,
             to_date=to_date,
-            magento_website_ids=magento_website_ids)
-        _logger.info('search for magento partners %s returned %s',
-                     filters, record_ids)
+            magento_website_ids=magento_website_ids,
+        )
+        _logger.info("search for magento partners %s returned %s", filters, record_ids)
         for record_id in record_ids:
             self._import_record(record_id)
 
 
 class PartnerImportMapper(Component):
-    _name = 'magento.partner.import.mapper'
-    _inherit = 'magento.import.mapper'
-    _apply_on = 'magento.res.partner'
+    _name = "magento.partner.import.mapper"
+    _inherit = "magento.import.mapper"
+    _apply_on = "magento.res.partner"
 
     direct = [
-        ('email', 'email'),
-        ('dob', 'birthday'),
-        (normalize_datetime('created_at'), 'created_at'),
-        (normalize_datetime('updated_at'), 'updated_at'),
-        ('email', 'emailid'),
-        ('taxvat', 'taxvat'),
-        ('group_id', 'group_id'),
+        ("email", "email"),
+        ("dob", "birthday"),
+        (normalize_datetime("created_at"), "created_at"),
+        (normalize_datetime("updated_at"), "updated_at"),
+        ("email", "emailid"),
+        ("taxvat", "taxvat"),
+        ("group_id", "group_id"),
     ]
 
     @only_create
@@ -57,109 +59,116 @@ class PartnerImportMapper(Component):
     def is_company(self, record):
         # partners are companies so we can bind
         # addresses on them
-        return {'is_company': True}
+        return {"is_company": True}
 
     @mapping
     def names(self, record):
         """ Middlename not always present in Magento 2 """
         # TODO Check on first run
-        parts = [part for part in (record['firstname'],
-                                   record.get('middlename'),
-                                   record['lastname']) if part]
-        return {'name': ' '.join(parts)}
+        parts = [
+            part
+            for part in (
+                record["firstname"],
+                record.get("middlename"),
+                record["lastname"],
+            )
+            if part
+        ]
+        return {"name": " ".join(parts)}
 
     @mapping
     def customer_group_id(self, record):
         # import customer groups
-        if record['group_id'] == 0:
-            category = self.env.ref('connector_magento.category_no_account')
+        if record["group_id"] == 0:
+            category = self.env.ref("connector_magento.category_no_account")
         else:
-            binder = self.binder_for(model='magento.res.partner.category')
-            category = binder.to_internal(record['group_id'], unwrap=True)
+            binder = self.binder_for(model="magento.res.partner.category")
+            category = binder.to_internal(record["group_id"], unwrap=True)
 
         if not category:
-            raise MappingError("The partner category with "
-                               "magento id %s does not exist" %
-                               record['group_id'])
+            raise MappingError(
+                "The partner category with "
+                "magento id %s does not exist" % record["group_id"]
+            )
 
         # FIXME: should remove the previous tag (all the other tags from
         # the same backend)
-        return {'category_id': [(4, category.id)]}
+        return {"category_id": [(4, category.id)]}
 
     @mapping
     def website_id(self, record):
-        binder = self.binder_for(model='magento.website')
-        website = binder.to_internal(record['website_id'])
-        return {'website_id': website.id}
+        binder = self.binder_for(model="magento.website")
+        website = binder.to_internal(record["website_id"])
+        return {"website_id": website.id}
 
     @only_create
     @mapping
     def company_id(self, record):
         if self.backend_record.is_multi_company:
-            return {'company_id': False}
-        binder = self.binder_for(model='magento.storeview')
-        storeview = binder.to_internal(record['store_id'])
+            return {"company_id": False}
+        binder = self.binder_for(model="magento.storeview")
+        storeview = binder.to_internal(record["store_id"])
         if storeview:
             company = storeview.backend_id.company_id
             if company:
-                return {'company_id': company.id}
-        return {'company_id': False}
+                return {"company_id": company.id}
+        return {"company_id": False}
 
     @mapping
     def lang(self, record):
-        binder = self.binder_for(model='magento.storeview')
-        storeview = binder.to_internal(record['store_id'])
+        binder = self.binder_for(model="magento.storeview")
+        storeview = binder.to_internal(record["store_id"])
         if storeview:
             if storeview.lang_id:
-                return {'lang': storeview.lang_id.code}
+                return {"lang": storeview.lang_id.code}
 
     @only_create
     @mapping
     def customer(self, record):
-        return {'customer': True}
+        return {"customer": True}
 
     @mapping
     def type(self, record):
-        return {'type': 'contact'}
+        return {"type": "contact"}
 
     @only_create
     @mapping
     def odoo_id(self, record):
         """ Will bind the customer on a existing partner
         with the same email """
-        partner = self.env['res.partner'].search(
-            [('email', '=', record['email']),
-             ('customer', '=', True),
-             '|',
-             ('is_company', '=', True),
-             ('parent_id', '=', False)],
+        partner = self.env["res.partner"].search(
+            [
+                ("email", "=", record["email"]),
+                ("customer", "=", True),
+                "|",
+                ("is_company", "=", True),
+                ("parent_id", "=", False),
+            ],
             limit=1,
         )
         if partner:
-            return {'odoo_id': partner.id}
+            return {"odoo_id": partner.id}
 
 
 class PartnerImporter(Component):
-    _name = 'magento.partner.importer'
-    _inherit = 'magento.importer'
-    _apply_on = 'magento.res.partner'
+    _name = "magento.partner.importer"
+    _inherit = "magento.importer"
+    _apply_on = "magento.res.partner"
 
     def _import_dependencies(self):
         """ Import the dependencies for the record"""
         record = self.magento_record
-        self._import_dependency(record['group_id'],
-                                'magento.res.partner.category')
+        self._import_dependency(record["group_id"], "magento.res.partner.category")
 
     def _after_import(self, partner_binding):
         """ Import the addresses """
-        book = self.component(usage='address.book',
-                              model_name='magento.address')
+        book = self.component(usage="address.book", model_name="magento.address")
         book.import_addresses(self.external_id, partner_binding.id)
 
 
-AddressInfos = namedtuple('AddressInfos', ['magento_record',
-                                           'partner_binding_id',
-                                           'merge'])
+AddressInfos = namedtuple(
+    "AddressInfos", ["magento_record", "partner_binding_id", "merge"]
+)
 
 
 class PartnerAddressBook(Component):
@@ -189,16 +198,16 @@ class PartnerAddressBook(Component):
         More information on:
         https://bugs.launchpad.net/openerp-connector/+bug/1193281
     """
-    _name = 'magento.address.book'
-    _inherit = 'base.magento.connector'
-    _apply_on = 'magento.address'
-    _usage = 'address.book'
+
+    _name = "magento.address.book"
+    _inherit = "base.magento.connector"
+    _apply_on = "magento.address"
+    _usage = "address.book"
 
     def import_addresses(self, magento_partner_id, partner_binding_id):
-        addresses = self._get_address_infos(magento_partner_id,
-                                            partner_binding_id)
+        addresses = self._get_address_infos(magento_partner_id, partner_binding_id)
         for address_id, infos in addresses:
-            importer = self.component(usage='record.importer')
+            importer = self.component(usage="record.importer")
             importer.run(address_id, address_infos=infos)
 
     def _read_addresses(self, magento_partner_id):
@@ -206,36 +215,39 @@ class PartnerAddressBook(Component):
         - Magento 1.x: read the addresses from the address repository
         - Magento 2.x: addresses are included in the partner record
         """
-        if self.collection.version == '1.7':
-            adapter = self.component(usage='backend.adapter')
-            mag_address_ids = adapter.search({'customer_id':
-                                              {'eq': magento_partner_id}})
-            return [(address_id, adapter.read(address_id))
-                    for address_id in mag_address_ids]
+        if self.collection.version == "1.7":
+            adapter = self.component(usage="backend.adapter")
+            mag_address_ids = adapter.search(
+                {"customer_id": {"eq": magento_partner_id}}
+            )
+            return [
+                (address_id, adapter.read(address_id)) for address_id in mag_address_ids
+            ]
 
-        with self.collection.work_on('magento.res.partner') as partner:
-            adapter = partner.component(usage='backend.adapter')
+        with self.collection.work_on("magento.res.partner") as partner:
+            adapter = partner.component(usage="backend.adapter")
             record = adapter.read(magento_partner_id)
-        return [(addr['id'], addr) for addr in record['addresses']]
+        return [(addr["id"], addr) for addr in record["addresses"]]
 
     def _get_address_infos(self, magento_partner_id, partner_binding_id):
-        for address_id, magento_record in self._read_addresses(
-                magento_partner_id):
+        for address_id, magento_record in self._read_addresses(magento_partner_id):
             # defines if the billing address is merged with the partner
             # or imported as a standalone contact
             merge = False
-            if (magento_record.get('is_default_billing')  # Magento 1.x
-                    or magento_record.get('default_billing')):  # Magento 2.x
-                binding_model = self.env['magento.res.partner']
+            if magento_record.get(
+                "is_default_billing"
+            ) or magento_record.get(  # Magento 1.x
+                "default_billing"
+            ):  # Magento 2.x
+                binding_model = self.env["magento.res.partner"]
                 partner_binding = binding_model.browse(partner_binding_id)
-                if magento_record.get('company'):
+                if magento_record.get("company"):
                     # when a company is there, we never merge the contact
                     # with the partner.
                     # Copy the billing address on the company
                     # and use the name of the company for the name
                     company_mapper = self.component(
-                        usage='company.import.mapper',
-                        model_name='magento.res.partner'
+                        usage="company.import.mapper", model_name="magento.res.partner"
                     )
                     map_record = company_mapper.map_record(magento_record)
                     parent = partner_binding.odoo_id.parent_id
@@ -247,10 +259,12 @@ class PartnerAddressBook(Component):
                     merge = True
                     # in the case if the billing address no longer
                     # has a company, reset the flag
-                    partner_binding.write({'consider_as_company': False})
-            address_infos = AddressInfos(magento_record=magento_record,
-                                         partner_binding_id=partner_binding_id,
-                                         merge=merge)
+                    partner_binding.write({"consider_as_company": False})
+            address_infos = AddressInfos(
+                magento_record=magento_record,
+                partner_binding_id=partner_binding_id,
+                merge=merge,
+            )
             yield address_id, address_infos
 
 
@@ -259,52 +273,50 @@ class BaseAddressImportMapper(AbstractComponent):
     in ``res.partner`` (state, country, ...)
     """
 
-    _name = 'magento.base.address.import.mapper'
-    _inherit = 'magento.import.mapper'
+    _name = "magento.base.address.import.mapper"
+    _inherit = "magento.import.mapper"
 
-    direct = [('postcode', 'zip'),
-              ('city', 'city'),
-              ('telephone', 'phone'),
-              ('company', 'company'),
-              ]
+    direct = [
+        ("postcode", "zip"),
+        ("city", "city"),
+        ("telephone", "phone"),
+        ("company", "company"),
+    ]
 
     @mapping
     def state(self, record):
-        if not record.get('region'):
+        if not record.get("region"):
             return
-        state = self.env['res.country.state'].search(
-            [('name', '=ilike', record['region'])],
-            limit=1,
+        state = self.env["res.country.state"].search(
+            [("name", "=ilike", record["region"])], limit=1,
         )
         if state:
-            return {'state_id': state.id}
+            return {"state_id": state.id}
 
     @mapping
     def country(self, record):
-        if not record.get('country_id'):
+        if not record.get("country_id"):
             return
-        country = self.env['res.country'].search(
-            [('code', '=', record['country_id'])],
-            limit=1,
+        country = self.env["res.country"].search(
+            [("code", "=", record["country_id"])], limit=1,
         )
         if country:
-            return {'country_id': country.id}
+            return {"country_id": country.id}
 
     @mapping
     def street(self, record):
         """ 'street' can be presented as a list in Magento2 """
-        value = record['street']
+        value = record["street"]
         if not value:
             return {}
         if isinstance(value, list):
             lines = value
         else:
-            lines = [line.strip() for line in value.split('\n')
-                     if line.strip()]
+            lines = [line.strip() for line in value.split("\n") if line.strip()]
         if len(lines) == 1:
-            result = {'street': lines[0], 'street2': False}
+            result = {"street": lines[0], "street2": False}
         elif len(lines) >= 2:
-            result = {'street': lines[0], 'street2': ' - '.join(lines[1:])}
+            result = {"street": lines[0], "street2": " - ".join(lines[1:])}
         else:
             result = {}
         return result
@@ -312,32 +324,29 @@ class BaseAddressImportMapper(AbstractComponent):
     @mapping
     def title(self, record):
         """ Prefix is optionally present in Magento 2 """
-        prefix = record.get('prefix')
+        prefix = record.get("prefix")
         if not prefix:
             return
-        title = self.env['res.partner.title'].search(
-            [('shortcut', '=ilike', prefix)],
-            limit=1
+        title = self.env["res.partner.title"].search(
+            [("shortcut", "=ilike", prefix)], limit=1
         )
         if not title:
-            title = self.env['res.partner.title'].create(
-                {'shortcut': prefix,
-                 'name': prefix,
-                 }
+            title = self.env["res.partner.title"].create(
+                {"shortcut": prefix, "name": prefix,}
             )
-        return {'title': title.id}
+        return {"title": title.id}
 
     @only_create
     @mapping
     def company_id(self, record):
         if self.backend_record.is_multi_company:
-            return {'company_id': False}
+            return {"company_id": False}
         parent = self.options.parent_partner
         if parent:
             if parent.company_id:
-                return {'company_id': parent.company_id.id}
+                return {"company_id": parent.company_id.id}
             else:
-                return {'company_id': False}
+                return {"company_id": False}
         # Don't return anything, we are merging into an existing partner
         return
 
@@ -362,26 +371,26 @@ class CompanyImportMapper(Component):
     for updates.
     """
 
-    _name = 'magento.company.import.mapper'
-    _inherit = 'magento.base.address.import.mapper'
-    _apply_on = 'magento.res.partner'
-    _usage = 'company.import.mapper'
+    _name = "magento.company.import.mapper"
+    _inherit = "magento.base.address.import.mapper"
+    _apply_on = "magento.res.partner"
+    _usage = "company.import.mapper"
 
     @property
     def direct(self):
         fields = super(CompanyImportMapper, self).direct[:]
-        return fields + [('company', 'name')]
+        return fields + [("company", "name")]
 
     @mapping
     def consider_as_company(self, record):
-        return {'consider_as_company': True}
+        return {"consider_as_company": True}
 
 
 class AddressImporter(Component):
 
-    _name = 'magento.address.importer'
-    _inherit = 'magento.importer'
-    _apply_on = 'magento.address'
+    _name = "magento.address.importer"
+    _inherit = "magento.importer"
+    _apply_on = "magento.address"
 
     def run(self, external_id, address_infos=None, force=False):
         """ Run the synchronization """
@@ -403,19 +412,20 @@ class AddressImporter(Component):
     def _define_partner_relationship(self, data):
         """ Link address with partner or parent company. """
         partner_binding_id = self.address_infos.partner_binding_id
-        assert partner_binding_id, ("AdressInfos are required for creation of "
-                                    "a new address.")
-        binder = self.binder_for('magento.res.partner')
+        assert partner_binding_id, (
+            "AdressInfos are required for creation of " "a new address."
+        )
+        binder = self.binder_for("magento.res.partner")
         partner = binder.unwrap_binding(partner_binding_id)
         if self.address_infos.merge:
             # it won't be imported as an independent address,
             # but will be linked with the main res.partner
-            data['odoo_id'] = partner.id
-            data['type'] = 'contact'
+            data["odoo_id"] = partner.id
+            data["type"] = "contact"
         else:
-            data['parent_id'] = partner.id
-            data['lang'] = partner.lang
-        data['magento_partner_id'] = self.address_infos.partner_binding_id
+            data["parent_id"] = partner.id
+            data["lang"] = partner.lang
+        data["magento_partner_id"] = self.address_infos.partner_binding_id
         return data
 
     def _create(self, data):
@@ -425,52 +435,58 @@ class AddressImporter(Component):
 
 class AddressImportMapper(Component):
 
-    _name = 'magento.address.import.mapper'
-    _inherit = 'magento.base.address.import.mapper'
-    _apply_on = 'magento.address'
+    _name = "magento.address.import.mapper"
+    _inherit = "magento.base.address.import.mapper"
+    _apply_on = "magento.address"
 
     @property
     def direct(self):
         fields = super(AddressImportMapper, self).direct[:]
         fields += [
-            ('created_at', 'created_at'),
-            ('updated_at', 'updated_at'),
-            ('company', 'company'),
+            ("created_at", "created_at"),
+            ("updated_at", "updated_at"),
+            ("company", "company"),
         ]
         return fields
 
     @staticmethod
     def is_billing(record):
-        return (
-            record.get('default_billing')  # Magento 2.x
-            or record.get('is_default_billing'))  # Magento 1.x
+        return record.get("default_billing") or record.get(  # Magento 2.x
+            "is_default_billing"
+        )  # Magento 1.x
 
     @staticmethod
     def is_shipping(record):
-        return (
-            record.get('default_shipping')  # Magento 2.x
-            or record.get('is_default_shipping'))  # Magento 1.x
+        return record.get("default_shipping") or record.get(  # Magento 2.x
+            "is_default_shipping"
+        )  # Magento 1.x
 
     @mapping
     def default_billing(self, record):
-        return {'is_default_billing': self.is_billing(record)}
+        return {"is_default_billing": self.is_billing(record)}
 
     def default_shipping(self, record):
-        return {'default_shipping': self.is_shipping(record)}
+        return {"default_shipping": self.is_shipping(record)}
 
     @mapping
     def names(self, record):
-        parts = [part for part in (record['firstname'],
-                                   record.get('middlename'),
-                                   record['lastname']) if part]
-        return {'name': ' '.join(parts)}
+        parts = [
+            part
+            for part in (
+                record["firstname"],
+                record.get("middlename"),
+                record["lastname"],
+            )
+            if part
+        ]
+        return {"name": " ".join(parts)}
 
     @mapping
     def type(self, record):
         if self.is_billing(record):
-            address_type = 'invoice'
+            address_type = "invoice"
         elif self.is_shipping(record):
-            address_type = 'delivery'
+            address_type = "delivery"
         else:
-            address_type = 'other'
-        return {'type': address_type}
+            address_type = "other"
+        return {"type": address_type}

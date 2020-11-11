@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 #
 # Connectors documentation build configuration file, created by
 # sphinx-quickstart on Mon Feb  4 11:35:44 2013.
@@ -14,17 +13,18 @@
 
 
 import ast
-import sys
 import os
+import sys
+
 import sphinx_bootstrap_theme
 
-sys.path.append(os.path.abspath('_themes'))
+sys.path.append(os.path.abspath("_themes"))
 
 
 MANIFEST_FILES = [
-    '__manifest__.py',
-    '__odoo__.py',
-    '__openerp__.py',
+    "__manifest__.py",
+    "__odoo__.py",
+    "__openerp__.py",
 ]
 
 
@@ -35,10 +35,9 @@ def is_module(path):
     if not os.path.isdir(path):
         return False
     files = os.listdir(path)
-    filtered = [x for x in files if x in (MANIFEST_FILES + ['__init__.py'])]
-    if len(filtered) == 2 and '__init__.py' in filtered:
-        return os.path.join(
-            path, next(x for x in filtered if x != '__init__.py'))
+    filtered = [x for x in files if x in (MANIFEST_FILES + ["__init__.py"])]
+    if len(filtered) == 2 and "__init__.py" in filtered:
+        return os.path.join(path, next(x for x in filtered if x != "__init__.py"))
     else:
         return False
 
@@ -49,47 +48,49 @@ def is_installable_module(path):
     manifest_path = is_module(path)
     if manifest_path:
         manifest = ast.literal_eval(open(manifest_path).read())
-        if manifest.get('installable', True):
+        if manifest.get("installable", True):
             return manifest_path
     return False
 
 
-if os.environ.get('TRAVIS_BUILD_DIR') and os.environ.get('VERSION'):
+if os.environ.get("TRAVIS_BUILD_DIR") and os.environ.get("VERSION"):
     # build from travis
-    repos_home = os.environ['HOME']
-    deps_path = os.path.join(repos_home, 'dependencies')
-    odoo_folder = 'odoo-{}'.format(os.environ['VERSION'])
+    repos_home = os.environ["HOME"]
+    deps_path = os.path.join(repos_home, "dependencies")
+    odoo_folder = "odoo-{}".format(os.environ["VERSION"])
     odoo_root = os.path.join(repos_home, odoo_folder)
-    build_path = os.environ['TRAVIS_BUILD_DIR']
+    build_path = os.environ["TRAVIS_BUILD_DIR"]
 else:
     # build from dev
-    odoo_root = os.path.abspath('../../../../src')
-    deps_path = os.path.abspath('../../..')
-    build_path = os.path.abspath('../..')
+    odoo_root = os.path.abspath("../../../../src")
+    deps_path = os.path.abspath("../../..")
+    build_path = os.path.abspath("../..")
 
 addons_paths = []
 
 
 def add_path(*paths):
-    addons_paths.append(
-        os.path.join(*paths)
-    )
+    addons_paths.append(os.path.join(*paths))
 
 
-add_path(odoo_root, 'odoo', 'addons')
-add_path(odoo_root, 'addons')
+add_path(odoo_root, "odoo", "addons")
+add_path(odoo_root, "addons")
 add_path(build_path)
 
-deps_repos = [repo for repo in os.listdir(deps_path)
-              if os.path.isdir(os.path.join(deps_path, repo)) and
-              not repo.startswith('.')]
+deps_repos = [
+    repo
+    for repo in os.listdir(deps_path)
+    if os.path.isdir(os.path.join(deps_path, repo)) and not repo.startswith(".")
+]
 
 for repo in deps_repos:
     add_path(deps_path, repo)
 
-addons = [x for x in os.listdir(build_path)
-          if not x.startswith(('.', '__')) and
-          is_installable_module(x)]
+addons = [
+    x
+    for x in os.listdir(build_path)
+    if not x.startswith((".", "__")) and is_installable_module(x)
+]
 
 # sphinxodoo.ext.autodoc variables
 sphinxodoo_root_path = odoo_root
@@ -106,42 +107,43 @@ sys.path.append(build_path)
 # Add any Sphinx extension module names here, as strings. They can be
 # extensions coming with Sphinx (named 'sphinx.ext.*') or your custom
 # ones.
-extensions = ['sphinx.ext.autodoc',
-              'sphinx.ext.intersphinx',
-              'sphinx.ext.todo',
-              'sphinx.ext.viewcode',
-              'sphinxodoo.ext.autodoc',
-              ]
+extensions = [
+    "sphinx.ext.autodoc",
+    "sphinx.ext.intersphinx",
+    "sphinx.ext.todo",
+    "sphinx.ext.viewcode",
+    "sphinxodoo.ext.autodoc",
+]
 
 todo_include_todos = False
 
 # Add any paths that contain templates here, relative to this directory.
-templates_path = ['_templates']
+templates_path = ["_templates"]
 
 # The suffix of source filenames.
-source_suffix = '.rst'
+source_suffix = ".rst"
 
 # autodoc options
-autodoc_member_order = 'bysource'
+autodoc_member_order = "bysource"
 
 # The encoding of source files.
 # source_encoding = 'utf-8-sig'
 
 # The master toctree document.
-master_doc = 'index'
+master_doc = "index"
 
 # General information about the project.
-project = 'Odoo Magento Connector'
-copyright = '2013-2015, Odoo Community Association (OCA)'
+project = "Odoo Magento Connector"
+copyright = "2013-2015, Odoo Community Association (OCA)"
 
 # The version info for the project you're documenting, acts as
 # replacement for |version| and |release|, also used in various other
 # places throughout the built documents.
 #
 # The short X.Y version.
-version = ''
+version = ""
 # The full version, including alpha/beta/rc tags.
-release = ''
+release = ""
 
 # The language for content autogenerated by Sphinx. Refer to
 # documentation for a list of supported languages.
@@ -155,7 +157,7 @@ release = ''
 
 # List of patterns, relative to source directory, that match files and
 # directories to ignore when looking for source files.
-exclude_patterns = ['_build']
+exclude_patterns = ["_build"]
 
 # The reST default role (used for this markup: `text`) to use for all
 # documents.
@@ -173,7 +175,7 @@ exclude_patterns = ['_build']
 # show_authors = False
 
 # The name of the Pygments (syntax highlighting) style to use.
-pygments_style = 'sphinx'
+pygments_style = "sphinx"
 
 # A list of ignored prefixes for module index sorting.
 # modindex_common_prefix = []
@@ -183,22 +185,19 @@ pygments_style = 'sphinx'
 
 # The theme to use for HTML and HTML Help pages.  See the documentation
 # for a list of builtin themes.
-html_theme = 'bootstrap'
+html_theme = "bootstrap"
 
 # Theme options are theme-specific and customize the look and feel of a
 # theme further.  For a list of options available for each theme, see
 # the documentation.
 html_theme_options = {
     # Navigation bar title. (Default: ``project`` value)
-    'navbar_title': "Odoo Magento Connector",
-
+    "navbar_title": "Odoo Magento Connector",
     # Tab name for entire site. (Default: "Site")
-    'navbar_site_name': "Site",
-
+    "navbar_site_name": "Site",
     # Global TOC depth for "site" navbar tab. (Default: 1)
     # Switching to -1 shows all levels.
-    'globaltoc_depth': 2,
-
+    "globaltoc_depth": 2,
     # Include hidden TOCs in Site navbar?
     #
     # Note: If this is "false", you cannot have mixed ``:hidden:`` and
@@ -206,27 +205,23 @@ html_theme_options = {
     # build will break.
     #
     # Values: "true" (default) or "false"
-    'globaltoc_includehidden': "true",
-
+    "globaltoc_includehidden": "true",
     # HTML navbar class (Default: "navbar") to attach to <div> element.
     # For black navbar, do "navbar navbar-inverse"
-    'navbar_class': "navbar",
-
+    "navbar_class": "navbar",
     # Fix navigation bar to top of page?
     # Values: "true" (default) or "false"
-    'navbar_fixed_top': "true",
-
+    "navbar_fixed_top": "true",
     # Location of link to source.
     # Options are "nav" (default), "footer" or anything else to exclude.
-    'source_link_position': "footer",
-
+    "source_link_position": "footer",
     # Bootswatch (http://bootswatch.com/) theme.
     #
     # Options are nothing with "" (default) or the name of a valid theme
     # such as "amelia" or "cosmo".
     #
     # Note that this is served off CDN, so won't be available offline.
-    'bootswatch_theme': "united",
+    "bootswatch_theme": "united",
 }
 
 # Add any paths that contain custom themes here, relative to this
@@ -254,7 +249,7 @@ html_theme_path = sphinx_bootstrap_theme.get_html_theme_path()
 # here, relative to this directory. They are copied after the builtin
 # static files, so a file named "default.css" will overwrite the builtin
 # "default.css".
-html_static_path = ['_static']
+html_static_path = ["_static"]
 
 # If not '', a 'Last updated on:' timestamp is inserted at every page
 # bottom, using the given strftime format.
@@ -300,7 +295,7 @@ html_static_path = ['_static']
 # html_file_suffix = None
 
 # Output file base name for HTML help builder.
-htmlhelp_basename = 'odoo-magento-connector-doc'
+htmlhelp_basename = "odoo-magento-connector-doc"
 
 
 # -- Options for LaTeX output ------------------------------------------
@@ -308,10 +303,8 @@ htmlhelp_basename = 'odoo-magento-connector-doc'
 latex_elements = {
     # The paper size ('letterpaper' or 'a4paper').
     # 'papersize': 'letterpaper',
-
     # The font size ('10pt', '11pt' or '12pt').
     # 'pointsize': '10pt',
-
     # Additional stuff for the LaTeX preamble.
     # 'preamble': '',
 }
@@ -319,9 +312,13 @@ latex_elements = {
 # Grouping the document tree into LaTeX files. List of tuples (source
 # start file, target name, title, author, documentclass [howto/manual]).
 latex_documents = [
-    ('index', 'odoo-magento-connector.tex',
-     'Odoo Magento Connector Documentation',
-     'Odoo Community Association (OCA)', 'manual'),
+    (
+        "index",
+        "odoo-magento-connector.tex",
+        "Odoo Magento Connector Documentation",
+        "Odoo Community Association (OCA)",
+        "manual",
+    ),
 ]
 
 # The name of an image file (relative to this directory) to place at the
@@ -350,9 +347,13 @@ latex_documents = [
 # One entry per manual page. List of tuples
 # (source start file, name, description, authors, manual section).
 man_pages = [
-    ('index', 'odoo-magento-connector',
-     'Odoo Magento Connector Documentation',
-     ['Odoo Community Association (OCA)'], 1)
+    (
+        "index",
+        "odoo-magento-connector",
+        "Odoo Magento Connector Documentation",
+        ["Odoo Community Association (OCA)"],
+        1,
+    )
 ]
 
 # If true, show URL addresses after external links.
@@ -365,11 +366,15 @@ man_pages = [
 # (source start file, target name, title, author,
 #  dir menu entry, description, category)
 texinfo_documents = [
-    ('index', 'Odoo Magento Connector',
-     'Odoo Magento Connector Documentation',
-     'Odoo Community Association (OCA)', 'Odoo Magento Connector',
-     'Connector between Odoo and Magento',
-     'Miscellaneous'),
+    (
+        "index",
+        "Odoo Magento Connector",
+        "Odoo Magento Connector Documentation",
+        "Odoo Community Association (OCA)",
+        "Odoo Magento Connector",
+        "Connector between Odoo and Magento",
+        "Miscellaneous",
+    ),
 ]
 
 # Documents to append as an appendix to all manuals.
@@ -385,6 +390,6 @@ texinfo_documents = [
 # Example configuration for intersphinx: refer to the Python standard
 # library.
 intersphinx_mapping = {
-    'python': ('http://docs.python.org/2.7', None),
-    'connector': ('http://www.odoo-connector.com', None),
+    "python": ("http://docs.python.org/2.7", None),
+    "connector": ("http://www.odoo-connector.com", None),
 }
