@@ -20,6 +20,7 @@ from os.path import dirname, join
 from contextlib import contextmanager
 from odoo import models
 from odoo.addons.component.tests.common import SavepointComponentCase
+from odoo.tools import mute_logger
 
 from vcr import VCR
 
@@ -160,11 +161,16 @@ class MagentoTestCase(SavepointComponentCase):
         filename = 'import_%s_%s' % (table_name[8:], str(magento_id))
 
         def run_import():
-            if self.backend.version != '1.7':
-                return self.env[model_name].import_record(
-                    self.backend, magento_id)
-            with mock_urlopen_image():
-                self.env[model_name].import_record(self.backend, magento_id)
+            with mute_logger(
+                    'odoo.addons.mail.models.mail_mail',
+                    'odoo.models.unlink',
+                    'odoo.tests'):
+                if self.backend.version != '1.7':
+                    return self.env[model_name].import_record(
+                        self.backend, magento_id)
+                with mock_urlopen_image():
+                    self.env[model_name].import_record(
+                        self.backend, magento_id)
 
         if cassette:
             with self.recorder.use_cassette(filename):
@@ -271,5 +277,10 @@ class MagentoSyncTestCase(MagentoTestCase):
 
     def setUp(self):
         super(MagentoSyncTestCase, self).setUp()
-        with recorder.use_cassette('metadata'):
-            self.backend.synchronize_metadata()
+        # Mute logging of notifications about new checkpoints
+        with mute_logger(
+                'odoo.addons.mail.models.mail_mail',
+                'odoo.models.unlink',
+                'odoo.tests'):
+            with recorder.use_cassette('metadata'):
+                self.backend.synchronize_metadata()
