@@ -13,6 +13,7 @@ Magento2 version of the helpers from tests/common.py
 from os.path import dirname, join
 from vcr import VCR
 
+from odoo.tools import mute_logger
 from ..common import MagentoTestCase
 
 
@@ -38,5 +39,9 @@ class Magento2TestCase(MagentoTestCase):
 class Magento2SyncTestCase(Magento2TestCase):
     def setUp(self):
         super(Magento2SyncTestCase, self).setUp()
-        with recorder.use_cassette('metadata'):
-            self.backend.synchronize_metadata()
+        with mute_logger(
+                'odoo.addons.mail.models.mail_mail',
+                'odoo.models.unlink',
+                'odoo.tests'):
+            with recorder.use_cassette('metadata'):
+                self.backend.synchronize_metadata()
