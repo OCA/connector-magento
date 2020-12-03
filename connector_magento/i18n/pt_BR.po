@@ -281,7 +281,7 @@ msgid "Already exported"
 msgstr "Já exportado"
 
 #. module: connector_magento
-#: code:addons/connector_magento/models/sale_order/importer.py:389
+#: code:addons/connector_magento/models/sale_order/importer.py:392
 #, python-format
 msgid "Already imported"
 msgstr "Já importado"
