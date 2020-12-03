@@ -1,0 +1,522 @@
+interactions:
+- request:
+    body: null
+    headers:
+      Accept: ['*/*']
+      Accept-Encoding: ['gzip, deflate']
+      Connection: [keep-alive]
+      User-Agent: [python-requests/2.23.0]
+    method: GET
+    uri: http://magento/index.php/rest/V1/orders/17
+  response:
+    body: {string: '{"applied_rule_ids":"5","base_currency_code":"USD","base_discount_amount":-49,"base_grand_total":0,"base_discount_tax_compensation_amount":0,"base_shipping_amount":5,"base_shipping_discount_amount":5,"base_shipping_discount_tax_compensation_amnt":0,"base_shipping_incl_tax":5,"base_shipping_tax_amount":0,"base_subtotal":44,"base_subtotal_incl_tax":44,"base_tax_amount":0,"base_total_due":0,"base_to_global_rate":1,"base_to_order_rate":1,"billing_address_id":34,"coupon_code":"1","created_at":"2020-05-08
+        10:21:22","customer_email":"test@free.org","customer_firstname":"Test","customer_group_id":0,"customer_is_guest":1,"customer_lastname":"Free","customer_note_notify":1,"discount_amount":-49,"discount_description":"1","entity_id":17,"global_currency_code":"USD","grand_total":0,"discount_tax_compensation_amount":0,"increment_id":"000000020","is_virtual":0,"order_currency_code":"USD","protect_code":"f781ac6b587a01e8f18a3cbaa85343df","quote_id":20,"remote_ip":"127.0.0.1","shipping_amount":5,"shipping_description":"Flat
+        Rate - Fixed","shipping_discount_amount":5,"shipping_discount_tax_compensation_amount":0,"shipping_incl_tax":5,"shipping_tax_amount":0,"state":"new","status":"pending","store_currency_code":"USD","store_id":1,"store_name":"Main
+        Website\nMain Website Store\nDefault Store View","store_to_base_rate":0,"store_to_order_rate":0,"subtotal":44,"subtotal_incl_tax":44,"tax_amount":0,"total_due":0,"total_item_count":1,"total_qty_ordered":1,"updated_at":"2020-05-08
+        10:21:22","weight":1,"items":[{"amount_refunded":0,"applied_rule_ids":"5","base_amount_refunded":0,"base_discount_amount":44,"base_discount_invoiced":0,"base_discount_tax_compensation_amount":0,"base_original_price":44,"base_price":44,"base_price_incl_tax":44,"base_row_invoiced":0,"base_row_total":0,"base_row_total_incl_tax":0,"base_tax_amount":0,"base_tax_invoiced":0,"created_at":"2020-05-08
+        10:21:22","discount_amount":44,"discount_invoiced":0,"discount_percent":100,"free_shipping":0,"discount_tax_compensation_amount":0,"is_qty_decimal":0,"is_virtual":0,"item_id":34,"name":"Sybil
+        Running Short","no_discount":0,"order_id":17,"original_price":44,"price":44,"price_incl_tax":44,"product_id":2009,"product_type":"configurable","qty_canceled":0,"qty_invoiced":0,"qty_ordered":1,"qty_refunded":0,"qty_shipped":0,"quote_item_id":45,"row_invoiced":0,"row_total":0,"row_total_incl_tax":0,"row_weight":1,"sku":"WSH08-29-Purple","store_id":1,"tax_amount":0,"tax_invoiced":0,"tax_percent":0,"updated_at":"2020-05-08
+        10:21:22","weight":1,"product_option":{"extension_attributes":{"configurable_item_options":[{"option_id":"152","option_value":5599},{"option_id":"93","option_value":5484}]}}},{"amount_refunded":0,"base_amount_refunded":0,"base_discount_amount":0,"base_discount_invoiced":0,"base_price":0,"base_row_invoiced":0,"base_row_total":0,"base_tax_amount":0,"base_tax_invoiced":0,"created_at":"2020-05-08
+        10:21:22","discount_amount":0,"discount_invoiced":0,"discount_percent":0,"free_shipping":0,"is_qty_decimal":0,"is_virtual":0,"item_id":35,"name":"Sybil
+        Running Short-29-Purple","no_discount":0,"order_id":17,"original_price":0,"parent_item_id":34,"price":44,"product_id":2005,"product_type":"simple","qty_canceled":0,"qty_invoiced":0,"qty_ordered":1,"qty_refunded":0,"qty_shipped":0,"quote_item_id":46,"row_invoiced":0,"row_total":0,"row_weight":0,"sku":"WSH08-29-Purple","store_id":1,"tax_amount":0,"tax_invoiced":0,"tax_percent":0,"updated_at":"2020-05-08
+        10:21:22","weight":1,"parent_item":{"amount_refunded":0,"applied_rule_ids":"5","base_amount_refunded":0,"base_discount_amount":44,"base_discount_invoiced":0,"base_discount_tax_compensation_amount":0,"base_original_price":44,"base_price":44,"base_price_incl_tax":44,"base_row_invoiced":0,"base_row_total":0,"base_row_total_incl_tax":0,"base_tax_amount":0,"base_tax_invoiced":0,"created_at":"2020-05-08
+        10:21:22","discount_amount":44,"discount_invoiced":0,"discount_percent":100,"free_shipping":0,"discount_tax_compensation_amount":0,"is_qty_decimal":0,"is_virtual":0,"item_id":34,"name":"Sybil
+        Running Short","no_discount":0,"order_id":17,"original_price":44,"price":44,"price_incl_tax":44,"product_id":2009,"product_type":"configurable","qty_canceled":0,"qty_invoiced":0,"qty_ordered":1,"qty_refunded":0,"qty_shipped":0,"quote_item_id":45,"row_invoiced":0,"row_total":0,"row_total_incl_tax":0,"row_weight":1,"sku":"WSH08-29-Purple","store_id":1,"tax_amount":0,"tax_invoiced":0,"tax_percent":0,"updated_at":"2020-05-08
+        10:21:22","weight":1,"product_option":{"extension_attributes":{"configurable_item_options":[{"option_id":"152","option_value":5599},{"option_id":"93","option_value":5484}]}}},"row_total_incl_tax":0,"base_row_total_incl_tax":0}],"billing_address":{"address_type":"billing","city":"Free
+        city","country_id":"UY","email":"test@free.org","entity_id":34,"firstname":"Test","lastname":"Free","parent_id":17,"postcode":"1234","street":["Free
+        street"],"telephone":"1"},"payment":{"account_status":null,"additional_information":["No
+        Payment Information Required"],"amount_ordered":0,"base_amount_ordered":0,"base_shipping_amount":5,"cc_last4":null,"entity_id":17,"method":"checkmo","parent_id":17,"shipping_amount":5},"status_histories":[],"extension_attributes":{"shipping_assignments":[{"shipping":{"address":{"address_type":"shipping","city":"Free
+        city","country_id":"UY","email":"test@free.org","entity_id":33,"firstname":"Test","lastname":"Free","parent_id":17,"postcode":"1234","street":["Free
+        street"],"telephone":"1"},"method":"flatrate_flatrate","total":{"base_shipping_amount":5,"base_shipping_discount_amount":5,"base_shipping_discount_tax_compensation_amnt":0,"base_shipping_incl_tax":5,"base_shipping_tax_amount":0,"shipping_amount":5,"shipping_discount_amount":5,"shipping_discount_tax_compensation_amount":0,"shipping_incl_tax":5,"shipping_tax_amount":0}},"items":[{"amount_refunded":0,"applied_rule_ids":"5","base_amount_refunded":0,"base_discount_amount":44,"base_discount_invoiced":0,"base_discount_tax_compensation_amount":0,"base_original_price":44,"base_price":44,"base_price_incl_tax":44,"base_row_invoiced":0,"base_row_total":0,"base_row_total_incl_tax":0,"base_tax_amount":0,"base_tax_invoiced":0,"created_at":"2020-05-08
+        10:21:22","discount_amount":44,"discount_invoiced":0,"discount_percent":100,"free_shipping":0,"discount_tax_compensation_amount":0,"is_qty_decimal":0,"is_virtual":0,"item_id":34,"name":"Sybil
+        Running Short","no_discount":0,"order_id":17,"original_price":44,"price":44,"price_incl_tax":44,"product_id":2009,"product_type":"configurable","qty_canceled":0,"qty_invoiced":0,"qty_ordered":1,"qty_refunded":0,"qty_shipped":0,"quote_item_id":45,"row_invoiced":0,"row_total":0,"row_total_incl_tax":0,"row_weight":1,"sku":"WSH08-29-Purple","store_id":1,"tax_amount":0,"tax_invoiced":0,"tax_percent":0,"updated_at":"2020-05-08
+        10:21:22","weight":1,"product_option":{"extension_attributes":{"configurable_item_options":[{"option_id":"152","option_value":5599},{"option_id":"93","option_value":5484}]}}},{"amount_refunded":0,"base_amount_refunded":0,"base_discount_amount":0,"base_discount_invoiced":0,"base_price":0,"base_row_invoiced":0,"base_row_total":0,"base_tax_amount":0,"base_tax_invoiced":0,"created_at":"2020-05-08
+        10:21:22","discount_amount":0,"discount_invoiced":0,"discount_percent":0,"free_shipping":0,"is_qty_decimal":0,"is_virtual":0,"item_id":35,"name":"Sybil
+        Running Short-29-Purple","no_discount":0,"order_id":17,"original_price":0,"parent_item_id":34,"price":44,"product_id":2005,"product_type":"simple","qty_canceled":0,"qty_invoiced":0,"qty_ordered":1,"qty_refunded":0,"qty_shipped":0,"quote_item_id":46,"row_invoiced":0,"row_total":0,"row_weight":0,"sku":"WSH08-29-Purple","store_id":1,"tax_amount":0,"tax_invoiced":0,"tax_percent":0,"updated_at":"2020-05-08
+        10:21:22","weight":1,"parent_item":{"amount_refunded":0,"applied_rule_ids":"5","base_amount_refunded":0,"base_discount_amount":44,"base_discount_invoiced":0,"base_discount_tax_compensation_amount":0,"base_original_price":44,"base_price":44,"base_price_incl_tax":44,"base_row_invoiced":0,"base_row_total":0,"base_row_total_incl_tax":0,"base_tax_amount":0,"base_tax_invoiced":0,"created_at":"2020-05-08
+        10:21:22","discount_amount":44,"discount_invoiced":0,"discount_percent":100,"free_shipping":0,"discount_tax_compensation_amount":0,"is_qty_decimal":0,"is_virtual":0,"item_id":34,"name":"Sybil
+        Running Short","no_discount":0,"order_id":17,"original_price":44,"price":44,"price_incl_tax":44,"product_id":2009,"product_type":"configurable","qty_canceled":0,"qty_invoiced":0,"qty_ordered":1,"qty_refunded":0,"qty_shipped":0,"quote_item_id":45,"row_invoiced":0,"row_total":0,"row_total_incl_tax":0,"row_weight":1,"sku":"WSH08-29-Purple","store_id":1,"tax_amount":0,"tax_invoiced":0,"tax_percent":0,"updated_at":"2020-05-08
+        10:21:22","weight":1,"product_option":{"extension_attributes":{"configurable_item_options":[{"option_id":"152","option_value":5599},{"option_id":"93","option_value":5484}]}}},"row_total_incl_tax":0,"base_row_total_incl_tax":0}]}],"payment_additional_info":[{"key":"method_title","value":"No
+        Payment Information Required"}],"applied_taxes":[],"item_applied_taxes":[]}}'}
+    headers:
+      Cache-Control: ['no-store, no-cache, must-revalidate']
+      Connection: [keep-alive]
+      Content-Type: [application/json; charset=utf-8]
+      Date: ['Fri, 08 May 2020 10:45:59 GMT']
+      Expires: ['Thu, 19 Nov 1981 08:52:00 GMT']
+      Pragma: [no-cache]
+      Server: [nginx/1.14.0 (Ubuntu)]
+      Set-Cookie: ['PHPSESSID=ki6tdl3h42eu6ujsfqsc1lagb1; expires=Fri, 08-May-2020
+          11:45:59 GMT; Max-Age=3600; path=/; domain=magento; HttpOnly']
+      Transfer-Encoding: [chunked]
+      Vary: [Accept-Encoding]
+      X-Frame-Options: [SAMEORIGIN]
+      content-length: ['9155']
+    status: {code: 200, message: OK}
+- request:
+    body: null
+    headers:
+      Accept: ['*/*']
+      Accept-Encoding: ['gzip, deflate']
+      Connection: [keep-alive]
+      User-Agent: [python-requests/2.23.0]
+    method: GET
+    uri: http://magento/index.php/rest/V1/products/WSH08-29-Purple
+  response:
+    body: {string: '{"id":2005,"sku":"WSH08-29-Purple","name":"Sybil Running Short-29-Purple","attribute_set_id":10,"price":44,"status":1,"visibility":1,"type_id":"simple","created_at":"2020-03-27
+        16:07:13","updated_at":"2020-03-27 16:07:13","weight":1,"extension_attributes":{"website_ids":[1],"category_links":[{"position":0,"category_id":"28"},{"position":0,"category_id":"35"},{"position":0,"category_id":"2"}],"stock_item":{"item_id":2005,"product_id":2005,"stock_id":1,"qty":100,"is_in_stock":true,"is_qty_decimal":false,"show_default_notification_message":false,"use_config_min_qty":true,"min_qty":0,"use_config_min_sale_qty":1,"min_sale_qty":1,"use_config_max_sale_qty":true,"max_sale_qty":10000,"use_config_backorders":true,"backorders":0,"use_config_notify_stock_qty":true,"notify_stock_qty":1,"use_config_qty_increments":true,"qty_increments":0,"use_config_enable_qty_inc":true,"enable_qty_increments":false,"use_config_manage_stock":true,"manage_stock":true,"low_stock_date":null,"is_decimal_divided":false,"stock_status_changed_auto":0}},"product_links":[],"options":[],"media_gallery_entries":[{"id":3349,"media_type":"image","label":"","position":1,"disabled":false,"types":["image","small_image","thumbnail"],"file":"\/w\/s\/wsh08-purple_main_1.jpg"},{"id":3350,"media_type":"image","label":"","position":2,"disabled":false,"types":[],"file":"\/w\/s\/wsh08-purple_back_1.jpg"}],"tier_prices":[],"custom_attributes":[{"attribute_code":"image","value":"\/w\/s\/wsh08-purple_main_1.jpg"},{"attribute_code":"small_image","value":"\/w\/s\/wsh08-purple_main_1.jpg"},{"attribute_code":"thumbnail","value":"\/w\/s\/wsh08-purple_main_1.jpg"},{"attribute_code":"options_container","value":"container2"},{"attribute_code":"msrp_display_actual_price_type","value":"0"},{"attribute_code":"url_key","value":"sybil-running-short-29-purple"},{"attribute_code":"required_options","value":"0"},{"attribute_code":"has_options","value":"0"},{"attribute_code":"tax_class_id","value":"2"},{"attribute_code":"category_ids","value":["28","35","2"]},{"attribute_code":"description","value":"<p>Fortunately,
+        it''s okay to look cute while you''re working out. The Sybil Running Short
+        combines a fun, color-blocked design with breathable mesh fabric for sporty-fun
+        style.<\/p>\n<p>&bull; Blue running shorts with green waist.<br \/>&bull;
+        Drawstring-adjustable waist.<br \/>&bull; 4\" inseam. Machine wash\/line dry.<\/p>"},{"attribute_code":"size","value":"5599"},{"attribute_code":"color","value":"5484"}]}'}
+    headers:
+      Cache-Control: ['no-store, no-cache, must-revalidate']
+      Connection: [keep-alive]
+      Content-Type: [application/json; charset=utf-8]
+      Date: ['Fri, 08 May 2020 10:45:59 GMT']
+      Expires: ['Thu, 19 Nov 1981 08:52:00 GMT']
+      Pragma: [no-cache]
+      Server: [nginx/1.14.0 (Ubuntu)]
+      Set-Cookie: ['PHPSESSID=st5eni5v7stpdipc3m3tiqluo8; expires=Fri, 08-May-2020
+          11:45:59 GMT; Max-Age=3600; path=/; domain=magento; HttpOnly']
+      Transfer-Encoding: [chunked]
+      Vary: [Accept-Encoding]
+      X-Frame-Options: [SAMEORIGIN]
+      content-length: ['2474']
+    status: {code: 200, message: OK}
+- request:
+    body: null
+    headers:
+      Accept: ['*/*']
+      Accept-Encoding: ['gzip, deflate']
+      Connection: [keep-alive]
+      User-Agent: [python-requests/2.23.0]
+    method: GET
+    uri: http://magento/index.php/rest/V1/categories/28
+  response:
+    body: {string: '{"id":28,"parent_id":22,"name":"Shorts","is_active":true,"position":2,"level":4,"children":"","created_at":"2020-03-27
+        16:06:36","updated_at":"2020-03-27 16:06:36","path":"1\/2\/20\/22\/28","available_sort_by":[],"include_in_menu":true,"custom_attributes":[{"attribute_code":"is_anchor","value":"1"},{"attribute_code":"path","value":"1\/2\/20\/22\/28"},{"attribute_code":"children_count","value":"0"},{"attribute_code":"url_key","value":"shorts-women"},{"attribute_code":"url_path","value":"women\/bottoms-women\/shorts-women"}]}'}
+    headers:
+      Cache-Control: ['no-store, no-cache, must-revalidate']
+      Connection: [keep-alive]
+      Content-Type: [application/json; charset=utf-8]
+      Date: ['Fri, 08 May 2020 10:45:59 GMT']
+      Expires: ['Thu, 19 Nov 1981 08:52:00 GMT']
+      Pragma: [no-cache]
+      Server: [nginx/1.14.0 (Ubuntu)]
+      Set-Cookie: ['PHPSESSID=4bd4mg1qg4c7o6vkkq1gjqai5u; expires=Fri, 08-May-2020
+          11:45:59 GMT; Max-Age=3600; path=/; domain=magento; HttpOnly']
+      Transfer-Encoding: [chunked]
+      Vary: [Accept-Encoding]
+      X-Frame-Options: [SAMEORIGIN]
+      content-length: ['529']
+    status: {code: 200, message: OK}
+- request:
+    body: null
+    headers:
+      Accept: ['*/*']
+      Accept-Encoding: ['gzip, deflate']
+      Connection: [keep-alive]
+      User-Agent: [python-requests/2.23.0]
+    method: GET
+    uri: http://magento/index.php/rest/V1/categories/22
+  response:
+    body: {string: '{"id":22,"parent_id":20,"name":"Bottoms","is_active":true,"position":2,"level":3,"children":"27,28","created_at":"2020-03-27
+        16:06:36","updated_at":"2020-04-24 10:01:36","path":"1\/2\/20\/22","available_sort_by":[],"include_in_menu":true,"custom_attributes":[{"attribute_code":"is_anchor","value":"1"},{"attribute_code":"path","value":"1\/2\/20\/22"},{"attribute_code":"children_count","value":"3"},{"attribute_code":"url_key","value":"bottoms-women"},{"attribute_code":"url_path","value":"women\/bottoms-women"}]}'}
+    headers:
+      Cache-Control: ['no-store, no-cache, must-revalidate']
+      Connection: [keep-alive]
+      Content-Type: [application/json; charset=utf-8]
+      Date: ['Fri, 08 May 2020 10:45:59 GMT']
+      Expires: ['Thu, 19 Nov 1981 08:52:00 GMT']
+      Pragma: [no-cache]
+      Server: [nginx/1.14.0 (Ubuntu)]
+      Set-Cookie: ['PHPSESSID=gias7ugh68ojhrk626l5qi6cre; expires=Fri, 08-May-2020
+          11:45:59 GMT; Max-Age=3600; path=/; domain=magento; HttpOnly']
+      Transfer-Encoding: [chunked]
+      Vary: [Accept-Encoding]
+      X-Frame-Options: [SAMEORIGIN]
+      content-length: ['514']
+    status: {code: 200, message: OK}
+- request:
+    body: null
+    headers:
+      Accept: ['*/*']
+      Accept-Encoding: ['gzip, deflate']
+      Connection: [keep-alive]
+      User-Agent: [python-requests/2.23.0]
+    method: GET
+    uri: http://magento/index.php/rest/V1/categories/20
+  response:
+    body: {string: '{"id":20,"parent_id":2,"name":"Women","is_active":true,"position":2,"level":2,"children":"21,22","created_at":"2020-03-27
+        16:06:36","updated_at":"2020-04-24 10:01:36","path":"1\/2\/20","available_sort_by":[],"include_in_menu":true,"custom_attributes":[{"attribute_code":"display_mode","value":"PAGE"},{"attribute_code":"is_anchor","value":"0"},{"attribute_code":"path","value":"1\/2\/20"},{"attribute_code":"children_count","value":"9"},{"attribute_code":"url_key","value":"women"},{"attribute_code":"url_path","value":"women"}]}'}
+    headers:
+      Cache-Control: ['no-store, no-cache, must-revalidate']
+      Connection: [keep-alive]
+      Content-Type: [application/json; charset=utf-8]
+      Date: ['Fri, 08 May 2020 10:45:59 GMT']
+      Expires: ['Thu, 19 Nov 1981 08:52:00 GMT']
+      Pragma: [no-cache]
+      Server: [nginx/1.14.0 (Ubuntu)]
+      Set-Cookie: ['PHPSESSID=ceuhb2jra3hlkqcmokfh5st3oc; expires=Fri, 08-May-2020
+          11:45:59 GMT; Max-Age=3600; path=/; domain=magento; HttpOnly']
+      Transfer-Encoding: [chunked]
+      Vary: [Accept-Encoding]
+      X-Frame-Options: [SAMEORIGIN]
+      content-length: ['529']
+    status: {code: 200, message: OK}
+- request:
+    body: null
+    headers:
+      Accept: ['*/*']
+      Accept-Encoding: ['gzip, deflate']
+      Connection: [keep-alive]
+      User-Agent: [python-requests/2.23.0]
+    method: GET
+    uri: http://magento/index.php/rest/V1/categories/2
+  response:
+    body: {string: '{"id":2,"parent_id":1,"name":"Default Category","is_active":true,"position":1,"level":1,"children":"3,9,11,20,37,38","created_at":"2020-03-27
+        15:25:28","updated_at":"2020-04-24 10:01:36","path":"1\/2","available_sort_by":[],"include_in_menu":true,"custom_attributes":[{"attribute_code":"display_mode","value":"PRODUCTS"},{"attribute_code":"path","value":"1\/2"},{"attribute_code":"children_count","value":"39"}]}'}
+    headers:
+      Cache-Control: ['no-store, no-cache, must-revalidate']
+      Connection: [keep-alive]
+      Content-Type: [application/json; charset=utf-8]
+      Date: ['Fri, 08 May 2020 10:45:59 GMT']
+      Expires: ['Thu, 19 Nov 1981 08:52:00 GMT']
+      Pragma: [no-cache]
+      Server: [nginx/1.14.0 (Ubuntu)]
+      Set-Cookie: ['PHPSESSID=3avjvhp00opum6plkqpiu276ut; expires=Fri, 08-May-2020
+          11:45:59 GMT; Max-Age=3600; path=/; domain=magento; HttpOnly']
+      Transfer-Encoding: [chunked]
+      Vary: [Accept-Encoding]
+      X-Frame-Options: [SAMEORIGIN]
+      content-length: ['412']
+    status: {code: 200, message: OK}
+- request:
+    body: null
+    headers:
+      Accept: ['*/*']
+      Accept-Encoding: ['gzip, deflate']
+      Connection: [keep-alive]
+      User-Agent: [python-requests/2.23.0]
+    method: GET
+    uri: http://magento/index.php/rest/V1/categories/1
+  response:
+    body: {string: '{"id":1,"parent_id":0,"name":"Root Catalog","position":0,"level":0,"children":"2","created_at":"2020-03-27
+        15:25:28","updated_at":"2020-04-24 10:01:36","path":"1","available_sort_by":[],"include_in_menu":true,"custom_attributes":[{"attribute_code":"path","value":"1"},{"attribute_code":"children_count","value":"40"}]}'}
+    headers:
+      Cache-Control: ['no-store, no-cache, must-revalidate']
+      Connection: [keep-alive]
+      Content-Type: [application/json; charset=utf-8]
+      Date: ['Fri, 08 May 2020 10:46:00 GMT']
+      Expires: ['Thu, 19 Nov 1981 08:52:00 GMT']
+      Pragma: [no-cache]
+      Server: [nginx/1.14.0 (Ubuntu)]
+      Set-Cookie: ['PHPSESSID=a5j1akv7m63gfksr03264ud38s; expires=Fri, 08-May-2020
+          11:46:00 GMT; Max-Age=3600; path=/; domain=magento; HttpOnly']
+      Transfer-Encoding: [chunked]
+      Vary: [Accept-Encoding]
+      X-Frame-Options: [SAMEORIGIN]
+      content-length: ['318']
+    status: {code: 200, message: OK}
+- request:
+    body: null
+    headers:
+      Accept: ['*/*']
+      Accept-Encoding: ['gzip, deflate']
+      Connection: [keep-alive]
+      User-Agent: [python-requests/2.23.0]
+    method: GET
+    uri: http://magento/index.php/rest/default/V1/categories/1
+  response:
+    body: {string: '{"id":1,"parent_id":0,"name":"Root Catalog","position":0,"level":0,"children":"2","created_at":"2020-03-27
+        15:25:28","updated_at":"2020-04-24 10:01:36","path":"1","available_sort_by":[],"include_in_menu":true,"custom_attributes":[{"attribute_code":"path","value":"1"},{"attribute_code":"children_count","value":"40"}]}'}
+    headers:
+      Cache-Control: ['no-store, no-cache, must-revalidate']
+      Connection: [keep-alive]
+      Content-Type: [application/json; charset=utf-8]
+      Date: ['Fri, 08 May 2020 10:46:00 GMT']
+      Expires: ['Thu, 19 Nov 1981 08:52:00 GMT']
+      Pragma: [no-cache]
+      Server: [nginx/1.14.0 (Ubuntu)]
+      Set-Cookie: ['PHPSESSID=jivkredamgqcbs34gi12dgtd9a; expires=Fri, 08-May-2020
+          11:46:00 GMT; Max-Age=3600; path=/; domain=magento; HttpOnly']
+      Transfer-Encoding: [chunked]
+      Vary: [Accept-Encoding]
+      X-Frame-Options: [SAMEORIGIN]
+      content-length: ['318']
+    status: {code: 200, message: OK}
+- request:
+    body: null
+    headers:
+      Accept: ['*/*']
+      Accept-Encoding: ['gzip, deflate']
+      Connection: [keep-alive]
+      User-Agent: [python-requests/2.23.0]
+    method: GET
+    uri: http://magento/index.php/rest/default/V1/categories/2
+  response:
+    body: {string: '{"id":2,"parent_id":1,"name":"Default Category","is_active":true,"position":1,"level":1,"children":"3,9,11,20,37,38","created_at":"2020-03-27
+        15:25:28","updated_at":"2020-04-24 10:01:36","path":"1\/2","available_sort_by":[],"include_in_menu":true,"custom_attributes":[{"attribute_code":"display_mode","value":"PRODUCTS"},{"attribute_code":"path","value":"1\/2"},{"attribute_code":"children_count","value":"39"}]}'}
+    headers:
+      Cache-Control: ['no-store, no-cache, must-revalidate']
+      Connection: [keep-alive]
+      Content-Type: [application/json; charset=utf-8]
+      Date: ['Fri, 08 May 2020 10:46:00 GMT']
+      Expires: ['Thu, 19 Nov 1981 08:52:00 GMT']
+      Pragma: [no-cache]
+      Server: [nginx/1.14.0 (Ubuntu)]
+      Set-Cookie: ['PHPSESSID=8tp5dpnoce1qmbu01e9vf4efrs; expires=Fri, 08-May-2020
+          11:46:00 GMT; Max-Age=3600; path=/; domain=magento; HttpOnly']
+      Transfer-Encoding: [chunked]
+      Vary: [Accept-Encoding]
+      X-Frame-Options: [SAMEORIGIN]
+      content-length: ['412']
+    status: {code: 200, message: OK}
+- request:
+    body: null
+    headers:
+      Accept: ['*/*']
+      Accept-Encoding: ['gzip, deflate']
+      Connection: [keep-alive]
+      User-Agent: [python-requests/2.23.0]
+    method: GET
+    uri: http://magento/index.php/rest/default/V1/categories/20
+  response:
+    body: {string: '{"id":20,"parent_id":2,"name":"Women","is_active":true,"position":2,"level":2,"children":"21,22","created_at":"2020-03-27
+        16:06:36","updated_at":"2020-04-24 10:01:36","path":"1\/2\/20","available_sort_by":[],"include_in_menu":true,"custom_attributes":[{"attribute_code":"display_mode","value":"PAGE"},{"attribute_code":"is_anchor","value":"0"},{"attribute_code":"path","value":"1\/2\/20"},{"attribute_code":"children_count","value":"9"},{"attribute_code":"url_key","value":"women"},{"attribute_code":"url_path","value":"women"}]}'}
+    headers:
+      Cache-Control: ['no-store, no-cache, must-revalidate']
+      Connection: [keep-alive]
+      Content-Type: [application/json; charset=utf-8]
+      Date: ['Fri, 08 May 2020 10:46:00 GMT']
+      Expires: ['Thu, 19 Nov 1981 08:52:00 GMT']
+      Pragma: [no-cache]
+      Server: [nginx/1.14.0 (Ubuntu)]
+      Set-Cookie: ['PHPSESSID=geld0ohq6v5m82raus5l4s1ls7; expires=Fri, 08-May-2020
+          11:46:00 GMT; Max-Age=3600; path=/; domain=magento; HttpOnly']
+      Transfer-Encoding: [chunked]
+      Vary: [Accept-Encoding]
+      X-Frame-Options: [SAMEORIGIN]
+      content-length: ['529']
+    status: {code: 200, message: OK}
+- request:
+    body: null
+    headers:
+      Accept: ['*/*']
+      Accept-Encoding: ['gzip, deflate']
+      Connection: [keep-alive]
+      User-Agent: [python-requests/2.23.0]
+    method: GET
+    uri: http://magento/index.php/rest/default/V1/categories/22
+  response:
+    body: {string: '{"id":22,"parent_id":20,"name":"Bottoms","is_active":true,"position":2,"level":3,"children":"27,28","created_at":"2020-03-27
+        16:06:36","updated_at":"2020-04-24 10:01:36","path":"1\/2\/20\/22","available_sort_by":[],"include_in_menu":true,"custom_attributes":[{"attribute_code":"is_anchor","value":"1"},{"attribute_code":"path","value":"1\/2\/20\/22"},{"attribute_code":"children_count","value":"3"},{"attribute_code":"url_key","value":"bottoms-women"},{"attribute_code":"url_path","value":"women\/bottoms-women"}]}'}
+    headers:
+      Cache-Control: ['no-store, no-cache, must-revalidate']
+      Connection: [keep-alive]
+      Content-Type: [application/json; charset=utf-8]
+      Date: ['Fri, 08 May 2020 10:46:00 GMT']
+      Expires: ['Thu, 19 Nov 1981 08:52:00 GMT']
+      Pragma: [no-cache]
+      Server: [nginx/1.14.0 (Ubuntu)]
+      Set-Cookie: ['PHPSESSID=uoohralplbv2t4c3ap52kckp45; expires=Fri, 08-May-2020
+          11:46:00 GMT; Max-Age=3600; path=/; domain=magento; HttpOnly']
+      Transfer-Encoding: [chunked]
+      Vary: [Accept-Encoding]
+      X-Frame-Options: [SAMEORIGIN]
+      content-length: ['514']
+    status: {code: 200, message: OK}
+- request:
+    body: null
+    headers:
+      Accept: ['*/*']
+      Accept-Encoding: ['gzip, deflate']
+      Connection: [keep-alive]
+      User-Agent: [python-requests/2.23.0]
+    method: GET
+    uri: http://magento/index.php/rest/default/V1/categories/28
+  response:
+    body: {string: '{"id":28,"parent_id":22,"name":"Shorts","is_active":true,"position":2,"level":4,"children":"","created_at":"2020-03-27
+        16:06:36","updated_at":"2020-03-27 16:06:36","path":"1\/2\/20\/22\/28","available_sort_by":[],"include_in_menu":true,"custom_attributes":[{"attribute_code":"is_anchor","value":"1"},{"attribute_code":"path","value":"1\/2\/20\/22\/28"},{"attribute_code":"children_count","value":"0"},{"attribute_code":"url_key","value":"shorts-women"},{"attribute_code":"url_path","value":"women\/bottoms-women\/shorts-women"}]}'}
+    headers:
+      Cache-Control: ['no-store, no-cache, must-revalidate']
+      Connection: [keep-alive]
+      Content-Type: [application/json; charset=utf-8]
+      Date: ['Fri, 08 May 2020 10:46:01 GMT']
+      Expires: ['Thu, 19 Nov 1981 08:52:00 GMT']
+      Pragma: [no-cache]
+      Server: [nginx/1.14.0 (Ubuntu)]
+      Set-Cookie: ['PHPSESSID=cup5cvims72engvgceiii7oqmd; expires=Fri, 08-May-2020
+          11:46:01 GMT; Max-Age=3600; path=/; domain=magento; HttpOnly']
+      Transfer-Encoding: [chunked]
+      Vary: [Accept-Encoding]
+      X-Frame-Options: [SAMEORIGIN]
+      content-length: ['529']
+    status: {code: 200, message: OK}
+- request:
+    body: null
+    headers:
+      Accept: ['*/*']
+      Accept-Encoding: ['gzip, deflate']
+      Connection: [keep-alive]
+      User-Agent: [python-requests/2.23.0]
+    method: GET
+    uri: http://magento/index.php/rest/V1/categories/35
+  response:
+    body: {string: '{"id":35,"parent_id":7,"name":"Performance Fabrics","is_active":true,"position":3,"level":3,"children":"","created_at":"2020-03-27
+        16:06:37","updated_at":"2020-03-27 16:06:37","path":"1\/2\/7\/35","available_sort_by":[],"include_in_menu":false,"custom_attributes":[{"attribute_code":"is_anchor","value":"1"},{"attribute_code":"path","value":"1\/2\/7\/35"},{"attribute_code":"children_count","value":"0"},{"attribute_code":"url_key","value":"performance-fabrics"},{"attribute_code":"url_path","value":"collections\/performance-fabrics"}]}'}
+    headers:
+      Cache-Control: ['no-store, no-cache, must-revalidate']
+      Connection: [keep-alive]
+      Content-Type: [application/json; charset=utf-8]
+      Date: ['Fri, 08 May 2020 10:46:01 GMT']
+      Expires: ['Thu, 19 Nov 1981 08:52:00 GMT']
+      Pragma: [no-cache]
+      Server: [nginx/1.14.0 (Ubuntu)]
+      Set-Cookie: ['PHPSESSID=6p2g46o1grrpdflo07do50qpvm; expires=Fri, 08-May-2020
+          11:46:01 GMT; Max-Age=3600; path=/; domain=magento; HttpOnly']
+      Transfer-Encoding: [chunked]
+      Vary: [Accept-Encoding]
+      X-Frame-Options: [SAMEORIGIN]
+      content-length: ['537']
+    status: {code: 200, message: OK}
+- request:
+    body: null
+    headers:
+      Accept: ['*/*']
+      Accept-Encoding: ['gzip, deflate']
+      Connection: [keep-alive]
+      User-Agent: [python-requests/2.23.0]
+    method: GET
+    uri: http://magento/index.php/rest/V1/categories/7
+  response:
+    body: {string: '{"id":7,"parent_id":2,"name":"Collections","is_active":false,"position":5,"level":2,"children":"34,35,36,39,40,8","created_at":"2020-03-27
+        16:06:12","updated_at":"2020-03-27 16:12:21","path":"1\/2\/7","available_sort_by":[],"include_in_menu":false,"custom_attributes":[{"attribute_code":"display_mode","value":"PAGE"},{"attribute_code":"is_anchor","value":"0"},{"attribute_code":"path","value":"1\/2\/7"},{"attribute_code":"children_count","value":"6"},{"attribute_code":"url_key","value":"collections"},{"attribute_code":"url_path","value":"collections"}]}'}
+    headers:
+      Cache-Control: ['no-store, no-cache, must-revalidate']
+      Connection: [keep-alive]
+      Content-Type: [application/json; charset=utf-8]
+      Date: ['Fri, 08 May 2020 10:46:01 GMT']
+      Expires: ['Thu, 19 Nov 1981 08:52:00 GMT']
+      Pragma: [no-cache]
+      Server: [nginx/1.14.0 (Ubuntu)]
+      Set-Cookie: ['PHPSESSID=aeld979ebel2sea9e83etig4j3; expires=Fri, 08-May-2020
+          11:46:01 GMT; Max-Age=3600; path=/; domain=magento; HttpOnly']
+      Transfer-Encoding: [chunked]
+      Vary: [Accept-Encoding]
+      X-Frame-Options: [SAMEORIGIN]
+      content-length: ['557']
+    status: {code: 200, message: OK}
+- request:
+    body: null
+    headers:
+      Accept: ['*/*']
+      Accept-Encoding: ['gzip, deflate']
+      Connection: [keep-alive]
+      User-Agent: [python-requests/2.23.0]
+    method: GET
+    uri: http://magento/index.php/rest/default/V1/categories/7
+  response:
+    body: {string: '{"id":7,"parent_id":2,"name":"Collections","is_active":false,"position":5,"level":2,"children":"34,35,36,39,40,8","created_at":"2020-03-27
+        16:06:12","updated_at":"2020-03-27 16:12:21","path":"1\/2\/7","available_sort_by":[],"include_in_menu":false,"custom_attributes":[{"attribute_code":"display_mode","value":"PAGE"},{"attribute_code":"is_anchor","value":"0"},{"attribute_code":"path","value":"1\/2\/7"},{"attribute_code":"children_count","value":"6"},{"attribute_code":"url_key","value":"collections"},{"attribute_code":"url_path","value":"collections"}]}'}
+    headers:
+      Cache-Control: ['no-store, no-cache, must-revalidate']
+      Connection: [keep-alive]
+      Content-Type: [application/json; charset=utf-8]
+      Date: ['Fri, 08 May 2020 10:46:01 GMT']
+      Expires: ['Thu, 19 Nov 1981 08:52:00 GMT']
+      Pragma: [no-cache]
+      Server: [nginx/1.14.0 (Ubuntu)]
+      Set-Cookie: ['PHPSESSID=npafslj04ibj17db52ul48cn64; expires=Fri, 08-May-2020
+          11:46:01 GMT; Max-Age=3600; path=/; domain=magento; HttpOnly']
+      Transfer-Encoding: [chunked]
+      Vary: [Accept-Encoding]
+      X-Frame-Options: [SAMEORIGIN]
+      content-length: ['557']
+    status: {code: 200, message: OK}
+- request:
+    body: null
+    headers:
+      Accept: ['*/*']
+      Accept-Encoding: ['gzip, deflate']
+      Connection: [keep-alive]
+      User-Agent: [python-requests/2.23.0]
+    method: GET
+    uri: http://magento/index.php/rest/default/V1/categories/35
+  response:
+    body: {string: '{"id":35,"parent_id":7,"name":"Performance Fabrics","is_active":true,"position":3,"level":3,"children":"","created_at":"2020-03-27
+        16:06:37","updated_at":"2020-03-27 16:06:37","path":"1\/2\/7\/35","available_sort_by":[],"include_in_menu":false,"custom_attributes":[{"attribute_code":"is_anchor","value":"1"},{"attribute_code":"path","value":"1\/2\/7\/35"},{"attribute_code":"children_count","value":"0"},{"attribute_code":"url_key","value":"performance-fabrics"},{"attribute_code":"url_path","value":"collections\/performance-fabrics"}]}'}
+    headers:
+      Cache-Control: ['no-store, no-cache, must-revalidate']
+      Connection: [keep-alive]
+      Content-Type: [application/json; charset=utf-8]
+      Date: ['Fri, 08 May 2020 10:46:01 GMT']
+      Expires: ['Thu, 19 Nov 1981 08:52:00 GMT']
+      Pragma: [no-cache]
+      Server: [nginx/1.14.0 (Ubuntu)]
+      Set-Cookie: ['PHPSESSID=b6gqtbeescrbega9cj8p4qe681; expires=Fri, 08-May-2020
+          11:46:01 GMT; Max-Age=3600; path=/; domain=magento; HttpOnly']
+      Transfer-Encoding: [chunked]
+      Vary: [Accept-Encoding]
+      X-Frame-Options: [SAMEORIGIN]
+      content-length: ['537']
+    status: {code: 200, message: OK}
+- request:
+    body: null
+    headers:
+      Accept: ['*/*']
+      Accept-Encoding: ['gzip, deflate']
+      Connection: [keep-alive]
+      User-Agent: [python-requests/2.23.0]
+    method: GET
+    uri: http://magento/index.php/rest/default/V1/products/WSH08-29-Purple
+  response:
+    body: {string: '{"id":2005,"sku":"WSH08-29-Purple","name":"Sybil Running Short-29-Purple","attribute_set_id":10,"price":44,"status":1,"visibility":1,"type_id":"simple","created_at":"2020-03-27
+        16:07:13","updated_at":"2020-03-27 16:07:13","weight":1,"extension_attributes":{"website_ids":[1],"category_links":[{"position":0,"category_id":"28"},{"position":0,"category_id":"35"},{"position":0,"category_id":"2"}],"stock_item":{"item_id":2005,"product_id":2005,"stock_id":1,"qty":100,"is_in_stock":true,"is_qty_decimal":false,"show_default_notification_message":false,"use_config_min_qty":true,"min_qty":0,"use_config_min_sale_qty":1,"min_sale_qty":1,"use_config_max_sale_qty":true,"max_sale_qty":10000,"use_config_backorders":true,"backorders":0,"use_config_notify_stock_qty":true,"notify_stock_qty":1,"use_config_qty_increments":true,"qty_increments":0,"use_config_enable_qty_inc":true,"enable_qty_increments":false,"use_config_manage_stock":true,"manage_stock":true,"low_stock_date":null,"is_decimal_divided":false,"stock_status_changed_auto":0}},"product_links":[],"options":[],"media_gallery_entries":[{"id":3349,"media_type":"image","label":"","position":1,"disabled":false,"types":["image","small_image","thumbnail"],"file":"\/w\/s\/wsh08-purple_main_1.jpg"},{"id":3350,"media_type":"image","label":"","position":2,"disabled":false,"types":[],"file":"\/w\/s\/wsh08-purple_back_1.jpg"}],"tier_prices":[],"custom_attributes":[{"attribute_code":"image","value":"\/w\/s\/wsh08-purple_main_1.jpg"},{"attribute_code":"small_image","value":"\/w\/s\/wsh08-purple_main_1.jpg"},{"attribute_code":"thumbnail","value":"\/w\/s\/wsh08-purple_main_1.jpg"},{"attribute_code":"options_container","value":"container2"},{"attribute_code":"msrp_display_actual_price_type","value":"0"},{"attribute_code":"url_key","value":"sybil-running-short-29-purple"},{"attribute_code":"required_options","value":"0"},{"attribute_code":"has_options","value":"0"},{"attribute_code":"tax_class_id","value":"2"},{"attribute_code":"category_ids","value":["28","35","2"]},{"attribute_code":"description","value":"<p>Fortunately,
+        it''s okay to look cute while you''re working out. The Sybil Running Short
+        combines a fun, color-blocked design with breathable mesh fabric for sporty-fun
+        style.<\/p>\n<p>&bull; Blue running shorts with green waist.<br \/>&bull;
+        Drawstring-adjustable waist.<br \/>&bull; 4\" inseam. Machine wash\/line dry.<\/p>"},{"attribute_code":"size","value":"5599"},{"attribute_code":"color","value":"5484"}]}'}
+    headers:
+      Cache-Control: ['no-store, no-cache, must-revalidate']
+      Connection: [keep-alive]
+      Content-Type: [application/json; charset=utf-8]
+      Date: ['Fri, 08 May 2020 10:46:02 GMT']
+      Expires: ['Thu, 19 Nov 1981 08:52:00 GMT']
+      Pragma: [no-cache]
+      Server: [nginx/1.14.0 (Ubuntu)]
+      Set-Cookie: ['PHPSESSID=55e591ecg46ruceum4nv4erhg8; expires=Fri, 08-May-2020
+          11:46:01 GMT; Max-Age=3600; path=/; domain=magento; HttpOnly']
+      Transfer-Encoding: [chunked]
+      Vary: [Accept-Encoding]
+      X-Frame-Options: [SAMEORIGIN]
+      content-length: ['2474']
+    status: {code: 200, message: OK}
+- request:
+    body: null
+    headers:
+      Accept: ['*/*']
+      Accept-Encoding: ['gzip, deflate']
+      Connection: [keep-alive]
+      User-Agent: [python-requests/2.23.0]
+    method: GET
+    uri: http://magento/media/catalog/product//w/s/wsh08-purple_main_1.jpg
+  response:
+    body:
+      string: !!binary |
+        R0lGODlhAQABAIAAAP///wAAACH5BAEAAAAALAAAAAABAAEAAAICRAEAOw==
+    headers:
+      Accept-Ranges: [bytes]
+      Cache-Control: [max-age=31536000, public]
+      Connection: [keep-alive]
+      Content-Length: ['51166']
+      Content-Type: [image/jpeg]
+      Date: ['Fri, 08 May 2020 10:46:02 GMT']
+      ETag: ['"5e7e24b1-c7de"']
+      Expires: ['Sat, 08 May 2021 10:46:02 GMT']
+      Last-Modified: ['Fri, 27 Mar 2020 16:07:13 GMT']
+      Server: [nginx/1.14.0 (Ubuntu)]
+      X-Frame-Options: [SAMEORIGIN]
+    status: {code: 200, message: OK}
+version: 1
