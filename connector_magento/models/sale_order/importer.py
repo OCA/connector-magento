@@ -71,8 +71,10 @@ class SaleImportRule(Component):
                                        'The import will be retried later.')
 
     def _rule_paid(self, record, method):
-        """ Import the order only if it has received a payment """
-        if not record.get('payment', {}).get('amount_paid'):
+        """ Import the order only if it has received a payment, or if there
+        is nothing to pay in the first place. """
+        amount_paid = record.get('payment', {}).get('amount_paid') or 0
+        if record['grand_total'] and amount_paid <= 0:
             raise OrderImportRuleRetry('The order has not been paid.\n'
                                        'The import will be retried later.')
 
@@ -143,16 +145,17 @@ class SaleOrderImportMapper(Component):
 
     def _add_shipping_line(self, map_record, values):
         record = map_record.source
-        amount_incl = float(record.get('base_shipping_incl_tax') or 0.0)
-        amount_excl = float(record.get('shipping_amount') or 0.0)
+        discount = float(record.get('shipping_discount_amount') or 0.0)
+        if self.options.tax_include:
+            amount = float(
+                record.get('base_shipping_incl_tax') or 0.0) - discount
+        else:
+            amount = float(
+                record.get('shipping_amount') or 0.0) - discount
         line_builder = self.component(usage='order.line.builder.shipping')
         # add even if the price is 0, otherwise odoo will add a shipping
         # line in the order when we ship the picking
-        if self.options.tax_include:
-            discount = float(record.get('shipping_discount_amount') or 0.0)
-            line_builder.price_unit = (amount_incl - discount)
-        else:
-            line_builder.price_unit = amount_excl
+        line_builder.price_unit = amount
 
         if values.get('carrier_id'):
             carrier = self.env['delivery.carrier'].browse(values['carrier_id'])
@@ -736,8 +739,8 @@ class SaleOrderLineImportMapper(Component):
         else:
             row_total = float(record.get('row_total') or 0)
         discount = 0
-        if discount_value > 0 and row_total > 0:
-            discount = 100 * discount_value / row_total
+        if discount_value > 0:
+            discount = 100 * discount_value / (discount_value + row_total)
         result = {'discount': discount}
         return result
 
@@ -796,13 +799,14 @@ class SaleOrderLineImportMapper(Component):
     def price(self, record):
         """ In Magento 2, base_row_total_incl_tax may not be present
         if no taxes apply """
-        result = {}
+        discount_amount = float(record['base_discount_amount'] or 0)
         base_row_total = float(record['base_row_total'] or 0.)
-        base_row_total_incl_tax = float(
-            record.get('base_row_total_incl_tax') or base_row_total)
+        base_row_total_incl_tax = (
+            float(record['base_row_total_incl_tax'] or 0)
+            if 'base_row_total_incl_tax' in record else base_row_total)
         qty_ordered = float(record['qty_ordered'])
         if self.options.tax_include:
-            result['price_unit'] = base_row_total_incl_tax / qty_ordered
+            total = base_row_total_incl_tax
         else:
-            result['price_unit'] = base_row_total / qty_ordered
-        return result
+            total = base_row_total
+        return {'price_unit': (total + discount_amount) / qty_ordered}
