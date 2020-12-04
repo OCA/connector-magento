@@ -91,6 +91,7 @@ class Magento2Client(object):
             kwargs['params'] = arguments
         elif arguments is not None:
             kwargs['json'] = arguments
+        kwargs['verify'] = self._verify_ssl
         res = function(url, **kwargs)
         if (res.status_code == 400 and res._content):
             raise requests.HTTPError(

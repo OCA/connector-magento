@@ -206,7 +206,8 @@ class MagentoBackend(models.Model):
             self.username,
             self.password,
             use_custom_api_path=self.use_custom_api_path,
-           version=self.version
+            version=self.version,
+            verify_ssl=self.verify_ssl,
         )
         if self.use_auth_basic:
             magento_location.use_auth_basic = True
