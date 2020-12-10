@@ -24,6 +24,18 @@ class MagentoPickingExporter(Component):
         return (magento_sale_id, lines_info,
                 _("Shipping Created"), mail_notification, True)
 
+    def _get_args_2(self, binding, lines_info=None):
+        if lines_info is None:
+            lines_info = {}
+        arguments = {
+            'items': [{
+                'order_item_id': key,
+                'qty': val,
+            } for key, val in lines_info.items()],
+            'notify': self._get_picking_mail_option(binding),
+        }
+        return arguments
+
     def _get_lines_info(self, binding):
         """
         Get the line to export to Magento. In case some lines doesn't have a
@@ -100,12 +112,7 @@ class MagentoPickingExporter(Component):
                 raise
 
         else:  # Magento 2.x
-            arguments = {
-                'items': [{
-                    'order_item_id': key,
-                    'qty': val,
-                } for key, val in get_lines_info().items()]
-            }
+            arguments = self._get_args_2(binding, lines_info=get_lines_info())
             external_id = self.backend_adapter._call(
                 'order/%s/ship' %
                 binding.sale_id.magento_bind_ids[0].external_id,
