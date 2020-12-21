@@ -100,7 +100,7 @@ class SaleOrder(models.Model):
             assert len(order.magento_bind_ids) == 1
             magento_order = order.magento_bind_ids[0]
             if magento_order.magento_parent_id:
-                self.parent_id = magento_order.magento_parent_id.odoo_id
+                order.parent_id = magento_order.magento_parent_id.odoo_id
 
     def _magento_cancel(self):
         """ Cancel sales order on Magento
