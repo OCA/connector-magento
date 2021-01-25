@@ -764,6 +764,9 @@ class SaleOrderLineImportMapper(Component):
             row_total = float(record.get('row_total_incl_tax') or 0)
         else:
             row_total = float(record.get('row_total') or 0)
+        if self.collection.version == '2.0':
+            # In Magento 2, row_total has discount applied
+            row_total = row_total + discount_value
         discount = 0
         if discount_value > 0 and row_total > 0:
             discount = 100 * discount_value / row_total
