@@ -448,6 +448,8 @@ class SaleOrderImporter(Component):
             # product_id. So the real product_id and the sku and the name
             # have to be extracted from the child
             for field in ['sku', 'product_id', 'name']:
+                if field not in child_items[0]:
+                    continue
                 item[field] = child_items[0][field]
             return item
         return top_item
