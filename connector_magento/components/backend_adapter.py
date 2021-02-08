@@ -79,9 +79,6 @@ class Magento2Client(object):
         elif arguments is not None:
             kwargs['json'] = arguments
         res = function(url, **kwargs)
-        if (res.status_code == 400 and res._content):
-            raise requests.HTTPError(
-                url, res.status_code, res._content, headers, __name__)
         res.raise_for_status()
         return res.json()
 
