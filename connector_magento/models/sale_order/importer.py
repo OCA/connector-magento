@@ -174,7 +174,12 @@ class SaleOrderImportMapper(Component):
     def _add_cash_on_delivery_line(self, map_record, values):
         record = map_record.source
         if self.collection.version == '2.0':
-            amount_incl = float(record.get('base_grand_total') - record.get('base_subtotal_incl_tax') - record.get('base_shipping_incl_tax'))
+            amount_incl = float(
+                record.get('base_grand_total') -
+                record.get('base_subtotal_incl_tax') -
+                record.get('base_shipping_incl_tax') -
+                record.get('base_discount_amount')
+            )
             amount_incl = round(amount_incl, 3)
             amount_excl = amount_incl
         else:
