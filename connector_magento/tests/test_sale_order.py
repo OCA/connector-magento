@@ -12,9 +12,6 @@ ExpectedOrderLine = namedtuple(
 
 class TestSaleOrder(MagentoSyncTestCase):
 
-    def setUp(self):
-        super(TestSaleOrder, self).setUp()
-
     def _import_sale_order(self, increment_id, cassette=True):
         return self._import_record('magento.sale.order',
                                    increment_id, cassette=cassette)

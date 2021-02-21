@@ -18,9 +18,10 @@ class TestUpdateStockQty(Magento2SyncTestCase):
         wizard = wizard_model.create(data)
         wizard.change_product_qty()
 
-    def setUp(self):
-        super(TestUpdateStockQty, self).setUp()
-        self.binding_product = self._import_record(
+    @classmethod
+    def setUpClass(cls):
+        super(TestUpdateStockQty, cls).setUpClass()
+        cls.binding_product = cls._import_record(
             'magento.product.product', 'MH09-L-Blue',
         )
 

@@ -6,17 +6,18 @@ from .common import MagentoSyncTestCase, recorder
 
 class TestImportPartner(MagentoSyncTestCase):
 
-    def setUp(self):
-        super(TestImportPartner, self).setUp()
-        category_model = self.env['res.partner.category']
+    @classmethod
+    def setUpClass(cls):
+        super(TestImportPartner, cls).setUpClass()
+        category_model = cls.env['res.partner.category']
         existing_category = category_model.create({'name': 'General'})
-        self.create_binding_no_export(
+        cls.create_binding_no_export(
             'magento.res.partner.category',
             existing_category,
             1
         )
-        self.model = self.env['magento.res.partner']
-        self.address_model = self.env['magento.address']
+        cls.model = cls.env['magento.res.partner']
+        cls.address_model = cls.env['magento.address']
 
     @recorder.use_cassette
     def test_import_partner_no_address(self):

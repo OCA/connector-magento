@@ -7,29 +7,30 @@ from .common import MagentoSyncTestCase, recorder
 class TestExportInvoice(MagentoSyncTestCase):
     """ Test the export of an invoice to Magento """
 
-    def setUp(self):
-        super(TestExportInvoice, self).setUp()
-        self.sale_binding_model = self.env['magento.sale.order']
-        self.payment_mode = self.env['account.payment.mode'].search(
+    @classmethod
+    def setUpClass(cls):
+        super(TestExportInvoice, cls).setUpClass()
+        cls.sale_binding_model = cls.env['magento.sale.order']
+        cls.payment_mode = cls.env['account.payment.mode'].search(
             [('name', '=', 'checkmo')],
             limit=1,
         )
-        self.pay_account = self.env['account.account'].search(
+        cls.pay_account = cls.env['account.account'].search(
             [('code', '=', '101501')],
             limit=1,
         )
-        self.order_binding = self._import_record(
+        cls.order_binding = cls._import_record(
             'magento.sale.order', '145000008'
         )
-        self.order_binding.payment_mode_id = self.payment_mode
-        self.stores = self.backend.mapped('website_ids.store_ids')
+        cls.order_binding.payment_mode_id = cls.payment_mode
+        cls.stores = cls.backend.mapped('website_ids.store_ids')
         # ignore exceptions on the sale order
-        self.order_binding.ignore_exception = True
-        self.order_binding.odoo_id.action_confirm()
-        invoice_ids = self.order_binding.odoo_id.action_invoice_create()
+        cls.order_binding.ignore_exception = True
+        cls.order_binding.odoo_id.action_confirm()
+        invoice_ids = cls.order_binding.odoo_id.action_invoice_create()
         assert invoice_ids
-        self.invoice_model = self.env['account.invoice']
-        self.invoice = self.invoice_model.browse(invoice_ids)
+        cls.invoice_model = cls.env['account.invoice']
+        cls.invoice = cls.invoice_model.browse(invoice_ids)
 
     def test_export_invoice_on_validate_trigger(self):
         """ Trigger export of an invoice: when it is validated """
