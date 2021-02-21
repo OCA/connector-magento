@@ -8,7 +8,7 @@ from base64 import b64encode
 from odoo import models
 from odoo.addons.component.core import WorkContext, Component
 from odoo.addons.component.tests.common import (
-    TransactionComponentRegistryCase,
+    SavepointComponentRegistryCase,
 )
 from .. import components
 from ..models.product.importer import CatalogImageImporter
@@ -28,14 +28,15 @@ PNG_IMG_4PX_GREEN = ("\x89PNG\r\n\x1a\n\x00\x00\x00\rIHDR\x00\x00\x00\x04"
 B64_PNG_IMG_4PX_GREEN = b64encode(PNG_IMG_4PX_GREEN)
 
 
-class TestImportProductImage(TransactionComponentRegistryCase):
+class TestImportProductImage(SavepointComponentRegistryCase):
     """ Test the imports of the image of the products. """
 
-    def setUp(self):
-        super(TestImportProductImage, self).setUp()
-        self.backend_model = self.env['magento.backend']
-        warehouse = self.env.ref('stock.warehouse0')
-        self.backend = self.backend_model.create(
+    @classmethod
+    def setUpClass(cls):
+        super(TestImportProductImage, cls).setUpClass()
+        cls.backend_model = cls.env['magento.backend']
+        warehouse = cls.env.ref('stock.warehouse0')
+        cls.backend = cls.backend_model.create(
             {'name': 'Test Magento',
              'version': '1.7',
              'location': 'http://magento',
@@ -44,14 +45,17 @@ class TestImportProductImage(TransactionComponentRegistryCase):
              'password': 'odoo42'}
         )
 
-        category_model = self.env['product.category']
+        category_model = cls.env['product.category']
         existing_category = category_model.create({'name': 'all'})
-        self.create_binding_no_export(
+        cls.create_binding_no_export(
             'magento.product.category',
             existing_category,
             1
         )
-        self.product_model = self.env['magento.product.product']
+        cls.product_model = cls.env['magento.product.product']
+
+    def setUp(self):
+        super(TestImportProductImage, self).setUp()
 
         # Use a stub for the product adapter, which is called
         # during the tests by the image importer
@@ -95,18 +99,19 @@ class TestImportProductImage(TransactionComponentRegistryCase):
             'magento.product.image.importer'
         )
 
-    def create_binding_no_export(self, model_name, odoo_id, external_id=None,
+    @classmethod
+    def create_binding_no_export(cls, model_name, odoo_id, external_id=None,
                                  **cols):
         if isinstance(odoo_id, models.BaseModel):
             odoo_id = odoo_id.id
         values = {
-            'backend_id': self.backend.id,
+            'backend_id': cls.backend.id,
             'odoo_id': odoo_id,
             'external_id': external_id,
         }
         if cols:
             values.update(cols)
-        return self.env[model_name].with_context(
+        return cls.env[model_name].with_context(
             connector_no_export=True
         ).create(values)
 
