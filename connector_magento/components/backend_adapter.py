@@ -227,7 +227,7 @@ class MagentoCRUDAdapter(AbstractComponent):
 
     def _call(self, method, arguments=None, http_method=None, storeview=None):
         try:
-            magento_api = getattr(self.work, "magento_api")  # noqa: E231
+            magento_api = getattr(self.work, "magento_api")  # noqa: B009
         except AttributeError:
             raise AttributeError(
                 "You must provide a magento_api attribute with a "
