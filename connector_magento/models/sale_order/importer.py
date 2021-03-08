@@ -109,7 +109,7 @@ class SaleImportRule(Component):
                 )
 
     def check(self, record):
-        """ Check whether the current sale order should be imported
+        """Check whether the current sale order should be imported
         or not. It will actually use the payment method configuration
         and see if the choosed rule is fullfilled.
 
@@ -372,7 +372,7 @@ class SaleOrderImportMapper(Component):
 
     @mapping
     def user_id(self, record):
-        """ Do not assign to a Salesperson otherwise sales orders are hidden
+        """Do not assign to a Salesperson otherwise sales orders are hidden
         for the salespersons (access rules)"""
         return {"user_id": False}
 
@@ -383,7 +383,7 @@ class SaleOrderImporter(Component):
     _apply_on = "magento.sale.order"
 
     def _must_skip(self):
-        """ Hook called right after we read the data from the backend.
+        """Hook called right after we read the data from the backend.
 
         If the method returns a message giving a reason for the
         skipping, the import will be interrupted and the message
@@ -470,7 +470,7 @@ class SaleOrderImporter(Component):
         rules.check(self.magento_record)
 
     def _link_parent_orders(self, binding):
-        """ Link the magento.sale.order to its parent orders.
+        """Link the magento.sale.order to its parent orders.
 
         When a Magento sales order is modified, it:
          - cancel the sales order
@@ -815,7 +815,9 @@ class SaleOrderLineImportMapper(Component):
                 if each.startswith('"label"'):
                     split_info = each.split(";")
                     options_label.append(
-                        "{}: {} [{}]".format(split_info[1], split_info[3], record["sku"])
+                        "{}: {} [{}]".format(
+                            split_info[1], split_info[3], record["sku"]
+                        )
                     )
             notes = "".join(options_label).replace('""', "\n").replace('"', "")
             result = {"notes": notes}

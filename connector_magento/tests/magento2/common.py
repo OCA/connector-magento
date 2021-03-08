@@ -31,7 +31,7 @@ class Magento2TestCase(MagentoTestCase):
         super(Magento2TestCase, self).setUp()
         self.recorder = recorder
         self.backend.write(
-            {"version": "2.0", "token": "m59qseoztake3xm1zcvkiv8qnuj09da0",}
+            {"version": "2.0", "token": "m59qseoztake3xm1zcvkiv8qnuj09da0"}
         )
 
 

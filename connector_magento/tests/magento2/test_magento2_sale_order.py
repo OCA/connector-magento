@@ -112,7 +112,7 @@ class TestSaleOrder(Magento2SyncTestCase):
 
     def test_import_sale_order_carrier_product(self):
         """ Product of a carrier is used in the sale line """
-        product = self.env["product.product"].create({"name": "Carrier Product",})
+        product = self.env["product.product"].create({"name": "Carrier Product"})
         self.env["delivery.carrier"].create(
             {
                 "name": "ups_GND",

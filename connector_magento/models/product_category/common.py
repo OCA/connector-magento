@@ -76,7 +76,7 @@ class ProductCategoryAdapter(Component):
                 raise
 
     def search(self, filters=None, from_date=None, to_date=None):
-        """ Search records according to some criteria and return a
+        """Search records according to some criteria and return a
         list of ids
 
         :rtype: list
@@ -99,7 +99,7 @@ class ProductCategoryAdapter(Component):
         return super(ProductCategoryAdapter, self).search(filters=filters)
 
     def read(self, external_id, storeview_id=None, attributes=None):
-        """ Returns the information of a record
+        """Returns the information of a record
 
         :rtype: dict
         """
@@ -114,7 +114,7 @@ class ProductCategoryAdapter(Component):
         )
 
     def tree(self, parent_id=None, storeview_id=None):
-        """ Returns a tree of product categories
+        """Returns a tree of product categories
 
         :rtype: dict
         """
@@ -143,7 +143,7 @@ class ProductCategoryAdapter(Component):
             )
         return self._call(
             "{}/{}/move".format(self._magento2_model, categ_id),
-            {"parent_id": parent_id, "after_id": after_categ_id,},
+            {"parent_id": parent_id, "after_id": after_categ_id},
         )
 
     def get_assigned_product(self, categ_id):
