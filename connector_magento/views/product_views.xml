@@ -1,10 +1,12 @@
-<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8" ?>
 <odoo>
-
     <record id="product_normal_form_view" model="ir.ui.view">
         <field name="name">product.product.form</field>
         <field name="model">product.product</field>
-        <field name="inherit_id" ref="connector_base_product.product_normal_form_view"/>
+        <field
+            name="inherit_id"
+            ref="connector_base_product.product_normal_form_view"
+        />
         <field name="arch" type="xml">
             <page name="connector" position="attributes">
                 <attribute name="invisible">0</attribute>
@@ -13,52 +15,163 @@
                 <group string="Magento Bindings">
                     <field name="magento_bind_ids" nolabel="1">
                         <tree>
-                            <field name="backend_id"/>
-                            <field name="product_type"/>
+                            <field name="backend_id" />
+                            <field name="product_type" />
+                            <field name="auto_content_sync" />
                         </tree>
                     </field>
                 </group>
             </page>
         </field>
     </record>
-
+    <record id="wizard_magento_publisher_form" model="ir.ui.view">
+        <field name="name">wizard_magento_publisher</field>
+        <field name="model">wizard.magento.publisher</field>
+        <field name="arch" type="xml">
+            <form string="Link Products To Magento">
+                <group>
+                    <field name="products_to_publish">
+                        <tree create="false">
+                            <field name="name" />
+                            <field name="default_code" />
+                        </tree>
+                    </field>
+                    <field name="backend_ids" widget="many2many_tags" />
+                </group>
+                <footer>
+                    <button
+                        string="Publish to Magento"
+                        name="action_publish_to_magento"
+                        type="object"
+                    />
+                    <button string="Cancel" class="oe_link" special="cancel" />
+                </footer>
+            </form>
+        </field>
+    </record>
+    <act_window
+        id="wizard_magento_publisher_action"
+        multi="False"
+        name="Publish to Magento"
+        src_model="product.product"
+        res_model="wizard.magento.publisher"
+        view_mode="form"
+        key2="client_action_multi"
+        target="new"
+    />
+    <record id="wizard_magento_publisher_template_form" model="ir.ui.view">
+        <field name="name">wizard_magento_publisher_template</field>
+        <field name="model">wizard.magento.publisher.template</field>
+        <field name="arch" type="xml">
+            <form string="Link Products To Magento">
+                <group>
+                    <field name="products_to_publish">
+                        <tree create="false">
+                            <field name="name" />
+                            <field name="default_code" />
+                        </tree>
+                    </field>
+                    <field name="backend_ids" widget="many2many_tags" />
+                </group>
+                <footer>
+                    <button
+                        string="Publish to Magento"
+                        name="action_publish_to_magento"
+                        type="object"
+                    />
+                    <button string="Cancel" class="oe_link" special="cancel" />
+                </footer>
+            </form>
+        </field>
+    </record>
+    <act_window
+        id="wizard_magento_publisher_template_action"
+        multi="False"
+        name="Publish to Magento"
+        src_model="product.template"
+        res_model="wizard.magento.publisher.template"
+        view_mode="form"
+        key2="client_action_multi"
+        target="new"
+    />
+    <record id="wizard_content_magento_sync_form" model="ir.ui.view">
+        <field name="name">wizard_content_magento_sync</field>
+        <field name="model">wizard.content.magento.sync</field>
+        <field name="arch" type="xml">
+            <form string="Link Products To Magento">
+                <group>
+                    <field name="products_to_sync">
+                        <tree create="false">
+                            <field name="name" />
+                            <field name="default_code" />
+                        </tree>
+                    </field>
+                </group>
+                <footer>
+                    <button
+                        string="Sync Content to Magento"
+                        name="action_sync_content_to_magento"
+                        type="object"
+                    />
+                    <button string="Cancel" class="oe_link" special="cancel" />
+                </footer>
+            </form>
+        </field>
+    </record>
+    <act_window
+        id="wizard_content_magento_sync_action"
+        multi="False"
+        name="Sync Content to Magento"
+        src_model="product.product"
+        res_model="wizard.content.magento.sync"
+        view_mode="form"
+        key2="client_action_multi"
+        target="new"
+    />
     <record id="view_magento_product_form" model="ir.ui.view">
         <field name="name">magento.product.product.form</field>
         <field name="model">magento.product.product</field>
         <field name="arch" type="xml">
             <form string="Magento Product">
                 <group>
-                    <field name="backend_id"/>
-                    <field name="external_id"/>
-                    <field name="created_at" readonly="1"/>
-                    <field name="updated_at" readonly="1"/>
-                    <field name="product_type" readonly="1"/>
+                    <field name="backend_id" />
+                    <field name="external_id" />
+                    <field name="created_at" readonly="1" />
+                    <field name="updated_at" readonly="1" />
+                    <field name="product_type" readonly="1" />
+                    <field name="auto_content_sync" />
                 </group>
                 <group string="Inventory Options">
-                    <field name="no_stock_sync"/>
-                    <field name="manage_stock"/>
-                    <field name="backorders"/>
+                    <field name="no_stock_sync" />
+                    <field name="manage_stock" />
+                    <field name="backorders" />
                     <div class="oe_inline">
                         <label for="magento_qty" class="oe_inline" />
-                        <field name="magento_qty" readonly="1" class="oe_inline"
-                            nolabel="1"/>
-                        <button name="recompute_magento_qty" string="(recompute)"
-                            class="oe_link oe_inline" type="object"/>
+                        <field
+                            name="magento_qty"
+                            readonly="1"
+                            class="oe_inline"
+                            nolabel="1"
+                        />
+                        <button
+                            name="recompute_magento_qty"
+                            string="(recompute)"
+                            class="oe_link oe_inline"
+                            type="object"
+                        />
                     </div>
                 </group>
             </form>
         </field>
     </record>
-
     <record id="view_magento_product_tree" model="ir.ui.view">
         <field name="name">magento.product.product.tree</field>
         <field name="model">magento.product.product</field>
         <field name="arch" type="xml">
             <tree string="Magento Product">
-                <field name="backend_id"/>
-                <field name="product_type"/>
+                <field name="backend_id" />
+                <field name="product_type" />
             </tree>
         </field>
     </record>
-
 </odoo>
