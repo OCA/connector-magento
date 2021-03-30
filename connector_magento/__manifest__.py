@@ -13,6 +13,7 @@
              'sale_stock',
              'product_multi_category',
              'connector_ecommerce',
+             'base_vat',
              ],
  'external_dependencies': {
      'python': ['magento'],
