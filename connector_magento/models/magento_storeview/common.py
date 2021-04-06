@@ -85,9 +85,8 @@ class MagentoStoreview(models.Model):
             delayable = sale_binding_model.with_delay(priority=1)
             filters = {
                 'magento_storeview_id': storeview.external_id,
-                'from_date': (fields.Datetime.to_string(from_date)
-                              if from_date else None),
-                'to_date': fields.Datetime.to_string(to_date),
+                'from_date': from_date or None,
+                'to_date': to_date,
             }
             delayable.import_batch(backend, filters=filters)
             # Records from Magento are imported based on their `created_at`
