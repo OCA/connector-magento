@@ -73,7 +73,7 @@ class SaleImportRule(Component):
     def _rule_paid(self, record, method):
         """ Import the order only if it has received a payment, or if there
         is nothing to pay in the first place. """
-        amount_paid = record.get('payment', {}).get('amount_paid') or 0
+        amount_paid = float(record.get('payment', {}).get('amount_paid') or 0)
         if record['grand_total'] and amount_paid <= 0:
             raise OrderImportRuleRetry('The order has not been paid.\n'
                                        'The import will be retried later.')
@@ -278,20 +278,20 @@ class SaleOrderImportMapper(Component):
             "SaleOrderImporter._import_dependencies" % record['customer_id'])
         return {'partner_id': partner.id}
 
-    @mapping
-    def pricelist_id(self, record):
-        """ Assign a pricelist in the correct currency if necessary. """
-        currency = record['order_currency_code']
-        partner = self.binder_for('magento.res.partner').to_internal(
-            record['customer_id'], unwrap=True)
-        if partner.property_product_pricelist.currency_id.name != currency:
-            pricelist = self.env['product.pricelist'].search(
-                [('currency_id.name', '=', currency)], limit=1)
-            if not pricelist:
-                raise FailedJobError(
-                    "Missing pricelist for this order's currency: %s" %
-                    currency)
-            return {'pricelist_id': pricelist.id}
+#     @mapping
+#     def pricelist_id(self, record):
+#         """ Assign a pricelist in the correct currency if necessary. """
+#         currency = record['order_currency_code']
+#         partner = self.binder_for('magento.res.partner').to_internal(
+#             record['customer_id'], unwrap=True)
+#         if partner.property_product_pricelist.currency_id.name != currency:
+#             pricelist = self.env['product.pricelist'].search(
+#                 [('currency_id.name', '=', currency)], limit=1)
+#             if not pricelist:
+#                 raise FailedJobError(
+#                     "Missing pricelist for this order's currency: %s" %
+#                     currency)
+#             return {'pricelist_id': pricelist.id}
 
     @mapping
     def payment(self, record):
