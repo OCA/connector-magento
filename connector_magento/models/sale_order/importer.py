@@ -189,7 +189,7 @@ class SaleOrderImportMapper(Component):
             return values
         line_builder = self.component(usage='order.line.builder.cod')
         tax_include = self.options.tax_include
-        price_unit = amount_incl if tax_include else amount_excl
+        price_unit = amount_incl + amount_excl if tax_include else amount_excl
         if price_unit > 0.01:
             line_builder.price_unit = price_unit
             line = (0, 0, line_builder.get_line())
