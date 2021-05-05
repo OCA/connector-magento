@@ -297,7 +297,7 @@ class TranslationImporter(Component):
         elif self.collection.version == '2.0':
             storeview_id = storeview.code
         else:
-            storeview_id = storeview.id
+            storeview_id = storeview.external_id
         return self.backend_adapter.read(self.external_id, storeview_id)
 
     def run(self, external_id, binding, mapper=None):
