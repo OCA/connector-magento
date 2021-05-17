@@ -134,8 +134,8 @@ class SaleOrderImportMapper(Component):
 
     direct = [('increment_id', 'external_id'),
               ('order_id', 'magento_order_id'),
-              ('grand_total', 'total_amount'),
-              ('tax_amount', 'total_amount_tax'),
+              ('base_grand_total', 'total_amount'),
+              ('base_tax_amount', 'total_amount_tax'),
               (normalize_datetime('created_at'), 'date_order'),
               ('store_id', 'storeview_id'),
               ]
@@ -151,7 +151,7 @@ class SaleOrderImportMapper(Component):
                 record.get('base_shipping_incl_tax') or 0.0) - discount
         else:
             amount = float(
-                record.get('shipping_amount') or 0.0) - discount
+                record.get('base_shipping_amount') or 0.0) - discount
         line_builder = self.component(usage='order.line.builder.shipping')
         # add even if the price is 0, otherwise odoo will add a shipping
         # line in the order when we ship the picking
