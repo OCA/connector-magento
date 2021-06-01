@@ -439,3 +439,4 @@ class ProductInventoryExporter(Component):
             return
         data = self._get_data(binding, fields)
         self.backend_adapter.update_inventory(external_id, data)
+        return "Exported data: {}".format(data)
