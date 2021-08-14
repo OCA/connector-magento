@@ -18,23 +18,23 @@ http://www.odoo-connector.com
 
 Available addons
 ----------------
-addon | version | summary
---- | --- | ---
-[connector_magento](connector_magento/) | 10.0.1.0.0 | Magento Connector
-[connector_magento_customize_example](connector_magento_customize_example/) | 10.0.1.0.0 | Magento Connector Customization Example
-[connector_magento_firstname](connector_magento_firstname/) | 10.0.1.0.0 | Magento Connector - Partner first name and last name
-[server_env_connector_magento](server_env_connector_magento/) | 10.0.1.0.0 | Magento Connector - Server Environment Configuration
+addon | version | maintainers | summary
+--- | --- | --- | ---
+[connector_magento](connector_magento/) | 10.0.1.0.0 |  | Magento Connector
+[connector_magento_customize_example](connector_magento_customize_example/) | 10.0.1.0.0 |  | Magento Connector Customization Example
+[connector_magento_firstname](connector_magento_firstname/) | 10.0.1.0.0 |  | Magento Connector - Partner first name and last name
+[server_env_connector_magento](server_env_connector_magento/) | 10.0.1.0.0 |  | Magento Connector - Server Environment Configuration
 
 
 Unported addons
 ---------------
-addon | version | summary
---- | --- | ---
-[connector_magento_export_partner](connector_magento_export_partner/) | 10.0.2.0.0 (unported) | Magento Connector - Export Partners (Experimental)
-[magentoerpconnect_catalog](magentoerpconnect_catalog/) | 2.0.0 (unported) | Magento Connector - Catalog
-[magentoerpconnect_options_active](magentoerpconnect_options_active/) | 1.0.0 (unported) | Magento Connector Option Active Products
-[magentoerpconnect_order_comment](magentoerpconnect_order_comment/) | 0.1 (unported) | Magento Connector - Order comment
-[magentoerpconnect_pricing](magentoerpconnect_pricing/) | 2.0.0 (unported) | Magento Connector - Pricing
+addon | version | maintainers | summary
+--- | --- | --- | ---
+[connector_magento_export_partner](connector_magento_export_partner/) | 10.0.2.0.0 (unported) |  | Magento Connector - Export Partners (Experimental)
+[magentoerpconnect_catalog](magentoerpconnect_catalog/) | 2.0.0 (unported) |  | Magento Connector - Catalog
+[magentoerpconnect_options_active](magentoerpconnect_options_active/) | 1.0.0 (unported) |  | Magento Connector Option Active Products
+[magentoerpconnect_order_comment](magentoerpconnect_order_comment/) | 0.1 (unported) |  | Magento Connector - Order comment
+[magentoerpconnect_pricing](magentoerpconnect_pricing/) | 2.0.0 (unported) |  | Magento Connector - Pricing
 
 [//]: # (end addons)
 
