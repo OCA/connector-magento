@@ -355,7 +355,10 @@ class SaleOrderImportMapper(Component):
     def warehouse_id(self, record):
         warehouse = self.options.storeview.warehouse_id
         if warehouse:
-            return {'warehouse_id': warehouse.id}
+            return {
+                'warehouse_id': warehouse.id,
+                'company_id': warehouse.company_id.id,
+            }
 
     # partner_id, partner_invoice_id, partner_shipping_id
     # are done in the importer
