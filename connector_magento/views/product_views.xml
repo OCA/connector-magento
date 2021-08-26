@@ -53,6 +53,12 @@
                             class="oe_link oe_inline"
                             type="object"
                         />
+                        <button
+                            name="export_magento_qty"
+                            string="(export)"
+                            class="oe_link oe_inline"
+                            type="object"
+                        />
                     </div>
                 </group>
             </form>

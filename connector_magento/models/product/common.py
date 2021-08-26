@@ -161,8 +161,13 @@ class MagentoProductProduct(models.Model):
             records = self_with_location.browse(chunk_ids)
             for product in records.read(fields=product_fields):
                 new_qty = self._magento_qty(product, backend, location, stock_field)
-                if new_qty != product["magento_qty"]:
+                if new_qty != product["magento_qty"] or self.env.context.get(
+                    "force_recompute"
+                ):
                     self.browse(product["id"]).magento_qty = new_qty
+
+    def export_magento_qty(self):
+        return self.with_context(force_recompute=True).recompute_magento_qty()
 
     def _magento_qty(self, product, backend, location, stock_field):
         """ Return the current quantity for one product.
