@@ -252,6 +252,10 @@ class MagentoBackend(models.Model):
         storeviews.import_sale_orders()
         return True
 
+    def import_sale_order(self, order_number):
+        filters = {"increment_id": {"eq": order_number}}
+        self.env["magento.sale.order"].import_batch(backend=self, filters=filters)
+
     def import_customer_groups(self):
         for backend in self:
             backend.check_magento_structure()
@@ -403,3 +407,15 @@ class MagentoConfigSpecializer(models.AbstractModel):
     def _compute_warehouse_id(self):
         for this in self:
             this.warehouse_id = this.specific_warehouse_id or this._parent.warehouse_id
+
+
+class MagentoBackendSaleImport(models.TransientModel):
+    _name = "magento.backend.sale.import"
+    _description = "Magento Backend Sale Import"
+
+    order_number = fields.Char(string="Order Number", required=True)
+
+    def import_sale_order(self):
+        backend = self.env["magento.backend"].browse(self.env.context.get("active_id"))
+        backend.import_sale_order(self.order_number)
+        return True

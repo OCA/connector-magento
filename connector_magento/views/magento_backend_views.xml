@@ -1,5 +1,39 @@
 <?xml version="1.0" encoding="utf-8" ?>
 <odoo>
+    <record id="magento_backend_sale_import_form" model="ir.ui.view">
+        <field name="name">magento.backend.sale.import.form</field>
+        <field name="model">magento.backend.sale.import</field>
+        <field name="type">form</field>
+        <field name="arch" type="xml">
+            <form>
+                <group>
+                    <field name="order_number" />
+                </group>
+                <footer>
+                    <button
+                        name="import_sale_order"
+                        string="Import Sale Order"
+                        class="oe_highlight"
+                        type="object"
+                    />
+                    <button
+                        name="action_cancel"
+                        string="Cancel"
+                        class="oe_link"
+                        special="cancel"
+                    />
+                </footer>
+            </form>
+        </field>
+    </record>
+    <record id="magento_backend_sale_import_action" model="ir.actions.act_window">
+        <field name="name">Magento Sale Import</field>
+        <field name="res_model">magento.backend.sale.import</field>
+        <field name="type">ir.actions.act_window</field>
+        <field name="view_mode">form</field>
+        <field name="view_id" ref="magento_backend_sale_import_form" />
+        <field name="target">new</field>
+    </record>
     <record id="view_magento_backend_form" model="ir.ui.view">
         <field name="name">magento.backend.form</field>
         <field name="model">magento.backend</field>
@@ -191,6 +225,19 @@
                                     type="object"
                                     class="oe_highlight"
                                     string="Update"
+                                />
+                            </group>
+                            <group>
+                                <label
+                                    for="magento_backend_sale_import_action"
+                                    string="Import a specific sale from magento"
+                                    class="oe_inline"
+                                />
+                                <button
+                                    name="%(magento_backend_sale_import_action)d"
+                                    type="action"
+                                    class="oe_highlight"
+                                    string="Import Sale"
                                 />
                             </group>
                         </page>
