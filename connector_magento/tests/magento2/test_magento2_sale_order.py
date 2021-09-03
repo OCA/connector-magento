@@ -30,6 +30,27 @@ class TestSaleOrder(Magento2SyncTestCase):
             "onchanges have not been applied.",
         )
 
+    def test_import_sale_order_eur_usd(self):
+        eur = self.env.ref("base.EUR")
+        self.env["account.move"].search([]).write({"state": "draft"})
+        self.env["account.move.line"].search([]).unlink()
+        company = self.env.ref("base.main_company")
+        company.currency_id = eur
+        rate_model = self.env["res.currency.rate"]
+        rate_model.search([("currency_id", "=", eur.id)]).unlink()
+        rate_model.create({"name": "1990-01-01", "currency_id": eur.id, "rate": 50})
+        usd = self.env.ref("base.USD")
+        rate_model.search([("currency_id", "=", usd.id)]).unlink()
+        rate_model.create({"name": "1990-01-01", "currency_id": usd.id, "rate": 20})
+        binding_9 = self._import_sale_order(9)
+        self.assertEqual(binding_9.pricelist_id.currency_id, usd)
+        self.assertEqual(binding_9.currency_id, usd)
+        self.assertEqual(binding_9.amount_total, 396.87)
+        binding_13 = self._import_sale_order(13)
+        self.assertEqual(binding_13.pricelist_id.currency_id, eur)
+        self.assertEqual(binding_13.currency_id, eur)
+        self.assertAlmostEqual(binding_13.amount_total, 253.73)
+
     def test_import_sale_order_paid(self):
         payment_checkmo = self.env["account.payment.mode"].search(
             [("name", "=", "checkmo")]
