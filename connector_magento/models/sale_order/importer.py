@@ -78,7 +78,7 @@ class SaleImportRule(Component):
     def _rule_paid(self, record, method):
         """ Import the order only if it has received a payment, or if there
         is nothing to pay in the first place. """
-        amount_paid = record.get("payment", {}).get("amount_paid") or 0
+        amount_paid = float(record.get("payment", {}).get("amount_paid") or 0.0)
         if record["grand_total"] and amount_paid <= 0:
             raise OrderImportRuleRetry(
                 "The order has not been paid.\n" "The import will be retried later."
@@ -504,6 +504,30 @@ class SaleOrderImporter(Component):
                 parent_binding.write({"canceled_in_backend": True})
             current_binding = parent_binding
 
+    def _create_payment_transaction(self, binding):
+        order = binding.odoo_id
+        if (
+            order.payment_mode_id.import_rule == "paid"
+            and order.payment_mode_id.rule_paid_acquirer_id
+        ):
+            amount_paid = float(
+                self.magento_record.get("payment", {}).get("amount_paid") or 0.0
+            )
+            transaction = self.env["payment.transaction"].create(
+                {
+                    "acquirer_id": order.payment_mode_id.rule_paid_acquirer_id.id,
+                    "amount": amount_paid,
+                    "currency_id": order.currency_id.id,
+                    "partner_id": order.partner_id.id,
+                    "reference": order.name,
+                    "sale_order_ids": [(4, order.id)],
+                    "state": "pending",
+                }
+            )
+            if amount_paid == order.amount_total:
+                transaction.write({"state": "done", "date": order.date_order})
+                transaction._post_process_after_done()
+
     def _create(self, data):
         binding = super()._create(data)
         if binding.fiscal_position_id:
@@ -512,6 +536,7 @@ class SaleOrderImporter(Component):
 
     def _after_import(self, binding):
         self._link_parent_orders(binding)
+        self._create_payment_transaction(binding)
 
     def _get_storeview(self, record):
         """ Return the tax inclusion setting for the appropriate storeview """

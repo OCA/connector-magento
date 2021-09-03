@@ -30,6 +30,18 @@ class TestSaleOrder(Magento2SyncTestCase):
             "onchanges have not been applied.",
         )
 
+    def test_import_sale_order_paid(self):
+        payment_checkmo = self.env["account.payment.mode"].search(
+            [("name", "=", "checkmo")]
+        )
+        payment_checkmo.write(
+            {"import_rule": "paid", "rule_paid_acquirer_id": self.magento_acquirer.id}
+        )
+        binding = self._import_sale_order(9)
+        self.assertEqual(binding.state, "sale")
+        self.assertEqual(len(binding.transaction_ids), 1)
+        self.assertEqual(len(binding.picking_ids), 1)
+
     def test_import_sale_order_with_prefix(self):
         """ Import sale order with prefix """
         self.backend.write({"sale_prefix": "EC"})

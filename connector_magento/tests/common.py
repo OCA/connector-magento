@@ -133,6 +133,17 @@ class MagentoTestCase(SavepointComponentCase):
             account_tax_form.amount = tax_percent
             account_tax_form.save()
 
+        journal_bank = self.env["account.journal"].search(
+            [("type", "=", "bank")], limit=1
+        )
+        self.magento_acquirer = self.env["payment.acquirer"].create(
+            {
+                "name": "Magento acquirer",
+                "provider": "transfer",
+                "journal_id": journal_bank.id,
+            }
+        )
+
     def get_magento_helper(self, model_name):
         return MagentoHelper(self.cr, self.registry, model_name)
 
