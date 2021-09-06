@@ -20,6 +20,7 @@ from vcr import VCR
 
 import odoo
 from odoo import models
+from odoo.tests import Form
 from odoo.tools import mute_logger
 
 from odoo.addons.component.tests.common import SavepointComponentCase
@@ -126,6 +127,11 @@ class MagentoTestCase(SavepointComponentCase):
                     "fixed_journal_id": self.journal.id,
                 }
             )
+        for tax_percent in [8.25, 9.0]:
+            account_tax_form = Form(self.env["account.tax"])
+            account_tax_form.name = "Sale {}{}".format(tax_percent, "%")
+            account_tax_form.amount = tax_percent
+            account_tax_form.save()
 
     def get_magento_helper(self, model_name):
         return MagentoHelper(self.cr, self.registry, model_name)

@@ -826,6 +826,21 @@ class SaleOrderLineImportMapper(Component):
         return result
 
     @mapping
+    def tax_id(self, record):
+        tax_percent = float(record["tax_percent"] or 0)
+        if tax_percent > 0:
+            tax_record = self.env["account.tax"].search(
+                [
+                    ("type_tax_use", "=", "sale"),
+                    ("amount_type", "=", "percent"),
+                    ("amount", "=", tax_percent),
+                ]
+            )
+            if not tax_record:
+                raise FailedJobError("Missing tax for amount: %s" % tax_percent)
+            return {"tax_id": [(4, tax_record.id)]}
+
+    @mapping
     def price(self, record):
         """ In Magento 2, base_row_total_incl_tax may not be present
         if no taxes apply """
