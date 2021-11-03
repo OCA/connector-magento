@@ -286,6 +286,8 @@ class PartnerImportMapper(ImportMapper):
     @only_create
     @mapping
     def company_id(self, record):
+        if self.backend_record.is_multi_company:
+            return {'company_id': False}
         binder = self.binder_for(model='magento.storeview')
         storeview = binder.to_openerp(record['store_id'], browse=True)
         if storeview:
@@ -499,6 +501,8 @@ class BaseAddressImportMapper(ImportMapper):
     @only_create
     @mapping
     def company_id(self, record):
+        if self.backend_record.is_multi_company:
+            return {'company_id': False}
         parent = self.options.parent_partner
         if parent:
             if parent.company_id:
