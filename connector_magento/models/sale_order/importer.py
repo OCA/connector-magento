@@ -710,13 +710,12 @@ class SaleOrderImporter(Component):
 
         for line in record.get('items', []):
             _logger.debug('line: %s', line)
-            if 'product_id' in line:
-                if self.collection.version == '1.7':
-                    key = 'product_id'
-                else:
-                    key = 'sku'
-                self._import_dependency(line[key],
-                                        'magento.product.product')
+            if self.collection.version == '1.7':
+                key = 'product_id'
+            else:
+                key = 'sku'
+            if key in line:
+                self._import_dependency(line[key], 'magento.product.product')
 
 
 class SaleOrderLineImportMapper(Component):
