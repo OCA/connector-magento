@@ -74,32 +74,34 @@ class MagentoStoreview(models.Model):
                 sale_binding_model = sale_binding_model.sudo(user)
 
             backend = storeview.sudo(user).backend_id
-            if storeview.import_orders_from_date:
-                from_string = fields.Datetime.from_string
-                from_date = from_string(storeview.import_orders_from_date)
-            else:
-                from_date = None
+            from_date = storeview.import_orders_from_date
+
+            # Apply the global order import delay
+            to_date = import_start_time - timedelta(
+                minutes=backend.order_import_delay)
+            if from_date and to_date < from_date:
+                continue
 
             delayable = sale_binding_model.with_delay(priority=1)
             filters = {
                 'magento_storeview_id': storeview.external_id,
-                'from_date': from_date,
-                'to_date': import_start_time,
+                'from_date': from_date or None,
+                'to_date': to_date,
             }
             delayable.import_batch(backend, filters=filters)
-        # Records from Magento are imported based on their `created_at`
-        # date.  This date is set on Magento at the beginning of a
-        # transaction, so if the import is run between the beginning and
-        # the end of a transaction, the import of a record may be
-        # missed.  That's why we add a small buffer back in time where
-        # the eventually missed records will be retrieved.  This also
-        # means that we'll have jobs that import twice the same records,
-        # but this is not a big deal because the sales orders will be
-        # imported the first time and the jobs will be skipped on the
-        # subsequent imports
-        next_time = import_start_time - timedelta(seconds=IMPORT_DELTA_BUFFER)
-        next_time = fields.Datetime.to_string(next_time)
-        self.write({'import_orders_from_date': next_time})
+            # Records from Magento are imported based on their `created_at`
+            # date.  This date is set on Magento at the beginning of a
+            # transaction, so if the import is run between the beginning and
+            # the end of a transaction, the import of a record may be
+            # missed.  That's why we add a small buffer back in time where
+            # the eventually missed records will be retrieved.  This also
+            # means that we'll have jobs that import twice the same records,
+            # but this is not a big deal because the sales orders will be
+            # imported the first time and the jobs will be skipped on the
+            # subsequent imports
+            if not backend.order_import_delay:
+                to_date -= timedelta(seconds=IMPORT_DELTA_BUFFER)
+            storeview.write({'import_orders_from_date': to_date})
         return True
 
 

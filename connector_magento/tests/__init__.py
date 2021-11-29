@@ -1,3 +1,4 @@
+from . import test_batch_import
 from . import test_concurrent_sync
 from . import test_export_invoice
 from . import test_export_picking

@@ -135,6 +135,9 @@ class MagentoBackend(models.Model):
     import_categories_from_date = fields.Datetime(
         string='Import categories from date',
     )
+    order_import_delay = fields.Integer(
+        help="Only import orders created earlier than ... minutes ago.",
+        default=0)
     product_stock_field_id = fields.Many2one(
         comodel_name='ir.model.fields',
         string='Stock Field',

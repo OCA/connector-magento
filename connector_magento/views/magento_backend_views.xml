@@ -145,6 +145,7 @@
                                 <field name="default_lang_id" widget="selection"/>
                                 <field name="default_category_id"/>
                                 <field name="sale_prefix" placeholder="mag-" />
+                                <field name="order_import_delay" />
                                 <field name="product_stock_field_id" widget="selection"
                                     domain="[('model', 'in', ['product.product', 'product.template']), ('ttype', '=', 'float')]"/>
                                 <field name="account_analytic_id" groups="analytic.group_analytic_accounting" />
