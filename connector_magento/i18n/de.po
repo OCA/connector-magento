@@ -654,7 +654,7 @@ msgstr ""
 "sein sollen."
 
 #. module: connector_magento
-#: code:addons/connector_magento/models/magento_backend/common.py:246
+#: code:addons/connector_magento/models/magento_backend/common.py:249
 #, python-format
 msgid ""
 "Check your configuration, we can't get the data. Here is the error:\n"
@@ -3008,6 +3008,11 @@ msgid "Only for Magento 2.0+"
 msgstr ""
 
 #. module: connector_magento
+#: model:ir.model.fields,help:connector_magento.field_magento_backend__order_import_delay
+msgid "Only import orders created earlier than ... minutes ago."
+msgstr ""
+
+#. module: connector_magento
 #: model:ir.model.fields,field_description:connector_magento.field_magento_stock_picking__picking_type_id
 msgid "Operation Type"
 msgstr ""
@@ -3050,6 +3055,11 @@ msgstr "Optionen"
 #. module: connector_magento
 #: model:ir.model.fields,field_description:connector_magento.field_magento_sale_order__date_order
 msgid "Order Date"
+msgstr ""
+
+#. module: connector_magento
+#: model:ir.model.fields,field_description:connector_magento.field_magento_backend__order_import_delay
+msgid "Order Import Delay"
 msgstr ""
 
 #. module: connector_magento
