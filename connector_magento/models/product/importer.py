@@ -113,7 +113,6 @@ class CatalogImageImporter(Component):
             request.raise_for_status()
         return request.content
 
-
     def _write_image_data(self, binding, binary, image_data):
         binding = binding.with_context(connector_no_export=True)
         binding.write({'image': base64.b64encode(binary)})
@@ -186,12 +185,15 @@ class ProductImportMapper(Component):
     # TODO :     categ, special_price => minimal_price
     direct = [('name', 'name'),
               ('weight', 'weight'),
-              ('cost', 'standard_price'),
               ('sku', 'default_code'),
               ('type_id', 'product_type'),
               (normalize_datetime('created_at'), 'created_at'),
               (normalize_datetime('updated_at'), 'updated_at'),
               ]
+
+    @mapping
+    def standard_price(self, record):
+        return {"standard_price": record.get("cost")}
 
     @mapping
     def magento_id(self, record):
