@@ -1,0 +1,103 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# 	* magentoerpconnect_pricelist_currency
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server 8.0\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2015-11-04 15:55+0000\n"
+"PO-Revision-Date: 2015-11-04 17:13+0100\n"
+"Last-Translator: Hugo Santos <hugo.santos@factorlibre.com>\n"
+"Language-Team: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Language: es_ES\n"
+"X-Generator: Poedit 1.5.4\n"
+
+#. module: magentoerpconnect_pricelist_currency
+#: model:ir.actions.act_window,help:magentoerpconnect_pricelist_currency.product_pricelist_mapping_action
+msgid ""
+"<p class=\"oe_view_nocontent_create\">\n"
+"                Click to create a pricelist mapping\n"
+"              </p>\n"
+"              <p>\n"
+"                A price list mapping is used to map similar pricelist with\n"
+"                different currencies.\n"
+"              </p>\n"
+"            "
+msgstr ""
+"<p class=\"oe_view_nocontent_create\">\n"
+"                Haga click para crear un nuevo mapeo de tarifas\n"
+"              </p>\n"
+"              <p>\n"
+"                Un mapeo de tarifas es utlizado para mapear tarifas iguales "
+"pero\n"
+"                con monedas diferentes.\n"
+"              </p>\n"
+"            "
+
+#. module: magentoerpconnect_pricelist_currency
+#: field:product.pricelist.mapping,create_uid:0
+msgid "Created by"
+msgstr "Creado por"
+
+#. module: magentoerpconnect_pricelist_currency
+#: field:product.pricelist.mapping,create_date:0
+msgid "Created on"
+msgstr "Creado el"
+
+#. module: magentoerpconnect_pricelist_currency
+#: field:product.pricelist.mapping,id:0
+msgid "ID"
+msgstr "ID"
+
+#. module: magentoerpconnect_pricelist_currency
+#: field:product.pricelist.mapping,write_uid:0
+msgid "Last Updated by"
+msgstr "Última actualización por"
+
+#. module: magentoerpconnect_pricelist_currency
+#: field:product.pricelist.mapping,write_date:0
+msgid "Last Updated on"
+msgstr "Última actualización el"
+
+#. module: magentoerpconnect_pricelist_currency
+#: field:magento.sale.order,magento_currency_id:0
+msgid "Magento Currency"
+msgstr "Moneda magento"
+
+#. module: magentoerpconnect_pricelist_currency
+#: model:ir.model,name:magentoerpconnect_pricelist_currency.model_magento_sale_order
+msgid "Magento Sale Order"
+msgstr "Pedido Magento"
+
+#. module: magentoerpconnect_pricelist_currency
+#: view:product.pricelist.mapping:magentoerpconnect_pricelist_currency.product_pricelist_mapping_form_view
+#: field:product.pricelist.mapping,pricelist_ids:0
+msgid "Mapped Pricelists"
+msgstr "Tarifas mapeadas"
+
+#. module: magentoerpconnect_pricelist_currency
+#: field:product.pricelist.mapping,name:0
+msgid "Mapping Name"
+msgstr "Nombre mapeo"
+
+#. module: magentoerpconnect_pricelist_currency
+#: model:ir.model,name:magentoerpconnect_pricelist_currency.model_product_pricelist
+msgid "Pricelist"
+msgstr "Tarifa"
+
+#. module: magentoerpconnect_pricelist_currency
+#: field:product.pricelist,mapping_id:0
+#: view:product.pricelist.mapping:magentoerpconnect_pricelist_currency.product_pricelist_mapping_form_view
+msgid "Pricelist Mapping"
+msgstr "Mapeo de tarifa"
+
+#. module: magentoerpconnect_pricelist_currency
+#: model:ir.actions.act_window,name:magentoerpconnect_pricelist_currency.product_pricelist_mapping_action
+#: model:ir.ui.menu,name:magentoerpconnect_pricelist_currency.menu_product_pricelist_mapping
+#: view:product.pricelist.mapping:magentoerpconnect_pricelist_currency.product_pricelist_mapping_tree_view
+msgid "Pricelist Mappings"
+msgstr "Mapeos de tarifas"
