@@ -27,29 +27,6 @@
     'author': "Akretion,Odoo Community Association (OCA)",
     'license': 'AGPL-3',
     'website': 'http://www.odoo-magento-connector.com',
-    'description': """
-Sale order comments synchronisation
-===================================
-
-Extension for **Magento Connector**
-
-Features
---------
-
-* Import sale comments in the same time than 'sale order'
-* Move messages from canceled order to replacing sale order (edited sale
-  order in magento)
-* Export messages from OpenERP sale order to Magento comment
-* Export of moved messages to Magento
-
-Settings / options
-------------------
-
-* Ability to require Magento to send email to customer for each comment
-  received. Unactive by default (Connectors/Magento/Store menu).
-
-
-    """,
     'images': [],
     'demo': [],
     'external_dependencies': {
@@ -58,6 +35,6 @@ Settings / options
     'data': [
         'magento_model_view.xml',
     ],
-    'installable': False,
+    'installable': True,
     'application': False,
 }
