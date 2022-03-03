@@ -4,12 +4,14 @@
 import socket
 import logging
 import requests
+from json.decoder import JSONDecodeError
 from urllib.parse import quote_plus
 import xmlrpc.client
 
 from odoo.addons.component.core import AbstractComponent
 from odoo.addons.queue_job.exception import RetryableJobError
 from odoo.addons.connector.exception import NetworkRetryableError
+from odoo.addons.connector_magento.exception import MagentoError
 from datetime import datetime
 
 _logger = logging.getLogger(__name__)
@@ -153,9 +155,18 @@ class MagentoAPI(object):
             # record(method, arguments, result)
             return result
         except (socket.gaierror, socket.error, socket.timeout) as err:
+            if err.response is not None:
+                try:
+                    json = err.response.json()
+                    raise MagentoError(
+                        ('An error caused the failure of the job %s: %s' % (err, json['message'])), json=json
+                    )
+                except JSONDecodeError:
+                    pass
             raise NetworkRetryableError(
-                'A network error caused the failure of the job: '
-                '%s' % err)
+                'A network error caused the failure of the job: %s'
+                % err
+            )
         except xmlrpc.client.ProtocolError as err:
             if err.errcode in [502,   # Bad gateway
                                503,   # Service unavailable
