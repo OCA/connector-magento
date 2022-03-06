@@ -18,6 +18,7 @@ import odoo
 
 from os.path import dirname, join
 from contextlib import contextmanager
+from psycopg2.extensions import AsIs
 from odoo import models
 from odoo.addons.component.tests.common import SavepointComponentCase
 from odoo.tools import mute_logger
@@ -70,8 +71,8 @@ class MagentoHelper(object):
         self.model = registry(model_name)
 
     def get_next_id(self):
-        self.cr.execute("SELECT max(external_id::int) FROM %s " %
-                        self.model._table)
+        self.cr.execute("SELECT max(external_id::int) FROM %s ",
+                        (AsIs(self.model._table),))
         result = self.cr.fetchone()
         if result:
             return int(result[0] or 0) + 1
