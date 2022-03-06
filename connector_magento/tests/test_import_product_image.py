@@ -54,9 +54,6 @@ class TestImportProductImage(SavepointComponentRegistryCase):
         )
         cls.product_model = cls.env['magento.product.product']
 
-    def setUp(self):
-        super(TestImportProductImage, self).setUp()
-
         # Use a stub for the product adapter, which is called
         # during the tests by the image importer
         class StubProductAdapter(Component):
@@ -88,14 +85,14 @@ class TestImportProductImage(SavepointComponentRegistryCase):
                 ]
 
         # build the Stub and the component we want to test
-        self._build_components(StubProductAdapter,
-                               components.core.BaseMagentoConnectorComponent,
-                               components.importer.MagentoImporter,
-                               CatalogImageImporter)
-        self.work = WorkContext(model_name='magento.product.product',
-                                collection=self.backend,
-                                components_registry=self.comp_registry)
-        self.image_importer = self.work.component_by_name(
+        cls._build_components(cls, StubProductAdapter,
+                              components.core.BaseMagentoConnectorComponent,
+                              components.importer.MagentoImporter,
+                              CatalogImageImporter)
+        cls.work = WorkContext(model_name='magento.product.product',
+                               collection=cls.backend,
+                               components_registry=cls.comp_registry)
+        cls.image_importer = cls.work.component_by_name(
             'magento.product.image.importer'
         )
 
