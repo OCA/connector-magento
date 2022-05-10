@@ -4,7 +4,6 @@
 import socket
 import logging
 import requests
-from json.decoder import JSONDecodeError
 from urllib.parse import quote_plus
 import xmlrpc.client
 
@@ -21,6 +20,10 @@ try:
 except ImportError:
     _logger.debug("Cannot import 'magento'")
 
+try:
+    from simplejson.errors import JSONDecodeError
+except ImportError:
+    from json.decoder import JSONDecodeError
 
 MAGENTO_DATETIME_FORMAT = '%Y-%m-%d %H:%M:%S'
 
