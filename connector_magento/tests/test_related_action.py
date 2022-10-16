@@ -10,10 +10,11 @@ from odoo import exceptions
 class TestRelatedActionStorage(MagentoSyncTestCase):
     """ Test related actions on stored jobs """
 
-    def setUp(self):
-        super(TestRelatedActionStorage, self).setUp()
-        self.MagentoProduct = self.env['magento.product.product']
-        self.QueueJob = self.env['queue.job']
+    @classmethod
+    def setUpClass(cls):
+        super(TestRelatedActionStorage, cls).setUpClass()
+        cls.MagentoProduct = cls.env['magento.product.product']
+        cls.QueueJob = cls.env['queue.job']
 
     def test_unwrap_binding(self):
         """ Open a related action opening an unwrapped binding """

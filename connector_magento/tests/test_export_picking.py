@@ -7,21 +7,22 @@ from .common import MagentoSyncTestCase, recorder
 class TestExportPicking(MagentoSyncTestCase):
     """ Test the export of pickings to Magento """
 
-    def setUp(self):
-        super(TestExportPicking, self).setUp()
+    @classmethod
+    def setUpClass(cls):
+        super(TestExportPicking, cls).setUpClass()
         # import a sales order
-        self.order_binding = self._import_record(
+        cls.order_binding = cls._import_record(
             'magento.sale.order', 100000201
         )
-        self.order_binding.ignore_exception = True
+        cls.order_binding.ignore_exception = True
         # generate sale's picking
-        self.order_binding.odoo_id.action_confirm()
+        cls.order_binding.odoo_id.action_confirm()
         # Create inventory for add stock qty to lines
         # With this commit https://goo.gl/fRTLM3 the moves that where
         # force-assigned are not transferred in the picking
-        for line in self.order_binding.odoo_id.order_line:
+        for line in cls.order_binding.odoo_id.order_line:
             if line.product_id.type == 'product':
-                inventory = self.env['stock.inventory'].create({
+                inventory = cls.env['stock.inventory'].create({
                     'name': 'Inventory for line %s' % line.name,
                     'filter': 'product',
                     'product_id': line.product_id.id,
@@ -29,13 +30,13 @@ class TestExportPicking(MagentoSyncTestCase):
                         'product_id': line.product_id.id,
                         'product_qty': line.product_uom_qty,
                         'location_id':
-                        self.env.ref('stock.stock_location_stock').id
+                        cls.env.ref('stock.stock_location_stock').id
                     })]
                 })
                 inventory.action_validate()
-        self.picking = self.order_binding.picking_ids
-        self.assertEqual(len(self.picking), 1)
-        magento_shop = self.picking.sale_id.magento_bind_ids[0].store_id
+        cls.picking = cls.order_binding.picking_ids
+        assert len(cls.picking) == 1, "Picking not found on imported order"
+        magento_shop = cls.picking.sale_id.magento_bind_ids[0].store_id
         magento_shop.send_picking_done_mail = True
 
     def test_export_complete_picking_trigger(self):

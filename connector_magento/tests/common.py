@@ -18,6 +18,7 @@ import odoo
 
 from os.path import dirname, join
 from contextlib import contextmanager
+from psycopg2.extensions import AsIs
 from odoo import models
 from odoo.addons.component.tests.common import SavepointComponentCase
 from odoo.tools import mute_logger
@@ -70,8 +71,8 @@ class MagentoHelper(object):
         self.model = registry(model_name)
 
     def get_next_id(self):
-        self.cr.execute("SELECT max(external_id::int) FROM %s " %
-                        self.model._table)
+        self.cr.execute("SELECT max(external_id::int) FROM %s ",
+                        (AsIs(self.model._table),))
         result = self.cr.fetchone()
         if result:
             return int(result[0] or 0) + 1
@@ -86,15 +87,16 @@ class MagentoTestCase(SavepointComponentCase):
     demo version of Magento on a standard 1.9 version.
     """
 
-    def setUp(self):
-        super(MagentoTestCase, self).setUp()
-        self.recorder = recorder
+    @classmethod
+    def setUpClass(cls):
+        super(MagentoTestCase, cls).setUpClass()
+        cls.recorder = recorder
         # disable commits when run from pytest/nosetest
         odoo.tools.config['test_enable'] = True
 
-        self.backend_model = self.env['magento.backend']
-        warehouse = self.env.ref('stock.warehouse0')
-        self.backend = self.backend_model.create(
+        cls.backend_model = cls.env['magento.backend']
+        warehouse = cls.env.ref('stock.warehouse0')
+        cls.backend = cls.backend_model.create(
             {'name': 'Test Magento',
              'version': '1.7',
              'location': 'http://magento',
@@ -103,39 +105,40 @@ class MagentoTestCase(SavepointComponentCase):
              'password': 'odoo42'}
         )
         # payment method needed to import a sale order
-        self.workflow = self.env.ref(
+        cls.workflow = cls.env.ref(
             'sale_automatic_workflow.manual_validation')
-        self.journal = self.env['account.journal'].create(
+        cls.journal = cls.env['account.journal'].create(
             {'name': 'Check', 'type': 'cash', 'code': 'Check'}
         )
-        payment_method = self.env.ref(
+        payment_method = cls.env.ref(
             'account.account_payment_method_manual_in'
         )
         for name in ['checkmo', 'ccsave', 'cashondelivery']:
-            self.env['account.payment.mode'].create(
+            cls.env['account.payment.mode'].create(
                 {'name': name,
-                 'workflow_process_id': self.workflow.id,
+                 'workflow_process_id': cls.workflow.id,
                  'import_rule': 'always',
                  'days_before_cancel': 0,
                  'bank_account_link': 'fixed',
                  'payment_method_id': payment_method.id,
-                 'fixed_journal_id': self.journal.id})
+                 'fixed_journal_id': cls.journal.id})
 
     def get_magento_helper(self, model_name):
         return MagentoHelper(self.cr, self.registry, model_name)
 
-    def create_binding_no_export(self, model_name, odoo_id, external_id=None,
+    @classmethod
+    def create_binding_no_export(cls, model_name, odoo_id, external_id=None,
                                  **cols):
         if isinstance(odoo_id, models.BaseModel):
             odoo_id = odoo_id.id
         values = {
-            'backend_id': self.backend.id,
+            'backend_id': cls.backend.id,
             'odoo_id': odoo_id,
             'external_id': external_id,
         }
         if cols:
             values.update(cols)
-        return self.env[model_name].with_context(
+        return cls.env[model_name].with_context(
             connector_no_export=True
         ).create(values)
 
@@ -154,7 +157,8 @@ class MagentoTestCase(SavepointComponentCase):
         # the first argument is a hash, we don't mind
         return args[1:]
 
-    def _import_record(self, model_name, magento_id, cassette=True):
+    @classmethod
+    def _import_record(cls, model_name, magento_id, cassette=True):
         assert model_name.startswith('magento.')
         table_name = model_name.replace('.', '_')
         # strip 'magento_' from the model_name to shorted the filename
@@ -165,24 +169,24 @@ class MagentoTestCase(SavepointComponentCase):
                     'odoo.addons.mail.models.mail_mail',
                     'odoo.models.unlink',
                     'odoo.tests'):
-                if self.backend.version != '1.7':
-                    return self.env[model_name].import_record(
-                        self.backend, magento_id)
+                if cls.backend.version != '1.7':
+                    return cls.env[model_name].import_record(
+                        cls.backend, magento_id)
                 with mock_urlopen_image():
-                    self.env[model_name].import_record(
-                        self.backend, magento_id)
+                    cls.env[model_name].import_record(
+                        cls.backend, magento_id)
 
         if cassette:
-            with self.recorder.use_cassette(filename):
+            with cls.recorder.use_cassette(filename):
                 run_import()
         else:
             run_import()
 
-        binding = self.env[model_name].search(
-            [('backend_id', '=', self.backend.id),
+        binding = cls.env[model_name].search(
+            [('backend_id', '=', cls.backend.id),
              ('external_id', '=', str(magento_id))]
         )
-        self.assertEqual(len(binding), 1)
+        assert len(binding) == 1, "Binding not found after import"
         return binding
 
     def assert_records(self, expected_records, records):
@@ -275,12 +279,13 @@ class MagentoTestCase(SavepointComponentCase):
 
 class MagentoSyncTestCase(MagentoTestCase):
 
-    def setUp(self):
-        super(MagentoSyncTestCase, self).setUp()
+    @classmethod
+    def setUpClass(cls):
+        super(MagentoSyncTestCase, cls).setUpClass()
         # Mute logging of notifications about new checkpoints
         with mute_logger(
                 'odoo.addons.mail.models.mail_mail',
                 'odoo.models.unlink',
                 'odoo.tests'):
             with recorder.use_cassette('metadata'):
-                self.backend.synchronize_metadata()
+                cls.backend.synchronize_metadata()

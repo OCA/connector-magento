@@ -7,9 +7,6 @@ from .common import MagentoSyncTestCase, recorder, mock_urlopen_image
 
 class TestImportProduct(MagentoSyncTestCase):
 
-    def setUp(self):
-        super(TestImportProduct, self).setUp()
-
     def _create_category(self, name, external_id):
         category_model = self.env['product.category']
         category = category_model.create({'name': name})
