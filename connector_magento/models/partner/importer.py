@@ -71,7 +71,7 @@ class PartnerImportMapper(Component):
     @mapping
     def customer_group_id(self, record):
         # import customer groups
-        if record['group_id'] == 0:
+        if not record['group_id']:
             category = self.env.ref('connector_magento.category_no_account')
         else:
             binder = self.binder_for(model='magento.res.partner.category')
