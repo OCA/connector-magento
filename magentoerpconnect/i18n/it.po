@@ -19,7 +19,7 @@ msgstr ""
 "Project-Id-Version: connector-magento (8.0)\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2018-03-17 03:18+0000\n"
-"PO-Revision-Date: 2022-12-30 11:54+0000\n"
+"PO-Revision-Date: 2023-01-18 12:07+0000\n"
 "Last-Translator: Francesco Foresti <francesco.foresti@ooops404.com>\n"
 "Language-Team: Italian (http://www.transifex.com/oca/"
 "OCA-connector-magento-8-0/language/it/)\n"
@@ -2774,7 +2774,7 @@ msgstr "L'ordine non è collegato ad un ordine di vendita di Magento"
 #: field:magento.address,sale_order_ids:0
 #: field:magento.res.partner,sale_order_ids:0
 msgid "Sales Order"
-msgstr "Ordini di vendita"
+msgstr "Ordine di vendita"
 
 #. module: magentoerpconnect
 #: model:ir.model,name:magentoerpconnect.model_sale_order_line
@@ -3650,7 +3650,7 @@ msgstr "Prezzo Unitario"
 #: field:magento.product.product,uom_id:0
 #: field:magento.stock.picking,weight_uom_id:0
 msgid "Unit of Measure"
-msgstr "Unità di Misura"
+msgstr "Unità di misura"
 
 #. module: magentoerpconnect
 #: field:magento.sale.order.line,product_uom:0
