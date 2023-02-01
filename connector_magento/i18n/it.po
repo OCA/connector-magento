@@ -10,7 +10,7 @@ msgstr ""
 "Project-Id-Version: connector-magento (8.0)\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2015-07-22 09:38+0000\n"
-"PO-Revision-Date: 2023-01-18 11:54+0000\n"
+"PO-Revision-Date: 2023-02-01 16:49+0000\n"
 "Last-Translator: Francesco Foresti <francesco.foresti@ooops404.com>\n"
 "Language-Team: Italian (http://www.transifex.com/oca/"
 "OCA-connector-magento-8-0/language/it/)\n"
@@ -3263,7 +3263,7 @@ msgstr "Ordine di vendita"
 #: model:ir.model,name:connector_magento.model_sale_order_line
 #: model:ir.model.fields,field_description:connector_magento.field_magento_product_product_sale_line_warn
 msgid "Sales Order Line"
-msgstr "Linee degli ordini di vendita"
+msgstr "Riga ordine di vendita"
 
 #. module: connector_magento
 #: model:ir.model.fields,field_description:connector_magento.field_magento_account_invoice_team_id
