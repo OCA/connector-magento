@@ -10,7 +10,7 @@ msgstr ""
 "Project-Id-Version: connector-magento (8.0)\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2015-07-22 09:38+0000\n"
-"PO-Revision-Date: 2023-02-01 16:50+0000\n"
+"PO-Revision-Date: 2023-04-07 14:26+0000\n"
 "Last-Translator: Francesco Foresti <francesco.foresti@ooops404.com>\n"
 "Language-Team: Italian (http://www.transifex.com/oca/"
 "OCA-connector-magento-8-0/language/it/)\n"
@@ -3728,7 +3728,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:connector_magento.field_magento_sale_order__team_id
 #: model:ir.model.fields,field_description:connector_magento.field_magento_storeview__team_id
 msgid "Sales Team"
-msgstr "Team vendite"
+msgstr "Team di vendita"
 
 #. module: connector_magento
 #: model:ir.model.fields,field_description:connector_magento.field_magento_address__sale_warn
