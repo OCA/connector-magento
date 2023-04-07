@@ -10,7 +10,7 @@ msgstr ""
 "Project-Id-Version: connector-magento (8.0)\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2015-07-22 09:38+0000\n"
-"PO-Revision-Date: 2023-02-01 16:49+0000\n"
+"PO-Revision-Date: 2023-04-07 14:26+0000\n"
 "Last-Translator: Francesco Foresti <francesco.foresti@ooops404.com>\n"
 "Language-Team: Italian (http://www.transifex.com/oca/"
 "OCA-connector-magento-8-0/language/it/)\n"
@@ -3272,7 +3272,7 @@ msgstr "Riga ordine di vendita"
 #: model:ir.model.fields,field_description:connector_magento.field_magento_sale_order_team_id
 #: model:ir.model.fields,field_description:connector_magento.field_magento_storeview_team_id
 msgid "Sales Team"
-msgstr "Team vendite"
+msgstr "Team di vendita"
 
 #. module: connector_magento
 #: model:ir.model.fields,field_description:connector_magento.field_magento_account_invoice_user_id
@@ -3280,9 +3280,8 @@ msgstr "Team vendite"
 #: model:ir.model.fields,field_description:connector_magento.field_magento_res_partner_user_id
 #: model:ir.model.fields,field_description:connector_magento.field_magento_sale_order_line_salesman_id
 #: model:ir.model.fields,field_description:connector_magento.field_magento_sale_order_user_id
-#, fuzzy
 msgid "Salesperson"
-msgstr "Ordini di vendita"
+msgstr "Addetto vendite"
 
 #. module: connector_magento
 #: model:ir.model.fields,field_description:connector_magento.field_magento_stock_picking_min_date
