@@ -19,7 +19,7 @@ msgstr ""
 "Project-Id-Version: connector-magento (8.0)\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2018-03-17 03:18+0000\n"
-"PO-Revision-Date: 2023-02-01 16:49+0000\n"
+"PO-Revision-Date: 2023-04-07 18:28+0000\n"
 "Last-Translator: Francesco Foresti <francesco.foresti@ooops404.com>\n"
 "Language-Team: Italian (http://www.transifex.com/oca/"
 "OCA-connector-magento-8-0/language/it/)\n"
@@ -1594,7 +1594,7 @@ msgstr ""
 #: field:magento.sale.order,message_is_follower:0
 #: field:magento.stock.picking,message_is_follower:0
 msgid "Is a Follower"
-msgstr "È un follower"
+msgstr "Sta seguendo"
 
 #. module: magentoerpconnect
 #: field:magento.product.product,is_product_variant:0
@@ -2074,7 +2074,7 @@ msgstr ""
 #: field:magento.sale.order,message_ids:0
 #: field:magento.stock.picking,message_ids:0
 msgid "Messages"
-msgstr "Messages"
+msgstr "Messaggi"
 
 #. module: magentoerpconnect
 #: help:magento.account.invoice,message_ids:0
@@ -2786,7 +2786,7 @@ msgstr "Riga ordine di vendita"
 #: field:magento.address,section_id:0 field:magento.res.partner,section_id:0
 #: field:magento.sale.order,section_id:0 field:magento.storeview,section_id:0
 msgid "Sales Team"
-msgstr "Team vendite"
+msgstr "Team di vendita"
 
 #. module: magentoerpconnect
 #: field:magento.account.invoice,user_id:0 field:magento.address,user_id:0
@@ -2798,7 +2798,7 @@ msgstr ""
 #. module: magentoerpconnect
 #: field:magento.stock.picking,min_date:0
 msgid "Scheduled Date"
-msgstr "Data pianificata"
+msgstr "Data programmata"
 
 #. module: magentoerpconnect
 #: help:magento.stock.picking,min_date:0
