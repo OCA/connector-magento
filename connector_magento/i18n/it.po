@@ -10,8 +10,8 @@ msgstr ""
 "Project-Id-Version: connector-magento (8.0)\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2015-07-22 09:38+0000\n"
-"PO-Revision-Date: 2023-04-07 14:26+0000\n"
-"Last-Translator: Francesco Foresti <francesco.foresti@ooops404.com>\n"
+"PO-Revision-Date: 2023-06-07 17:10+0000\n"
+"Last-Translator: mymage <stefano.consolaro@mymage.it>\n"
 "Language-Team: Italian (http://www.transifex.com/oca/"
 "OCA-connector-magento-8-0/language/it/)\n"
 "Language: it\n"
@@ -19,7 +19,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Generator: Weblate 4.14.1\n"
+"X-Generator: Weblate 4.17\n"
 
 #. module: connector_magento
 #: model:ir.model.fields,help:connector_magento.field_magento_stock_picking_state
@@ -2023,7 +2023,7 @@ msgstr "Ultimo aggiornamento il"
 #: model:ir.model.fields,field_description:connector_magento.field_magento_storeview_write_uid
 #: model:ir.model.fields,field_description:connector_magento.field_magento_website_write_uid
 msgid "Last Updated by"
-msgstr "Ultimo aggiornamento da"
+msgstr "Ultimo aggiornamento di"
 
 #. module: connector_magento
 #: model:ir.model.fields,field_description:connector_magento.field_magento_account_invoice_write_date
