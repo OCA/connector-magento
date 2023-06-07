@@ -19,7 +19,7 @@ msgstr ""
 "Project-Id-Version: connector-magento (8.0)\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2018-03-17 03:18+0000\n"
-"PO-Revision-Date: 2023-05-31 15:11+0000\n"
+"PO-Revision-Date: 2023-06-07 17:11+0000\n"
 "Last-Translator: mymage <stefano.consolaro@mymage.it>\n"
 "Language-Team: Italian (http://www.transifex.com/oca/"
 "OCA-connector-magento-8-0/language/it/)\n"
@@ -1704,7 +1704,7 @@ msgstr "Ultima modifica il"
 #: field:magento.stock.picking,write_uid:0 field:magento.store,write_uid:0
 #: field:magento.storeview,write_uid:0 field:magento.website,write_uid:0
 msgid "Last Updated by"
-msgstr "Ultimo aggiornamento da"
+msgstr "Ultimo aggiornamento di"
 
 #. module: magentoerpconnect
 #: field:magento.account.invoice,write_date:0
