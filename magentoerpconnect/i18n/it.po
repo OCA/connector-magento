@@ -19,7 +19,7 @@ msgstr ""
 "Project-Id-Version: connector-magento (8.0)\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2018-03-17 03:18+0000\n"
-"PO-Revision-Date: 2023-06-07 17:11+0000\n"
+"PO-Revision-Date: 2023-06-09 12:09+0000\n"
 "Last-Translator: mymage <stefano.consolaro@mymage.it>\n"
 "Language-Team: Italian (http://www.transifex.com/oca/"
 "OCA-connector-magento-8-0/language/it/)\n"
@@ -3644,7 +3644,7 @@ msgstr ""
 #. module: magentoerpconnect
 #: field:magento.sale.order.line,price_unit:0
 msgid "Unit Price"
-msgstr "Prezzo Unitario"
+msgstr "Prezzo unitario"
 
 #. module: magentoerpconnect
 #: field:magento.product.product,uom_id:0
