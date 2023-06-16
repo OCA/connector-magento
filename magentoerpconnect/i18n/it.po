@@ -19,7 +19,7 @@ msgstr ""
 "Project-Id-Version: connector-magento (8.0)\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2018-03-17 03:18+0000\n"
-"PO-Revision-Date: 2023-06-15 09:10+0000\n"
+"PO-Revision-Date: 2023-06-16 13:10+0000\n"
 "Last-Translator: mymage <stefano.consolaro@mymage.it>\n"
 "Language-Team: Italian (http://www.transifex.com/oca/"
 "OCA-connector-magento-8-0/language/it/)\n"
@@ -1253,7 +1253,7 @@ msgstr ""
 #: help:magento.sale.order,message_unread:0
 #: help:magento.stock.picking,message_unread:0
 msgid "If checked new messages require your attention."
-msgstr "If checked new messages require your attention."
+msgstr "Se selezionata, nuovi messaggi richiedono attenzione."
 
 #. module: magentoerpconnect
 #: help:magento.address,opt_out:0 help:magento.res.partner,opt_out:0
