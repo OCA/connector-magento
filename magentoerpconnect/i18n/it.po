@@ -19,7 +19,7 @@ msgstr ""
 "Project-Id-Version: connector-magento (8.0)\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2018-03-17 03:18+0000\n"
-"PO-Revision-Date: 2023-07-12 16:12+0000\n"
+"PO-Revision-Date: 2023-07-17 17:17+0000\n"
 "Last-Translator: Francesco Foresti <francesco.foresti@ooops404.com>\n"
 "Language-Team: Italian (http://www.transifex.com/oca/"
 "OCA-connector-magento-8-0/language/it/)\n"
@@ -2390,7 +2390,7 @@ msgstr "Metodo di picking"
 #. module: magentoerpconnect
 #: field:magento.stock.picking,picking_type_id:0
 msgid "Picking Type"
-msgstr "Tipo Picking"
+msgstr "Tipologia prelievo"
 
 #. module: magentoerpconnect
 #: field:magento.stock.picking,picking_type_code:0
@@ -2529,12 +2529,12 @@ msgstr ""
 #: field:magento.product.product,product_tmpl_id:0
 #: field:magento.sale.order.line,product_tmpl_id:0
 msgid "Product Template"
-msgstr "Template Prodotto"
+msgstr "Modello prodotto"
 
 #. module: magentoerpconnect
 #: field:magento.product.product,type:0
 msgid "Product Type"
-msgstr ""
+msgstr "Tipologia prodotto"
 
 #. module: magentoerpconnect
 #: field:magento.sale.order.line,product_uos:0
