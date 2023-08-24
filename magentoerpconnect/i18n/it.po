@@ -19,8 +19,8 @@ msgstr ""
 "Project-Id-Version: connector-magento (8.0)\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2018-03-17 03:18+0000\n"
-"PO-Revision-Date: 2023-07-17 17:17+0000\n"
-"Last-Translator: Francesco Foresti <francesco.foresti@ooops404.com>\n"
+"PO-Revision-Date: 2023-09-03 13:43+0000\n"
+"Last-Translator: mymage <stefano.consolaro@mymage.it>\n"
 "Language-Team: Italian (http://www.transifex.com/oca/"
 "OCA-connector-magento-8-0/language/it/)\n"
 "Language: it\n"
@@ -3584,7 +3584,7 @@ msgstr "Il totale delle tasse è diverso da quello di Magento"
 #. module: magentoerpconnect
 #: field:magento.sale.order,total_amount:0
 msgid "Total amount"
-msgstr "Totale"
+msgstr "Valore totale"
 
 #. module: magentoerpconnect
 #: help:magento.address,credit:0 help:magento.res.partner,credit:0
