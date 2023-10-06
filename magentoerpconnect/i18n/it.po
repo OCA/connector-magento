@@ -19,7 +19,7 @@ msgstr ""
 "Project-Id-Version: connector-magento (8.0)\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2018-03-17 03:18+0000\n"
-"PO-Revision-Date: 2023-09-20 17:53+0000\n"
+"PO-Revision-Date: 2023-10-09 09:13+0000\n"
 "Last-Translator: mymage <stefano.consolaro@mymage.it>\n"
 "Language-Team: Italian (http://www.transifex.com/oca/"
 "OCA-connector-magento-8-0/language/it/)\n"
@@ -851,7 +851,7 @@ msgstr "Fattura di default"
 #. module: magentoerpconnect
 #: field:magento.backend,default_lang_id:0
 msgid "Default Language"
-msgstr "Lingua di default"
+msgstr "Lingua predefinita"
 
 #. module: magentoerpconnect
 #: help:magento.stock.picking,owner_id:0
@@ -1073,7 +1073,7 @@ msgstr ""
 #: field:magento.sale.order,message_follower_ids:0
 #: field:magento.stock.picking,message_follower_ids:0
 msgid "Followers"
-msgstr "Followers"
+msgstr "Seguito da"
 
 #. module: magentoerpconnect
 #: field:magento.account.invoice,period_id:0
