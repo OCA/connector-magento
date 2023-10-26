@@ -10,7 +10,7 @@ msgstr ""
 "Project-Id-Version: connector-magento (8.0)\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2015-07-22 09:38+0000\n"
-"PO-Revision-Date: 2023-10-09 08:33+0000\n"
+"PO-Revision-Date: 2023-10-29 08:32+0000\n"
 "Last-Translator: mymage <stefano.consolaro@mymage.it>\n"
 "Language-Team: Italian (http://www.transifex.com/oca/"
 "OCA-connector-magento-8-0/language/it/)\n"
@@ -1147,7 +1147,7 @@ msgstr ""
 #. module: connector_magento
 #: model:ir.model.fields,field_description:connector_magento.field_magento_res_partner_emailid
 msgid "E-mail address"
-msgstr "Indirizzo email"
+msgstr "Indirizzo e-mail"
 
 #. module: connector_magento
 #: model:ir.model.fields,help:connector_magento.field_magento_address_partner_share
