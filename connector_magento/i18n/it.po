@@ -10,7 +10,7 @@ msgstr ""
 "Project-Id-Version: connector-magento (8.0)\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2015-07-22 09:38+0000\n"
-"PO-Revision-Date: 2023-10-29 08:33+0000\n"
+"PO-Revision-Date: 2023-11-27 12:35+0000\n"
 "Last-Translator: mymage <stefano.consolaro@mymage.it>\n"
 "Language-Team: Italian (http://www.transifex.com/oca/"
 "OCA-connector-magento-8-0/language/it/)\n"
@@ -4993,7 +4993,7 @@ msgstr ""
 #. module: connector_magento
 #: model:ir.model.fields,field_description:connector_magento.field_magento_backend__username
 msgid "Username"
-msgstr "Username"
+msgstr "Nome utente"
 
 #. module: connector_magento
 #: model:ir.model.fields,field_description:connector_magento.field_magento_address__user_ids
