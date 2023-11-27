@@ -19,7 +19,7 @@ msgstr ""
 "Project-Id-Version: connector-magento (8.0)\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2018-03-17 03:18+0000\n"
-"PO-Revision-Date: 2023-10-29 16:42+0000\n"
+"PO-Revision-Date: 2023-11-27 12:37+0000\n"
 "Last-Translator: mymage <stefano.consolaro@mymage.it>\n"
 "Language-Team: Italian (http://www.transifex.com/oca/"
 "OCA-connector-magento-8-0/language/it/)\n"
@@ -3747,7 +3747,7 @@ msgstr ""
 #. module: magentoerpconnect
 #: field:magento.backend,username:0
 msgid "Username"
-msgstr "Username"
+msgstr "Nome utente"
 
 #. module: magentoerpconnect
 #: field:magento.address,user_ids:0 field:magento.res.partner,user_ids:0
