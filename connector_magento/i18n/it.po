@@ -10,7 +10,7 @@ msgstr ""
 "Project-Id-Version: connector-magento (8.0)\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2015-07-22 09:38+0000\n"
-"PO-Revision-Date: 2023-12-06 10:36+0000\n"
+"PO-Revision-Date: 2023-12-24 18:41+0000\n"
 "Last-Translator: mymage <stefano.consolaro@mymage.it>\n"
 "Language-Team: Italian (http://www.transifex.com/oca/"
 "OCA-connector-magento-8-0/language/it/)\n"
@@ -4364,7 +4364,6 @@ msgstr ""
 
 #. module: connector_magento
 #: model:exception.rule,description:connector_magento.excep_wrong_total_amount
-#, fuzzy
 msgid ""
 "The amount computed in Odoo doesn't match with the amount in Magento.\n"
 "\n"
@@ -4379,7 +4378,7 @@ msgstr ""
 "Il totale calcolato su OpenERP non corrisponde alla quantità su Magento.\n"
 "Causa:\n"
 "Le tasse sono probabilmente differenti tra OpenERP e Magento. Una posizione "
-"fiscale  potrebbe aver cambiato il prezzo finale.\n"
+"fiscale potrebbe aver cambiato il prezzo finale.\n"
 "Soluzione:\n"
 "Controlla la configurazione delle tue tasse e delle tue posizioni fiscali e "
 "correggile se necessario."
@@ -4423,9 +4422,9 @@ msgid ""
 "custom API path, in that case, the location has to be completed with the "
 "custom API path "
 msgstr ""
-"Il path predefinito del API è  '/index.php/api/xmlrpc''. Seleziona questo "
-"box se utilizzi un path personalizzato per l'API. In quel caso la posizione "
-"deve essere completata con il path custom dell'API."
+"Il path predefinito del API è '/index.php/api/xmlrpc''. Seleziona questo box "
+"se utilizzi un path personalizzato per l'API. In quel caso la posizione deve "
+"essere completata con il path custom dell'API. "
 
 #. module: connector_magento
 #: model:ir.model.fields,help:connector_magento.field_magento_product_category__property_account_expense_categ_id
@@ -4526,7 +4525,6 @@ msgstr ""
 
 #. module: connector_magento
 #: model:exception.rule,description:connector_magento.excep_wrong_total_amount_tax
-#, fuzzy
 msgid ""
 "The tax amount computed in Odoo doesn't match with the tax amount in "
 "Magento.\n"
@@ -4543,7 +4541,7 @@ msgstr ""
 "tasse su Magento.\n"
 "Causa:\n"
 "Le tasse sono probabilmente differenti tra OpenERP e Magento. Una posizione "
-"fiscale  potrebbe aver cambiato il prezzo finale.\n"
+"fiscale potrebbe aver cambiato il prezzo finale.\n"
 "Soluzione:\n"
 "Controlla la configurazione delle tue tasse e delle tue posizioni fiscali e "
 "correggile se necessario."
