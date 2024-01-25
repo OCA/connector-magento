@@ -19,7 +19,7 @@ msgstr ""
 "Project-Id-Version: connector-magento (8.0)\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2018-03-17 03:18+0000\n"
-"PO-Revision-Date: 2024-01-10 15:36+0000\n"
+"PO-Revision-Date: 2024-01-25 16:36+0000\n"
 "Last-Translator: mymage <stefano.consolaro@mymage.it>\n"
 "Language-Team: Italian (http://www.transifex.com/oca/"
 "OCA-connector-magento-8-0/language/it/)\n"
@@ -2798,7 +2798,7 @@ msgstr ""
 #. module: magentoerpconnect
 #: field:magento.stock.picking,min_date:0
 msgid "Scheduled Date"
-msgstr "Data programmata"
+msgstr "Data schedulata"
 
 #. module: magentoerpconnect
 #: help:magento.stock.picking,min_date:0
