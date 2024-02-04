@@ -10,7 +10,7 @@ msgstr ""
 "Project-Id-Version: connector-magento (8.0)\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2015-07-22 09:38+0000\n"
-"PO-Revision-Date: 2024-01-10 15:36+0000\n"
+"PO-Revision-Date: 2024-02-05 00:25+0000\n"
 "Last-Translator: mymage <stefano.consolaro@mymage.it>\n"
 "Language-Team: Italian (http://www.transifex.com/oca/"
 "OCA-connector-magento-8-0/language/it/)\n"
@@ -2565,7 +2565,7 @@ msgstr "Note"
 #: code:addons/connector_magento/components/exporter.py:368
 #, python-format
 msgid "Nothing to export."
-msgstr "Niente da esportare"
+msgstr "Niente da esportare."
 
 #. module: connector_magento
 #: model:ir.model.fields,field_description:connector_magento.field_magento_account_invoice_number
