@@ -19,7 +19,7 @@ msgstr ""
 "Project-Id-Version: connector-magento (8.0)\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2018-03-17 03:18+0000\n"
-"PO-Revision-Date: 2024-01-25 16:36+0000\n"
+"PO-Revision-Date: 2024-02-05 00:25+0000\n"
 "Last-Translator: mymage <stefano.consolaro@mymage.it>\n"
 "Language-Team: Italian (http://www.transifex.com/oca/"
 "OCA-connector-magento-8-0/language/it/)\n"
@@ -2162,7 +2162,7 @@ msgstr "Note"
 #: code:addons/magentoerpconnect/unit/export_synchronizer.py:412
 #, python-format
 msgid "Nothing to export."
-msgstr "Niente da esportare"
+msgstr "Niente da esportare."
 
 #. module: magentoerpconnect
 #: field:magento.account.invoice,number:0
@@ -2647,7 +2647,7 @@ msgstr "Il record non esiste più su Magento"
 #: code:addons/magentoerpconnect/unit/export_synchronizer.py:414
 #, python-format
 msgid "Record exported with ID %s on Magento."
-msgstr "Il record è stato esportato con ID %s su Magento"
+msgstr "Il record è stato esportato con ID %s su Magento."
 
 #. module: magentoerpconnect
 #: field:magento.stock.picking,name:0
@@ -2667,7 +2667,7 @@ msgstr ""
 #. module: magentoerpconnect
 #: help:magento.account.invoice,origin:0
 msgid "Reference of the document that produced this invoice."
-msgstr "Riferimento del documento che ha generato questa fattura"
+msgstr "Riferimento del documento che ha generato questa fattura."
 
 #. module: magentoerpconnect
 #: field:magento.account.invoice,name:0
