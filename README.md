@@ -1,21 +1,37 @@
-[![Build Status](https://travis-ci.org/OCA/connector-magento.svg?branch=13.0)](https://travis-ci.org/OCA/connector-magento)
-[![Coverage Status](https://coveralls.io/repos/OCA/connector-magento/badge.svg?branch=13.0)](https://coveralls.io/r/OCA/connector-magento?branch=13.0)
 
-Odoo Connector Magento Modules
-==============================
+[![Runboat](https://img.shields.io/badge/runboat-Try%20me-875A7B.png)](https://runboat.odoo-community.org/builds?repo=OCA/connector-magento&target_branch=13.0)
+[![Pre-commit Status](https://github.com/OCA/connector-magento/actions/workflows/pre-commit.yml/badge.svg?branch=13.0)](https://github.com/OCA/connector-magento/actions/workflows/pre-commit.yml?query=branch%3A13.0)
+[![Build Status](https://github.com/OCA/connector-magento/actions/workflows/test.yml/badge.svg?branch=13.0)](https://github.com/OCA/connector-magento/actions/workflows/test.yml?query=branch%3A13.0)
+[![codecov](https://codecov.io/gh/OCA/connector-magento/branch/13.0/graph/badge.svg)](https://codecov.io/gh/OCA/connector-magento)
+[![Translation Status](https://translation.odoo-community.org/widgets/connector-magento-13-0/-/svg-badge.svg)](https://translation.odoo-community.org/engage/connector-magento-13-0/?utm_source=widget)
 
-*Odoo Magento Connector (also known as MagentoERPconnect) is a bi-directional connector, 100% compatible with the last OpenERP 13.0 and latest Magento versions (1.x).*
+<!-- /!\ do not modify above this line -->
 
-This new release of MagentoERPconnect is based on the [OpenERP Connector framework](https://github.com/OCA/connector).
-
-The mailing list for this project is named 'Connectors' and is on https://odoo-community.org/groups
-
-Documentation:
-http://www.odoo-magento-connector.com
-http://www.odoo-connector.com
+# Magento eCommerce Connector
 
 
 
-Translation Status
-------------------
-[![Transifex Status](https://www.transifex.com/projects/p/OCA-connector-magento-13-0/chart/image_png)](https://www.transifex.com/projects/p/OCA-connector-magento-13-0)
+<!-- /!\ do not modify below this line -->
+
+<!-- prettier-ignore-start -->
+
+[//]: # (addons)
+
+This part will be replaced when running the oca-gen-addons-table script from OCA/maintainer-tools.
+
+[//]: # (end addons)
+
+<!-- prettier-ignore-end -->
+
+## Licenses
+
+This repository is licensed under [AGPL-3.0](LICENSE).
+
+However, each module can have a totally different license, as long as they adhere to Odoo Community Association (OCA)
+policy. Consult each module's `__manifest__.py` file, which contains a `license` key
+that explains its license.
+
+----
+OCA, or the [Odoo Community Association](http://odoo-community.org/), is a nonprofit
+organization whose mission is to support the collaborative development of Odoo features
+and promote its widespread use.
