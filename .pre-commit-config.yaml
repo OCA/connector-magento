@@ -51,6 +51,7 @@ repos:
           - --repo-name=connector-magento
           - --if-source-changed
           - --keep-source-digest
+          - --convert-fragments-to-markdown
   - repo: https://github.com/OCA/odoo-pre-commit-hooks
     rev: v0.0.25
     hooks:
