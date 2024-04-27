@@ -60,8 +60,8 @@ class MagentoBindingBackendRead(models.TransientModel):
         except KeyError:
             _logger.info(
                 "No component registry for database %s. "
-                "Probably because the Odoo registry has not been built "
-                "yet." % (self.env.cr.dbname)
+                "Probably because the Odoo registry has not been built yet.",
+                self.env.cr.dbname
             )
             return []
         component_classes = components_registry.lookup(

@@ -134,7 +134,7 @@ master_doc = "index"
 
 # General information about the project.
 project = "Odoo Magento Connector"
-copyright = "2013-2015, Odoo Community Association (OCA)"
+copyright = "2013-2015, Odoo Community Association (OCA)"  # pylint: disable=W0622
 
 # The version info for the project you're documenting, acts as
 # replacement for |version| and |release|, also used in various other
