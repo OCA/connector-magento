@@ -1,7 +1,8 @@
 # Do NOT update manually; changes here will be overwritten by Copier
-_commit: v1.17.2
+_commit: v1.21.1
 _src_path: gh:oca/oca-addons-repo-template
 ci: Travis
+convert_readme_fragments_to_markdown: false
 dependency_installation_mode: PIP
 generate_requirements_txt: true
 github_enable_stale_action: true
@@ -17,4 +18,6 @@ repo_slug: connector-magento
 repo_website: https://github.com/OCA/connector-magento
 travis_apt_packages: []
 travis_apt_sources: []
+use_pyproject_toml: false
+use_ruff: false
 
