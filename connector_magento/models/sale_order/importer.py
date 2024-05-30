@@ -220,7 +220,9 @@ class SaleOrderImportMapper(Component):
         amount = float(record['customer_balance_amount'])
         if amount == 0.0:
             return values
-        line_builder = self.component(usage='order.line.builder.magento.store_credit')
+        line_builder = self.component(
+            usage='order.line.builder.magento.store_credit'
+        )
         line_builder.price_unit = amount
         line = (0, 0, line_builder.get_line())
         values['order_line'].append(line)
@@ -233,7 +235,9 @@ class SaleOrderImportMapper(Component):
         amount = float(record['reward_currency_amount'])
         if amount == 0.0:
             return values
-        line_builder = self.component(usage='order.line.builder.magento.rewards')
+        line_builder = self.component(
+                usage='order.line.builder.magento.rewards'
+        )
         line_builder.price_unit = amount
         line = (0, 0, line_builder.get_line())
         values['order_line'].append(line)
