@@ -1,2 +1,2 @@
 magento
-vcrpy
+vcrpy<6.0
