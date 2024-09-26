@@ -73,8 +73,7 @@ class MagentoProductProduct(models.Model):
             ('simple', 'Simple Product'),
             ('configurable', 'Configurable Product'),
             ('virtual', 'Virtual Product'),
-            ('downloadable', 'Downloadable Product'),
-            # XXX activate when supported
+            ('downloadable', 'Downloadable Product'),# XXX activate when supported
             # ('grouped', 'Grouped Product'),
             # ('bundle', 'Bundle Product'),
         ]
@@ -470,10 +469,10 @@ class ProductImportMapper(ImportMapper):
     def categories(self, record):
         mag_categories = record['categories']
         binder = self.binder_for('magento.product.category')
-
-        category_ids = []
+        product_id=[]
+	curr_product = self.binder_for('magento.product.product').to_openerp(record['product_id'], browse=True)
+	category_ids = []
         main_categ_id = None
-
         for mag_category_id in mag_categories:
             cat_id = binder.to_openerp(mag_category_id, unwrap=True)
             if cat_id is None:
@@ -483,8 +482,9 @@ class ProductImportMapper(ImportMapper):
 
             category_ids.append(cat_id)
 
+        #do not pop from extra categories
         if category_ids:
-            main_categ_id = category_ids.pop(0)
+            main_categ_id = category_ids[0]
 
         if main_categ_id is None:
             default_categ = self.backend_record.default_category_id
@@ -492,7 +492,11 @@ class ProductImportMapper(ImportMapper):
                 main_categ_id = default_categ.id
 
         result = {'categ_ids': [(6, 0, category_ids)]}
-        if main_categ_id:  # OpenERP assign 'All Products' if not specified
+        # OpenERP assign 'All Products' if not specified
+        # skip main cat assignment if the current main category is already in
+        # categ_ids
+	if ((main_categ_id and not curr_product) or
+                (main_categ_id and curr_product.categ_id not in category_ids)):
             result['categ_id'] = main_categ_id
         return result
 
