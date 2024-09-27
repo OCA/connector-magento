@@ -993,7 +993,7 @@ class SaleOrderLineImportMapper(ImportMapper):
             row_total = float(record.get('row_total') or 0)
         discount = 0
         if discount_value > 0 and row_total > 0:
-            discount = 100 * discount_value / row_total
+            discount = 100 * discount_value / (discount_value + row_total)
         result = {'discount': discount}
         return result
 
@@ -1027,9 +1027,11 @@ class SaleOrderLineImportMapper(ImportMapper):
     @mapping
     def price(self, record):
         result = {}
-        base_row_total = float(record['base_row_total'] or 0.)
-        base_row_total_incl_tax = float(record['base_row_total_incl_tax'] or
-                                        0.)
+        base_row_total = float(record['base_row_total'] or 0.) + float(
+            record['base_discount_amount'] or 0)
+        base_row_total_incl_tax = float(
+            record['base_row_total_incl_tax'] or 0.) + float(
+                record['base_discount_amount'] or 0)
         qty_ordered = float(record['qty_ordered'])
         if self.options.tax_include:
             result['price_unit'] = base_row_total_incl_tax / qty_ordered
