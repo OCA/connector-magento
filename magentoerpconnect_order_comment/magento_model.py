@@ -18,20 +18,14 @@
 #
 ##############################################################################
 
-from openerp.osv import orm, fields
-from openerp.tools.translate import _
+from openerp import models, fields
 
 
-class magento_store(orm.Model):
+class MagentoStore(models.Model):
     _inherit = 'magento.store'
 
-    _columns = {
-        'send_sale_comment_mail': fields.boolean(
-            'Send email notification on sale comment',
-            help=_("Require Magento to send email on 'sale order comment' "
-                   "based on 'send a message' case (not 'log a note')")),
-    }
-
-    _defaults = {
-        'send_sale_comment_mail': False,
-    }
+    send_sale_comment_mail = fields.Boolean(
+        'Send email notification on sale comment',
+        help="Require Magento to send email on 'sale order comment' "
+             "based on 'send a message' case (not 'log a note')",
+        default=False)

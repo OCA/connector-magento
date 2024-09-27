@@ -20,10 +20,3 @@
 ##############################################################################
 
 from . import test_synchronization
-
-fast_suite = [
-]
-
-checks = [
-    test_synchronization,
-]
