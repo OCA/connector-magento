@@ -19,7 +19,7 @@ msgstr ""
 "Project-Id-Version: connector-magento (8.0)\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2018-03-17 03:18+0000\n"
-"PO-Revision-Date: 2024-08-22 11:06+0000\n"
+"PO-Revision-Date: 2024-11-04 17:06+0000\n"
 "Last-Translator: mymage <stefano.consolaro@mymage.it>\n"
 "Language-Team: Italian (http://www.transifex.com/oca/"
 "OCA-connector-magento-8-0/language/it/)\n"
@@ -3090,7 +3090,7 @@ msgstr ""
 #: field:magento.sale.order,message_summary:0
 #: field:magento.stock.picking,message_summary:0
 msgid "Summary"
-msgstr "Periodo Iva"
+msgstr "Riepilogo"
 
 #. module: magentoerpconnect
 #: field:magento.address,supplier:0 field:magento.product.product,seller_ids:0
