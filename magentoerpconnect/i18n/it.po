@@ -19,7 +19,7 @@ msgstr ""
 "Project-Id-Version: connector-magento (8.0)\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2018-03-17 03:18+0000\n"
-"PO-Revision-Date: 2024-11-04 17:06+0000\n"
+"PO-Revision-Date: 2025-02-20 11:06+0000\n"
 "Last-Translator: mymage <stefano.consolaro@mymage.it>\n"
 "Language-Team: Italian (http://www.transifex.com/oca/"
 "OCA-connector-magento-8-0/language/it/)\n"
@@ -2734,7 +2734,7 @@ msgstr "Ordine di vendita"
 #. module: magentoerpconnect
 #: field:magento.sale.order.line,openerp_id:0
 msgid "Sale Order Line"
-msgstr "Linea dell'ordine di vendita"
+msgstr "Riga ordine di vendita"
 
 #. module: magentoerpconnect
 #: field:magento.account.invoice,sale_ids:0
