@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="account_payment_mode_form_view" model="ir.ui.view">
+        <field name="name">account_payment_mode.form.view (connector_magento_payment_ref)</field>
+        <field name="model">account.payment.mode</field>
+        <field name="inherit_id" ref="account_payment_mode.account_payment_mode_form"/>
+        <field name="arch" type="xml">
+            <field name="fixed_journal_id" position="after">
+                <field name="transaction_id_path" placeholder="payment.last_trans_id"/>
+            </field>
+        </field>
+    </record>
+</odoo>

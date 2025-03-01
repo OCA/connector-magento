@@ -6,3 +6,4 @@ sale-workflow
 server-tools
 bank-payment
 partner-contact
+bank-statement-reconcile
