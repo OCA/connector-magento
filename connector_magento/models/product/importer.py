@@ -171,10 +171,8 @@ class ProductImportMapper(Component):
 
     # TODO :     categ, special_price => minimal_price
     direct = [('name', 'name'),
-              ('description', 'description'),
               ('weight', 'weight'),
               ('cost', 'standard_price'),
-              ('short_description', 'description_sale'),
               ('sku', 'default_code'),
               ('type_id', 'product_type'),
               (normalize_datetime('created_at'), 'created_at'),
@@ -317,11 +315,7 @@ class ProductImporter(Component):
         translation_importer = self.component(
             usage='translation.importer',
         )
-        translation_importer.run(
-            self.external_id,
-            binding,
-            mapper='magento.product.product.import.mapper'
-        )
+        translation_importer.run(self.external_id, binding)
         image_importer = self.component(usage='product.image.importer')
         image_importer.run(self.external_id, binding)
 

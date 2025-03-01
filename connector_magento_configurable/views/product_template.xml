@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="product_template_only_form_view" model="ir.ui.view">
+        <field name="model">product.template</field>
+        <field name="inherit_id" ref="product.product_template_only_form_view"/>
+        <field name="arch" type="xml">
+            <field name="attribute_line_ids" position="before">
+                <label string="Variants managed by magento" class="oe_inline"/>
+                <field name="variant_managed_by_magento" class="oe_inline"
+                nolabel="1" readonly="True"/>
+                <p class="oe_grey">
+					<strong>
+						Warning
+					</strong>
+					: this template's variants are manage by magento and cannot
+                    be modified from the ERP. unchecking this box may
+                    cause conflicts between magento and the ERP.
+				</p>
+            </field>
+            <page name="connector" position="attributes">
+                <attribute name="invisible">0</attribute>
+            </page>
+            <page name="connector" position="inside">
+                <group string="Magento Bindings">
+                    <field name="magento_bind_ids" nolabel="1">
+                        <tree>
+                            <field name="backend_id"/>
+                        </tree>
+                    </field>
+                </group>
+            </page>
+        </field>
+    </record>
+
+</odoo>
