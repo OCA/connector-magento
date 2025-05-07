@@ -337,18 +337,21 @@ class SaleOrderImportMapper(Component):
         team = self.options.storeview.team_id
         if team:
             return {'team_id': team.id}
+        return {}
 
     @mapping
     def analytic_account_id(self, record):
         analytic_account_id = self.options.storeview.account_analytic_id
         if analytic_account_id:
             return {'analytic_account_id': analytic_account_id.id}
+        return {}
 
     @mapping
     def fiscal_position(self, record):
         fiscal_position = self.options.storeview.fiscal_position_id
         if fiscal_position:
             return {'fiscal_position_id': fiscal_position.id}
+        return {}
 
     @mapping
     def warehouse_id(self, record):
@@ -358,6 +361,7 @@ class SaleOrderImportMapper(Component):
                 'warehouse_id': warehouse.id,
                 'company_id': warehouse.company_id.id,
             }
+        return {}
 
     # partner_id, partner_invoice_id, partner_shipping_id
     # are done in the importer
@@ -744,6 +748,10 @@ class SaleOrderLineImportMapper(Component):
                 discount = 100 * discount_value / row_total
             else:
                 discount = 100 * discount_value / (row_total + discount_value)
+        elif discount_value > 0 and row_total == 0:
+            discount = 100
+
+        discount = min(discount, 100)
         result = {'discount': discount}
         return result
 
