@@ -3,12 +3,17 @@
 # License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl).
 
 from odoo.addons.component.core import AbstractComponent
+from odoo.addons.connector.components.mapper import mapping
 
 
 class MagentoImportMapper(AbstractComponent):
     _name = 'magento.import.mapper'
     _inherit = ['base.magento.connector', 'base.import.mapper']
     _usage = 'import.mapper'
+
+    @mapping
+    def user_data(self, record):
+        return {f: record.get(f[3:]) for f in self.model._fields if f.startswith('x__')}
 
 
 class MagentoExportMapper(AbstractComponent):

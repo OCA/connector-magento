@@ -73,7 +73,7 @@ class SaleImportRule(Component):
     def _rule_paid(self, record, method):
         """ Import the order only if it has received a payment, or if there
         is nothing to pay in the first place. """
-        amount_paid = record.get('payment', {}).get('amount_paid') or 0
+        amount_paid = float(record.get('payment', {}).get('amount_paid') or 0)
         if record['grand_total'] and amount_paid <= 0:
             raise OrderImportRuleRetry('The order has not been paid.\n'
                                        'The import will be retried later.')
@@ -127,15 +127,14 @@ class SaleImportRule(Component):
 
 
 class SaleOrderImportMapper(Component):
-
     _name = 'magento.sale.order.mapper'
     _inherit = 'magento.import.mapper'
     _apply_on = 'magento.sale.order'
 
     direct = [('increment_id', 'external_id'),
               ('order_id', 'magento_order_id'),
-              ('grand_total', 'total_amount'),
-              ('tax_amount', 'total_amount_tax'),
+              ('base_grand_total', 'total_amount'),
+              ('base_tax_amount', 'total_amount_tax'),
               (normalize_datetime('created_at'), 'date_order'),
               ('store_id', 'storeview_id'),
               ]
@@ -151,7 +150,7 @@ class SaleOrderImportMapper(Component):
                 record.get('base_shipping_incl_tax') or 0.0) - discount
         else:
             amount = float(
-                record.get('shipping_amount') or 0.0) - discount
+                record.get('base_shipping_amount') or 0.0) - discount
         line_builder = self.component(usage='order.line.builder.shipping')
         # add even if the price is 0, otherwise odoo will add a shipping
         # line in the order when we ship the picking
@@ -278,20 +277,20 @@ class SaleOrderImportMapper(Component):
             "SaleOrderImporter._import_dependencies" % record['customer_id'])
         return {'partner_id': partner.id}
 
-    @mapping
-    def pricelist_id(self, record):
-        """ Assign a pricelist in the correct currency if necessary. """
-        currency = record['order_currency_code']
-        partner = self.binder_for('magento.res.partner').to_internal(
-            record['customer_id'], unwrap=True)
-        if partner.property_product_pricelist.currency_id.name != currency:
-            pricelist = self.env['product.pricelist'].search(
-                [('currency_id.name', '=', currency)], limit=1)
-            if not pricelist:
-                raise FailedJobError(
-                    "Missing pricelist for this order's currency: %s" %
-                    currency)
-            return {'pricelist_id': pricelist.id}
+    #     @mapping
+    #     def pricelist_id(self, record):
+    #         """ Assign a pricelist in the correct currency if necessary. """
+    #         currency = record['order_currency_code']
+    #         partner = self.binder_for('magento.res.partner').to_internal(
+    #             record['customer_id'], unwrap=True)
+    #         if partner.property_product_pricelist.currency_id.name != currency:
+    #             pricelist = self.env['product.pricelist'].search(
+    #                 [('currency_id.name', '=', currency)], limit=1)
+    #             if not pricelist:
+    #                 raise FailedJobError(
+    #                     "Missing pricelist for this order's currency: %s" %
+    #                     currency)
+    #             return {'pricelist_id': pricelist.id}
 
     @mapping
     def payment(self, record):
@@ -338,18 +337,21 @@ class SaleOrderImportMapper(Component):
         team = self.options.storeview.team_id
         if team:
             return {'team_id': team.id}
+        return {}
 
     @mapping
     def analytic_account_id(self, record):
         analytic_account_id = self.options.storeview.account_analytic_id
         if analytic_account_id:
             return {'analytic_account_id': analytic_account_id.id}
+        return {}
 
     @mapping
     def fiscal_position(self, record):
         fiscal_position = self.options.storeview.fiscal_position_id
         if fiscal_position:
             return {'fiscal_position_id': fiscal_position.id}
+        return {}
 
     @mapping
     def warehouse_id(self, record):
@@ -359,6 +361,7 @@ class SaleOrderImportMapper(Component):
                 'warehouse_id': warehouse.id,
                 'company_id': warehouse.company_id.id,
             }
+        return {}
 
     # partner_id, partner_invoice_id, partner_shipping_id
     # are done in the importer
@@ -722,7 +725,6 @@ class SaleOrderImporter(Component):
 
 
 class SaleOrderLineImportMapper(Component):
-
     _name = 'magento.sale.order.line.mapper'
     _inherit = 'magento.import.mapper'
     _apply_on = 'magento.sale.order.line'
@@ -741,8 +743,12 @@ class SaleOrderLineImportMapper(Component):
         else:
             row_total = float(record.get('row_total') or 0)
         discount = 0
-        if discount_value > 0:
-            discount = 100 * discount_value / (discount_value + row_total)
+        if discount_value > 0 and row_total >= 0:
+            if self.collection.version == '1.7':
+                discount = 100 * discount_value / row_total
+            else:
+                discount = 100 * discount_value / (row_total + discount_value)
+        discount = min(discount, 100)
         result = {'discount': discount}
         return result
 
@@ -774,8 +780,8 @@ class SaleOrderLineImportMapper(Component):
             #     }
             # }
             if record.get('product_option', {}).get(
-                    'extension_attributes', {}).get(
-                        'configurable_item_options'):
+                'extension_attributes', {}).get(
+                'configurable_item_options'):
                 _logger.debug(
                     'Magento order#%s contains a product with configurable '
                     'options but their import is not supported yet for '
@@ -801,14 +807,20 @@ class SaleOrderLineImportMapper(Component):
     def price(self, record):
         """ In Magento 2, base_row_total_incl_tax may not be present
         if no taxes apply """
-        discount_amount = float(record['base_discount_amount'] or 0)
-        base_row_total = float(record['base_row_total'] or 0.)
-        base_row_total_incl_tax = (
-            float(record['base_row_total_incl_tax'] or 0)
-            if 'base_row_total_incl_tax' in record else base_row_total)
-        qty_ordered = float(record['qty_ordered'])
-        if self.options.tax_include:
-            total = base_row_total_incl_tax
+        if self.collection.version == '1.7':
+            discount_amount = float(record['base_discount_amount'] or 0)
+            base_row_total = float(record['base_row_total'] or 0.)
+            base_row_total_incl_tax = (
+                float(record['base_row_total_incl_tax'] or 0)
+                if 'base_row_total_incl_tax' in record else base_row_total)
+            qty_ordered = float(record['qty_ordered'])
+            if self.options.tax_include:
+                total = base_row_total_incl_tax
+            else:
+                total = base_row_total
+            return {'price_unit': total / qty_ordered}
         else:
-            total = base_row_total
-        return {'price_unit': (total + discount_amount) / qty_ordered}
+            if self.options.tax_include:
+                return {'price_unit': record.get('base_price_incl_tax', 0.0)}
+            else:
+                return {'price_unit': record.get('base_price', 0.0)}
