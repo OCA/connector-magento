@@ -743,14 +743,11 @@ class SaleOrderLineImportMapper(Component):
         else:
             row_total = float(record.get('row_total') or 0)
         discount = 0
-        if discount_value > 0 and row_total > 0:
+        if discount_value > 0 and row_total >= 0:
             if self.collection.version == '1.7':
                 discount = 100 * discount_value / row_total
             else:
                 discount = 100 * discount_value / (row_total + discount_value)
-        elif discount_value > 0 and row_total == 0:
-            discount = 100
-
         discount = min(discount, 100)
         result = {'discount': discount}
         return result
