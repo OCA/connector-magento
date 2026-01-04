@@ -18,8 +18,7 @@
 #
 ##############################################################################
 
-from openerp.osv import orm, fields
-from openerp.tools.translate import _
+from openerp import models, fields, api, _
 from openerp.addons.connector.event import (
     on_record_write,
     on_record_create)
@@ -41,26 +40,24 @@ from openerp.addons.magentoerpconnect import sale
 from bs4 import BeautifulSoup
 
 
-class mail_message(orm.Model):
+class MailMessage(models.Model):
     _inherit = "mail.message"
 
-    _columns = {
-        'magento_sale_bind_ids': fields.one2many(
-            'magento.sale.comment',
-            'openerp_id',
-            string="Magento Bindings"),
-    }
+    magento_sale_bind_ids = fields.One2many(
+        'magento.sale.comment',
+        'openerp_id',
+        string="Magento Bindings")
 
 
 @on_record_create(model_names='mail.message')
 def create_mail_message(session, model_name, record_id, vals):
-    if session.context.get('connector_no_export'):
+    if session.env.context.get('connector_no_export'):
         return
     if vals.get('model') == 'sale.order' and vals.get('subtype_id'):
-        order = session.browse('sale.order', vals['res_id'])
+        order = session.env['sale.order'].browse(vals['res_id'])
         for mag_sale in order.magento_bind_ids:
             store = mag_sale.storeview_id.store_id
-            session.create('magento.sale.comment', {
+            session.env['magento.sale.comment'].create({
                 'openerp_id': record_id,
                 'subject': _('Sent to Magento'),
                 'is_visible_on_front': True,
@@ -69,7 +66,7 @@ def create_mail_message(session, model_name, record_id, vals):
             })
 
 
-class magento_sale_order(orm.Model):
+class MagentoSaleOrder(models.Model):
     """Allow to have a relation between
     magento.sale.order and magento.sale.comment
     like you have a relation between
@@ -78,15 +75,13 @@ class magento_sale_order(orm.Model):
     """
     _inherit = 'magento.sale.order'
 
-    _columns = {
-        'magento_order_comment_ids': fields.one2many(
-            'magento.sale.comment',
-            'magento_sale_order_id',
-            'Magento Sale comments'),
-    }
+    magento_order_comment_ids = fields.One2many(
+        'magento.sale.comment',
+        'magento_sale_order_id',
+        'Magento Sale comments')
 
 
-class magento_sale_comment(orm.Model):
+class MagentoSaleComment(models.Model):
     _name = 'magento.sale.comment'
     _inherit = 'magento.binding'
     _description = 'Magento Sale Comment'
@@ -96,66 +91,47 @@ class magento_sale_comment(orm.Model):
                    "sale comment on Magento. \nPlease refer to the Magento " \
                    "documentation for details. "
 
-    def _get_comments_from_order(self, cr, uid, ids, context=None):
-        return self.pool['magento.sale.comment'].search(
-            cr, uid, [('magento_sale_order_id', 'in', ids)], context=context)
+    openerp_id = fields.Many2one(
+        'mail.message',
+        string='Sale Comment',
+        required=True,
+        ondelete='cascade')
+    magento_sale_order_id = fields.Many2one(
+        'magento.sale.order',
+        'Magento Sale Order',
+        required=True,
+        ondelete='cascade',
+        select=True)
+    is_customer_notified = fields.Boolean(
+        'Customer notified',
+        help=MAGENTO_HELP)
+    is_visible_on_front = fields.Boolean(
+        'Visible on front',
+        help=MAGENTO_HELP)
+    status = fields.Char(
+        'Order status',
+        size=64,
+        help=MAGENTO_HELP)
+    backend_id = fields.Many2one(
+        'magento.backend', related='magento_sale_order_id.backend_id',
+        string='Magento Backend',
+        store=True,
+        readonly=True)
+    storeid = fields.Char(
+        'Store id',
+        help=MAGENTO_HELP)
 
-    _columns = {
-        'openerp_id': fields.many2one(
-            'mail.message',
-            string='Sale Comment',
-            required=True,
-            ondelete='cascade'),
-        'magento_sale_order_id': fields.many2one(
-            'magento.sale.order',
-            'Magento Sale Order',
-            required=True,
-            ondelete='cascade',
-            select=True),
-        'is_customer_notified': fields.boolean(
-            'Customer notified',
-            help=MAGENTO_HELP),
-        'is_visible_on_front': fields.boolean(
-            'Visible on front',
-            help=MAGENTO_HELP),
-        'status': fields.char(
-            'Order status',
-            size=64,
-            help=MAGENTO_HELP),
-        'backend_id': fields.related(
-            'magento_sale_order_id', 'backend_id',
-            type='many2one',
-            relation='magento.backend',
-            string='Magento Backend',
-            store={
-                'magento.sale.comment': (
-                    lambda self, cr, uid, ids, c=None:
-                    ids,
-                    ['magento_sale_order_id'],
-                    10),
-                'magento.sale.order': (
-                    _get_comments_from_order,
-                    ['backend_id'],
-                    20),
-                },
-            readonly=True),
-        'storeid': fields.char(
-            'Store id',
-            help=MAGENTO_HELP),
-    }
-
-    def create(self, cr, uid, vals, context=None):
+    @api.model
+    def create(self, vals):
         if 'res_id' not in vals:
-            info = self.pool['magento.sale.order'].read(
-                cr, uid, vals['magento_sale_order_id'],
-                ['openerp_id'],
-                context=context)
+            info = self.env['magento.sale.order'].browse(
+                vals['magento_sale_order_id'])
             vals.update({
-                'res_id': info['openerp_id'][0],
+                'res_id': info.openerp_id.id,
                 'model': 'sale.order',
-                })
-        return super(magento_sale_comment, self).create(
-            cr, uid, vals, context=context)
+                'backend_id': info.backend_id.id
+            })
+        return super(MagentoSaleComment, self).create(vals)
 
 
 @magento(replacing=sale.SaleOrderCommentImportMapper)
@@ -231,17 +207,18 @@ class SaleOrderMoveComment(sale.SaleOrderMoveComment):
     def move(self, binding):
         """magento messages from canceled (edit) order
         are moved to the new order"""
-        mag_message_ids = self.session.search('magento.sale.comment', [
+        mag_messages = self.session.env['magento.sale.comment'].search([
             ('model', '=', 'sale.order'),
             ('magento_sale_order_id', '!=', False),
-            ('res_id', '=', binding.parent_id)])
-        mag_sale_order_ids = self.session.search('magento.sale.order', [
-            ('openerp_id', '=', binding.openerp_id.id)])
+            ('res_id', '=', binding.parent_id.id)])
+        mag_sale_order = self.session.env['magento.sale.order'].search([
+            ('openerp_id', '=', binding.openerp_id.id)
+        ], limit=1)
         vals = {
             'res_id': binding.openerp_id.id,
             'magento_id': False,
-            'magento_sale_order_id': mag_sale_order_ids[0]}
-        self.session.write('magento.sale.comment', mag_message_ids, vals)
+            'magento_sale_order_id': mag_sale_order.id}
+        mag_messages.write(vals)
 
 
 @magento
@@ -263,7 +240,7 @@ class MagentoSaleCommentExporter(MagentoExporter):
         """ Create the Magento record """
         # special check on data before export
         self._validate_create_data(data)   # you may inherit in your own module
-        adapter = self.get_connector_unit_for_model(
+        adapter = self.unit_for(
             GenericAdapter,
             'magento.sale.order')
         return adapter.add_comment(data['order_increment'],
