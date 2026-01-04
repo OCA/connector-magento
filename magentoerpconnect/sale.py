@@ -436,6 +436,14 @@ class SaleOrderMoveComment(ConnectorUnit):
 
 
 @magento
+class SaleOrderPricelistCurrencyAssign(ConnectorUnit):
+    _model_name = ['magento.sale.order']
+
+    def change_pricelist_currency(self, binding):
+        pass
+
+
+@magento
 class SaleOrderImportMapper(ImportMapper):
     _model_name = 'magento.sale.order'
 
@@ -608,6 +616,12 @@ class SaleOrderImportMapper(ImportMapper):
         pricelist_mapper = self.unit_for(PricelistSaleOrderImportMapper)
         return pricelist_mapper.map_record(record).values(**self.options)
 
+    @mapping
+    def magento_currency(self, record):
+        currency_mapper = self.unit_for(SaleOrderCurrencyImportMapper)
+        map_record = currency_mapper.map_record(record)
+        return map_record.values(**self.options)
+
 
 @magento
 class SaleOrderImporter(MagentoImporter):
@@ -748,6 +762,8 @@ class SaleOrderImporter(MagentoImporter):
         if binding.magento_parent_id:
             move_comment = self.unit_for(SaleOrderMoveComment)
             move_comment.move(binding)
+        pricelist_assign = self.unit_for(SaleOrderPricelistCurrencyAssign)
+        pricelist_assign.change_pricelist_currency(binding)
 
     def _get_storeview(self, record):
         """ Return the tax inclusion setting for the appropriate storeview """
@@ -963,6 +979,15 @@ class PricelistSaleOrderImportMapper(ImportMapper):
 @magento
 class SaleOrderCommentImportMapper(ImportMapper):
     """ Mapper for importing comments of sales orders.
+
+    Does nothing in the base addons.
+    """
+    _model_name = 'magento.sale.order'
+
+
+@magento
+class SaleOrderCurrencyImportMapper(ImportMapper):
+    """ Mapper for importing currency of sales orders.
 
     Does nothing in the base addons.
     """
