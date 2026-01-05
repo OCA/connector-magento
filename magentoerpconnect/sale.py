@@ -532,15 +532,8 @@ class SaleOrderImportMapper(ImportMapper):
 
     @mapping
     def payment(self, record):
-        record_method = record['payment']['method']
-        method = self.env['payment.method'].search(
-            [['name', '=', record_method]],
-            limit=1,
-        )
-        assert method, ("method %s should exist because the import fails "
-                        "in SaleOrderImporter._before_import when it is "
-                        " missing" % record['payment']['method'])
-        return {'payment_method_id': method.id}
+        payment_mapper = self.unit_for(SaleOrderPaymentImportMapper)
+        return payment_mapper.map_record(record).values(**self.options)
 
     @mapping
     def shipping_method(self, record):
@@ -949,6 +942,28 @@ class SaleOrderImporter(MagentoImporter):
 
 
 SaleOrderImport = SaleOrderImporter  # deprecated
+
+
+@magento
+class SaleOrderPaymentImportMapper(ImportMapper):
+    """ Mapper for importing the sales order payment
+
+    By default link the sale order to a payment method.
+    Extended in magentoerpconnect_transaction_id.
+    """
+    _model_name = 'magento.sale.order'
+
+    @mapping
+    def payment(self, record):
+        record_method = record['payment']['method']
+        method = self.env['payment.method'].search(
+            [['name', '=', record_method]],
+            limit=1,
+        )
+        assert method, ("method %s should exist because the import fails "
+                        "in SaleOrderImporter._before_import when it is "
+                        " missing" % record['payment']['method'])
+        return {'payment_method_id': method.id}
 
 
 @magento
