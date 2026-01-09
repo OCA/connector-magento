@@ -34,10 +34,13 @@ from .data_base import magento_base_responses
 class TestUpdateStockQty(SetUpMagentoSynchronized):
     """ Test the export of pickings to Magento """
 
-    def _product_change_qty(self, product, new_qty):
+    def _product_change_qty(self, product, new_qty, location_id=False):
         wizard_model = self.env['stock.change.product.qty']
-        wizard = wizard_model.create({'product_id': product.id,
-                                      'new_quantity': new_qty})
+        data = {'product_id': product.id,
+                'new_quantity': new_qty}
+        if location_id:
+            data['location_id'] = location_id
+        wizard = wizard_model.create(data)
         wizard.change_product_qty()
 
     def setUp(self):
@@ -199,3 +202,37 @@ class TestUpdateStockQty(SetUpMagentoSynchronized):
                                           'backorders': 2,
                                           'use_config_backorders': 0,
                                           })
+
+    def test_compute_new_qty_on_location(self):
+        product = self.binding_product.openerp_id
+        binding = self.binding_product
+        # start with 0
+        self.assertEqual(product.virtual_available, 0.0)
+        self.assertEqual(binding.magento_qty, 0.0)
+
+        my_location_id = self.env.ref("stock.stock_location_components").id
+
+        # change to 30
+        self._product_change_qty(product, 30)
+        self._product_change_qty(product, 5, my_location_id)
+
+        # the virtual available is 30, the magento qty has not been
+        # updated yet
+        self.assertEqual(product.virtual_available, 35.0)
+        self.assertEqual(binding.magento_qty, 0.0)
+
+        # search for the new quantities to push to Magento
+        # we mock the job so we can check it .delay() is called on it
+        # when the quantity is changed
+        patched = ('openerp.addons.magentoerpconnect.'
+                   'product.export_product_inventory')
+        with mock.patch(patched) as export_product_inventory:
+            binding.with_context(location=my_location_id
+                                 ).recompute_magento_qty()
+            self.assertEqual(binding.magento_qty, 5)
+            export_product_inventory.delay.assert_called_with(
+                mock.ANY,
+                'magento.product.product',
+                binding.id,
+                priority=20,
+                fields=['magento_qty'])
