@@ -2,6 +2,15 @@
 # © 2016 Sodexis
 # License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl).
 
+"""Exporters for Magento.
+
+In addition to its export job, an exporter has to:
+
+* check in Magento if the record has been updated more recently than the
+  last sync date and if yes, delay an import
+* call the ``bind`` method of the binder to update the last sync date
+"""
+
 import logging
 from contextlib import contextmanager
 from datetime import datetime
@@ -17,19 +26,6 @@ from odoo.addons.connector.exception import IDMissingInBackend, RetryableJobErro
 from .backend_adapter import MAGENTO_DATETIME_FORMAT
 
 _logger = logging.getLogger(__name__)
-
-
-"""
-
-Exporters for Magento.
-
-In addition to its export job, an exporter has to:
-
-* check in Magento if the record has been updated more recently than the
-  last sync date and if yes, delay an import
-* call the ``bind`` method of the binder to update the last sync date
-
-"""
 
 
 class MagentoBaseExporter(AbstractComponent):
@@ -142,10 +138,10 @@ class MagentoExporter(AbstractComponent):
         on the binding record it has to export.
 
         """
-        sql = "SELECT id FROM %s WHERE ID = %%s FOR UPDATE NOWAIT" % self.model._table
+        sql = f"SELECT id FROM {self.model._table} WHERE ID = %s FOR UPDATE NOWAIT"
         try:
             self.env.cr.execute(sql, (self.binding.id,), log_exceptions=False)
-        except psycopg2.OperationalError:
+        except psycopg2.OperationalError as err:
             _logger.info(
                 "A concurrent job is already exporting the same "
                 "record (%s with id %s). Job delayed later.",
@@ -154,9 +150,9 @@ class MagentoExporter(AbstractComponent):
             )
             raise RetryableJobError(
                 "A concurrent job is already exporting the same record "
-                "(%s with id %s). The job will be retried later."
-                % (self.model._name, self.binding.id)
-            )
+                f"({self.model._name} with id {self.binding.id}). "
+                "The job will be retried later."
+            ) from err
 
     def _has_to_skip(self):
         """Return True if the export can be skipped"""
@@ -188,10 +184,10 @@ class MagentoExporter(AbstractComponent):
             if err.pgcode == psycopg2.errorcodes.UNIQUE_VIOLATION:
                 raise RetryableJobError(
                     "A database error caused the failure of the job:\n"
-                    "%s\n\n"
+                    f"{err}\n\n"
                     "Likely due to 2 concurrent jobs wanting to create "
-                    "the same record. The job will be retried later." % err
-                )
+                    "the same record. The job will be retried later."
+                ) from err
             else:
                 raise
 

@@ -71,7 +71,7 @@ class StateExporter(Component):
             )
             to_notify = comment and notify
             self.backend_adapter._call(
-                "orders/%s/comments" % external_id,
+                f"orders/{external_id}/comments",
                 {
                     "statusHistory": {
                         "comment": comment or magento_state,

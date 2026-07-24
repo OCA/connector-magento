@@ -9,7 +9,6 @@ from odoo import api, fields, models
 
 from odoo.addons.component.core import Component
 from odoo.addons.connector.exception import IDMissingInBackend
-from odoo.addons.queue_job.job import job
 
 from ...components.backend_adapter import MAGENTO_DATETIME_FORMAT
 
@@ -29,7 +28,7 @@ class ResPartner(models.Model):
         inverse_name="odoo_id",
         string="Magento Address Bindings",
     )
-    birthday = fields.Date(string="Birthday")
+    birthday = fields.Date()
     company = fields.Char(string="Company name (in Magento)")
 
     @api.model
@@ -42,7 +41,6 @@ class ResPartner(models.Model):
         fields.append("company")
         return fields
 
-    @job(default_channel="root.magento")
     @api.model
     def import_batch(self, backend, filters=None):
         assert (
@@ -83,9 +81,10 @@ class MagentoResPartner(models.Model):
     created_at = fields.Datetime(string="Created At (on Magento)", readonly=True)
     updated_at = fields.Datetime(string="Updated At (on Magento)", readonly=True)
     emailid = fields.Char(string="E-mail address")
+    birthday = fields.Date()
     taxvat = fields.Char(string="Magento VAT")
-    newsletter = fields.Boolean(string="Newsletter")
-    guest_customer = fields.Boolean(string="Guest Customer")
+    newsletter = fields.Boolean()
+    guest_customer = fields.Boolean()
     consider_as_company = fields.Boolean(
         string="Considered as company",
         help="An account imported with a 'company' in "
@@ -167,7 +166,7 @@ class PartnerAdapter(Component):
             # this is the error in the Magento API
             # when the customer does not exist
             if err.faultCode == 102:
-                raise IDMissingInBackend
+                raise IDMissingInBackend from err
             else:
                 raise
 
@@ -181,19 +180,36 @@ class PartnerAdapter(Component):
         """
         if filters is None:
             filters = {}
+        else:
+            filters = dict(filters)
 
         dt_fmt = MAGENTO_DATETIME_FORMAT
+        from_date = from_date or filters.pop("from_date", None)
+        to_date = to_date or filters.pop("to_date", None)
+        if "magento_website_id" in filters:
+            website_id = filters.pop("magento_website_id")
+            filters["website_id"] = website_id
+
         if from_date is not None:
-            # updated_at include the created records
             filters.setdefault("updated_at", {})
-            filters["updated_at"]["from"] = from_date.strftime(dt_fmt)
+            if isinstance(filters["updated_at"], dict):
+                filters["updated_at"]["from"] = (
+                    from_date.strftime(dt_fmt)
+                    if hasattr(from_date, "strftime")
+                    else str(from_date)
+                )
         if to_date is not None:
             filters.setdefault("updated_at", {})
-            filters["updated_at"]["to"] = to_date.strftime(dt_fmt)
+            if isinstance(filters["updated_at"], dict):
+                filters["updated_at"]["to"] = (
+                    to_date.strftime(dt_fmt)
+                    if hasattr(to_date, "strftime")
+                    else str(to_date)
+                )
         if magento_website_ids is not None:
             filters["website_id"] = {"in": magento_website_ids}
 
-        if self.collection.version == "1.7":
+        if self.collection.version and str(self.collection.version).startswith("1."):
             # the search method is on ol_customer instead of customer
             return self._call("ol_customer.search", [filters] if filters else [{}])
         return super().search(filters=filters)
@@ -215,11 +231,11 @@ class AddressAdapter(Component):
         return [
             int(row["customer_address_id"])
             for row in self._call(
-                "%s.list" % self._magento_model, [filters] if filters else [{}]
+                f"{self._magento_model}.list", [filters] if filters else [{}]
             )
         ]
 
     def create(self, customer_id, data):
         """Create a record on the external system"""
         # pylint: disable=method-required-super
-        return self._call("%s.create" % self._magento_model, [customer_id, data])
+        return self._call(f"{self._magento_model}.create", [customer_id, data])

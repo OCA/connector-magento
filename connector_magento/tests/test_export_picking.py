@@ -19,28 +19,13 @@ class TestExportPicking(MagentoSyncTestCase):
         # With this commit https://goo.gl/fRTLM3 the moves that where
         # force-assigned are not transferred in the picking
         for line in cls.order_binding.odoo_id.order_line:
-            if line.product_id.type == "product":
-                inventory = cls.env["stock.inventory"].create(
-                    {
-                        "name": "Inventory for line %s" % line.name,
-                        "filter": "product",
-                        "product_id": line.product_id.id,
-                        "line_ids": [
-                            (
-                                0,
-                                0,
-                                {
-                                    "product_id": line.product_id.id,
-                                    "product_qty": line.product_uom_qty,
-                                    "location_id": cls.env.ref(
-                                        "stock.stock_location_stock"
-                                    ).id,
-                                },
-                            )
-                        ],
-                    }
-                )
-                inventory.action_validate()
+            cls.env["stock.quant"].with_context(inventory_mode=True).create(
+                {
+                    "product_id": line.product_id.id,
+                    "inventory_quantity": line.product_uom_qty,
+                    "location_id": cls.env.ref("stock.stock_location_stock").id,
+                }
+            ).action_apply_inventory()
         cls.picking = cls.order_binding.picking_ids
         assert len(cls.picking) == 1, "Picking not found on imported order"
         magento_shop = cls.picking.sale_id.magento_bind_ids[0].store_id

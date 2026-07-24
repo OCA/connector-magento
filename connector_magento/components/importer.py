@@ -20,7 +20,7 @@ from odoo import _, fields
 
 from odoo.addons.component.core import AbstractComponent, Component
 from odoo.addons.connector.exception import IDMissingInBackend
-from odoo.addons.queue_job.exception import NothingToDoJob
+from odoo.addons.queue_job.exception import JobError
 
 _logger = logging.getLogger(__name__)
 
@@ -98,7 +98,7 @@ class MagentoImporter(AbstractComponent):
                 )
             try:
                 importer.run(external_id)
-            except NothingToDoJob:
+            except JobError:
                 _logger.info(
                     "Dependency import of %s(%s) has been ignored.",
                     binding_model._name,
@@ -180,7 +180,10 @@ class MagentoImporter(AbstractComponent):
         :param external_id: identifier of the record on Magento
         """
         self.external_id = external_id
-        lock_name = f"import({self.backend_record._name}, {self.backend_record.id}, {self.work.model_name}, {external_id})"
+        lock_name = (
+            f"import({self.backend_record._name}, {self.backend_record.id}, "
+            f"{self.work.model_name}, {external_id})"
+        )
 
         if data:
             self.magento_record = data

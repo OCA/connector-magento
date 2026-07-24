@@ -9,9 +9,11 @@ class TestUpdateStockQty(MagentoSyncTestCase):
 
     def _product_change_qty(self, product, new_qty, location_id=False):
         wizard_model = self.env["stock.change.product.qty"]
-        data = {"product_id": product.id, "new_quantity": new_qty}
-        if location_id:
-            data["location_id"] = location_id
+        data = {
+            "product_id": product.id,
+            "product_tmpl_id": product.product_tmpl_id.id,
+            "new_quantity": new_qty,
+        }
         wizard = wizard_model.create(data)
         wizard.change_product_qty()
 
@@ -202,7 +204,7 @@ class TestUpdateStockQty(MagentoSyncTestCase):
         self.assertEqual(product.virtual_available, 0.0)
         self.assertEqual(binding.magento_qty, 0.0)
 
-        my_location_id = self.env.ref("stock.stock_location_components").id
+        my_location_id = self.env.ref("stock.stock_location_stock").id
         binding = binding.with_context(location=my_location_id)
 
         # change to 30

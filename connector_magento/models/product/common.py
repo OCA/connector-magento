@@ -13,7 +13,6 @@ from odoo.tools.translate import _
 from odoo.addons.component.core import Component
 from odoo.addons.component_event import skip_if
 from odoo.addons.connector.exception import IDMissingInBackend
-from odoo.addons.queue_job.job import job, related_action
 
 from ...components.backend_adapter import MAGENTO_DATETIME_FORMAT
 
@@ -104,9 +103,6 @@ class MagentoProductProduct(models.Model):
 
     RECOMPUTE_QTY_STEP = 1000  # products at a time
 
-    @job(default_channel="root.magento")
-    @related_action(action="related_action_unwrap_binding")
-    @api.multi
     def export_inventory(self, fields=None):
         """Export the inventory configuration and quantity of a product."""
         self.ensure_one()
@@ -114,7 +110,6 @@ class MagentoProductProduct(models.Model):
             exporter = work.component(usage="product.inventory.exporter")
             return exporter.run(self, fields)
 
-    @api.multi
     def recompute_magento_qty(self):
         """Check if the quantity in the stock location configured
         on the backend has changed since the last export.
@@ -135,7 +130,6 @@ class MagentoProductProduct(models.Model):
             self._recompute_magento_qty_backend(backend, self.browse(product_ids))
         return True
 
-    @api.multi
     def _recompute_magento_qty_backend(self, backend, products, read_fields=None):
         """Recompute the products quantity for one backend.
 
@@ -167,7 +161,6 @@ class MagentoProductProduct(models.Model):
                 if new_qty != product["magento_qty"]:
                     self.browse(product["id"]).magento_qty = new_qty
 
-    @api.multi
     def _magento_qty(self, product, backend, location, stock_field):
         """Return the current quantity for one product.
 
@@ -184,14 +177,14 @@ class MagentoProductProduct(models.Model):
     def _get_admin_path(self, backend, external_id):
         """In Magento2, we can only link to the product when we have already
         imported it"""
-        if backend.version == "1.7":
+        if backend.version and backend.version.startswith("1."):
             return "/{model}/edit/id/{id}"
         magento_internal_id = self.search(
             [("backend_id", "=", backend.id), ("external_id", "=", external_id)],
             limit=1,
         ).magento_internal_id
         if magento_internal_id:
-            return "catalog/product/edit/id/%s" % magento_internal_id
+            return f"catalog/product/edit/id/{magento_internal_id}"
         raise UserError(
             _(
                 "We have to import the product before we can provide the admin "
@@ -230,7 +223,7 @@ class ProductProductAdapter(Component):
             # this is the error in the Magento API
             # when the product does not exist
             if err.faultCode == 101:
-                raise IDMissingInBackend
+                raise IDMissingInBackend from err
             else:
                 raise
 
@@ -249,12 +242,12 @@ class ProductProductAdapter(Component):
         if to_date is not None:
             filters.setdefault("updated_at", {})
             filters["updated_at"]["to"] = to_date.strftime(dt_fmt)
-        if self.collection.version == "1.7":
+        if self.collection.version and self.collection.version.startswith("1."):
             # TODO add a search entry point on the Magento API
             return [
                 int(row["product_id"])
                 for row in self._call(
-                    "%s.list" % self._magento_model, [filters] if filters else [{}]
+                    f"{self._magento_model}.list", [filters] if filters else [{}]
                 )
             ]
         return super().search(filters=filters)
@@ -265,7 +258,7 @@ class ProductProductAdapter(Component):
         :rtype: dict
         """
         # pylint: disable=method-required-super
-        if self.collection.version == "1.7":
+        if self.collection.version and self.collection.version.startswith("1."):
             return self._call(
                 "ol_catalog_product.info",
                 [int(external_id), storeview_id, attributes, "id"],
@@ -281,7 +274,7 @@ class ProductProductAdapter(Component):
         # pylint: disable=method-required-super
         # XXX actually only ol_catalog_product.update works
         # the PHP connector maybe breaks the catalog_product.update
-        if self.collection.version == "1.7":
+        if self.collection.version and self.collection.version.startswith("1."):
             return self._call(
                 "ol_catalog_product.update",
                 [int(external_id), data, storeview_id, "id"],
@@ -291,7 +284,7 @@ class ProductProductAdapter(Component):
     def get_images(self, external_id, storeview_id=None, data=None):
         """Fetch image metadata either by querying Magento 1.x, or extracting
         it from the product data for Magento 2.x"""
-        if self.collection.version == "1.7":
+        if self.collection.version and self.collection.version.startswith("1."):
             return self._call(
                 "product_media.list", [int(external_id), storeview_id, "id"]
             )
@@ -305,18 +298,16 @@ class ProductProductAdapter(Component):
                 [("backend_id", "=", self.collection.id), ("code", "=", "default")]
             )
         )
-        base_url = (
-            storeview.base_media_url or "%s/media/" % self.backend_record.location
-        )
+        base_url = storeview.base_media_url or f"{self.backend_record.location}/media/"
 
         for entry in data.get("media_gallery_entries", []):
             if entry["media_type"] == "image":
-                entry["url"] = "%scatalog/product/%s" % (base_url, entry["file"])
+                entry["url"] = "{}catalog/product/{}".format(base_url, entry["file"])
                 res.append(entry)
         return res
 
     def read_image(self, external_id, image_name, storeview_id=None):
-        if self.collection.version == "1.7":
+        if self.collection.version and self.collection.version.startswith("1."):
             return self._call(
                 "product_media.info", [int(external_id), image_name, storeview_id, "id"]
             )
@@ -325,7 +316,7 @@ class ProductProductAdapter(Component):
     def update_inventory(self, external_id, data):
         """Update the default stock. For Magento2, first retrieve the stock
         item that applies to this stock for the product."""
-        if self.collection.version == "1.7":
+        if self.collection.version and self.collection.version.startswith("1."):
             # product_stock.update is too slow
             return self._call(
                 "oerp_cataloginventory_stock_item.update", [int(external_id), data]
@@ -333,7 +324,7 @@ class ProductProductAdapter(Component):
 
         # Magento2
         data = {"stockItem": data}
-        res = self._call("stockItems/%s" % self.escape(external_id), None)
+        res = self._call(f"stockItems/{self.escape(external_id)}", None)
         if isinstance(res, dict):
             res = [res]
         item_id = 0
@@ -343,11 +334,10 @@ class ProductProductAdapter(Component):
                 break
         else:
             raise ValueError(
-                "No stock item found for product %s for default stock_id 1"
-                % external_id
+                f"No stock item found for product {external_id} for default stock_id 1"
             )
         self._call(
-            "products/%s/stockItems/%s" % (self.escape(external_id), item_id),
+            f"products/{self.escape(external_id)}/stockItems/{item_id}",
             data,
             http_method="put",
         )

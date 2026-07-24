@@ -5,11 +5,10 @@
 import logging
 import xmlrpc.client
 
-from odoo import api, fields, models
+from odoo import fields, models
 
 from odoo.addons.component.core import Component
 from odoo.addons.connector.exception import IDMissingInBackend
-from odoo.addons.queue_job.job import job, related_action
 
 _logger = logging.getLogger(__name__)
 
@@ -33,13 +32,9 @@ class MagentoStockPicking(models.Model):
     )
     picking_method = fields.Selection(
         selection=[("complete", "Complete"), ("partial", "Partial")],
-        string="Picking Method",
         required=True,
     )
 
-    @job(default_channel="root.magento")
-    @related_action(action="related_action_unwrap_binding")
-    @api.multi
     def export_tracking_number(self):
         """Export the tracking number of a delivery order."""
         self.ensure_one()
@@ -47,9 +42,6 @@ class MagentoStockPicking(models.Model):
             exporter = work.component(usage="tracking.exporter")
             return exporter.run(self)
 
-    @job(default_channel="root.magento")
-    @related_action(action="related_action_unwrap_binding")
-    @api.multi
     def export_picking_done(self, with_tracking=True):
         """Export a complete or partial delivery order."""
         # with_tracking is True to keep a backward compatibility (jobs that
@@ -92,7 +84,7 @@ class StockPickingAdapter(Component):
             # this is the error in the Magento API
             # when the shipment does not exist
             if err.faultCode == 100:
-                raise IDMissingInBackend
+                raise IDMissingInBackend from err
             else:
                 raise
 
@@ -100,7 +92,7 @@ class StockPickingAdapter(Component):
         """Create a record on the external system"""
         # pylint: disable=method-required-super
         return self._call(
-            "%s.create" % self._magento_model,
+            f"{self._magento_model}.create",
             [order_id, items, comment, email, include_comment],
         )
 
@@ -118,7 +110,7 @@ class StockPickingAdapter(Component):
         if self.collection.version == "2.0":
             _external_id, json_data = arguments
             return self._call("shipment/track", json_data, http_method="post")
-        return self._call("%s.addTrack" % self._magento_model, arguments)
+        return self._call(f"{self._magento_model}.addTrack", arguments)
 
     def get_carriers(self, external_id):
         """Get the list of carrier codes allowed for the shipping.
@@ -126,7 +118,7 @@ class StockPickingAdapter(Component):
         :param external_id: order increment id
         :rtype: list
         """
-        return self._call("%s.getCarriers" % self._magento_model, [external_id])
+        return self._call(f"{self._magento_model}.getCarriers", [external_id])
 
 
 class MagentoBindingStockPickingListener(Component):

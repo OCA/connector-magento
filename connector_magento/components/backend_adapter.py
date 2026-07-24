@@ -7,6 +7,7 @@ import xmlrpc.client
 from datetime import datetime
 from urllib.parse import quote_plus
 
+import magento as magentolib
 import requests
 
 from odoo.addons.component.core import AbstractComponent
@@ -14,12 +15,6 @@ from odoo.addons.connector.exception import NetworkRetryableError
 from odoo.addons.queue_job.exception import RetryableJobError
 
 _logger = logging.getLogger(__name__)
-
-try:
-    import magento as magentolib
-except ImportError:
-    _logger.debug("Cannot import 'magento'")
-
 
 MAGENTO_DATETIME_FORMAT = "%Y-%m-%d %H:%M:%S"
 
@@ -53,7 +48,7 @@ class MagentoLocation:
         if not self.use_auth_basic:
             return location
         assert self.auth_basic_username and self.auth_basic_password
-        replacement = "%s:%s@" % (self.auth_basic_username, self.auth_basic_password)
+        replacement = f"{self.auth_basic_username}:{self.auth_basic_password}@"
         location = location.replace("://", "://" + replacement)
         return location
 
@@ -71,14 +66,14 @@ class Magento2Client:
         if resource_path is None:
             _logger.exception("Magento2 REST API called without resource path")
             raise NotImplementedError
-        url = "%s/%s" % (self._url, resource_path)
+        url = f"{self._url}/{resource_path}"
         if storeview:
             # https://github.com/magento/magento2/issues/3864
-            url = url.replace("/rest/V1/", "/rest/%s/V1/" % storeview)
+            url = url.replace("/rest/V1/", f"/rest/{storeview}/V1/")
         if http_method is None:
             http_method = "get"
         function = getattr(requests, http_method)
-        headers = {"Authorization": "Bearer %s" % self._token}
+        headers = {"Authorization": f"Bearer {self._token}"}
         kwargs = {"headers": headers}
         if http_method == "get":
             kwargs["params"] = arguments
@@ -164,8 +159,8 @@ class MagentoAPI:
             return result
         except (TimeoutError, OSError, socket.gaierror) as err:
             raise NetworkRetryableError(
-                "A network error caused the failure of the job: " "%s" % err
-            )
+                "A network error caused the failure of the job: " f"{err}"
+            ) from err
         except xmlrpc.client.ProtocolError as err:
             if err.errcode in [
                 502,  # Bad gateway
@@ -174,12 +169,11 @@ class MagentoAPI:
             ]:  # Gateway timeout
                 raise RetryableJobError(
                     "A protocol error caused the failure of the job:\n"
-                    "URL: %s\n"
-                    "HTTP/HTTPS headers: %s\n"
-                    "Error code: %d\n"
-                    "Error message: %s\n"
-                    % (err.url, err.headers, err.errcode, err.errmsg)
-                )
+                    f"URL: {err.url}\n"
+                    f"HTTP/HTTPS headers: {err.headers}\n"
+                    f"Error code: {err.errcode}\n"
+                    f"Error message: {err.errmsg}\n"
+                ) from err
             else:
                 raise
 
@@ -222,12 +216,12 @@ class MagentoCRUDAdapter(AbstractComponent):
     def _call(self, method, arguments=None, http_method=None, storeview=None):
         try:
             magento_api = self.work.magento_api
-        except AttributeError:
+        except AttributeError as err:
             raise AttributeError(
                 "You must provide a magento_api attribute with a "
                 "MagentoAPI instance to be able to use the "
                 "Backend Adapter."
-            )
+            ) from err
         return magento_api.call(
             method, arguments, http_method=http_method, storeview=storeview
         )
@@ -280,16 +274,22 @@ class GenericAdapter(AbstractComponent):
             "to",
         ]
         for field in filters.keys():
-            for op in filters[field].keys():
-                assert op in operators
-                value = filters[field][op]
-                if isinstance(value, (list, set)):
-                    value = ",".join(value)
+            if isinstance(filters[field], dict):
+                op_dict = filters[field]
+            else:
+                op_dict = {"eq": filters[field]}
+            for op, value in op_dict.items():
+                if op not in operators:
+                    op = "eq"
+                if isinstance(value, list | set | tuple):
+                    value = ",".join(str(v) for v in value)
+                    if op == "eq":
+                        op = "in"
                 res.update(
                     {
                         expr % (count, "field"): field,
                         expr % (count, "condition_type"): op,
-                        expr % (count, "value"): value,
+                        expr % (count, "value"): str(value),
                     }
                 )
                 count += 1
@@ -310,23 +310,30 @@ class GenericAdapter(AbstractComponent):
 
         :rtype: list
         """
-        if self.collection.version == "1.7":
+        if self.collection.version and self.collection.version.startswith("1."):
             return self._call(
-                "%s.search" % self._magento_model, [filters] if filters else [{}]
+                f"{self._magento_model}.search", [filters] if filters else [{}]
             )
         key = self._magento2_key or "id"
         params = {}
         if self._magento2_search:
-            params["fields"] = "items[%s]" % key
+            params["fields"] = f"items[{key}]"
             params.update(self.get_searchCriteria(filters))
         else:
             params["fields"] = key
             if filters:
-                raise NotImplementedError
+                params.update(self.get_searchCriteria(filters))
         res = self._call(self._magento2_search or self._magento2_model, params)
-        if "items" in res:
+        if isinstance(res, dict) and "items" in res:
             res = res["items"] or []
-        return [item[key] for item in res if item[key] != 0]
+        elif not isinstance(res, list):
+            res = [res] if res else []
+        result_ids = []
+        for item in res:
+            val = item.get(key) if isinstance(item, dict) else item
+            if val and val != 0 and val != "0":
+                result_ids.append(val)
+        return result_ids
 
     @staticmethod
     def escape(term):
@@ -339,28 +346,26 @@ class GenericAdapter(AbstractComponent):
 
         :rtype: dict
         """
-        if self.collection.version == "1.7":
+        if self.collection.version and self.collection.version.startswith("1."):
             arguments = [int(external_id)]
-            # Avoid to pass Null values in attributes. Workaround for
-            # https://bugs.launchpad.net/openerp-connector-magento/+bug/1210775
-            # When Magento is installed on PHP 5.4 and the compatibility patch
-            # http://magento.com/blog/magento-news/magento-now-supports-php-54
-            # is not installed, calling info() with None in attributes
-            # would return a wrong result (almost empty list of
-            # attributes). The right correction is to install the
-            # compatibility patch on Magento.
             if attributes:
                 arguments.append(attributes)
             return self._call(
-                "%s.info" % self._magento_model, arguments, storeview=storeview
+                f"{self._magento_model}.info", arguments, storeview=storeview
             )
 
         if attributes:
-            raise NotImplementedError
+            params = (
+                self.get_searchCriteria(attributes)
+                if isinstance(attributes, dict)
+                else {}
+            )
+        else:
+            params = None
         if self._magento2_key:
             return self._call(
-                "%s/%s" % (self._magento2_model, self.escape(external_id)),
-                attributes,
+                f"{self._magento2_model}/{self.escape(external_id)}",
+                params,
                 storeview=storeview,
             )
         res = self._call(self._magento2_model, None)
@@ -369,35 +374,41 @@ class GenericAdapter(AbstractComponent):
     def search_read(self, filters=None):
         """Search records according to some criterias
         and returns their information"""
-        if self.collection.version == "1.7":
-            return self._call("%s.list" % self._magento_model, [filters])
+        if self.collection.version and self.collection.version.startswith("1."):
+            return self._call(f"{self._magento_model}.list", [filters])
         params = {}
         if self._magento2_search:
             params.update(self.get_searchCriteria(filters))
         else:
             if filters:
-                raise NotImplementedError
+                params.update(self.get_searchCriteria(filters))
         return self._call(self._magento2_search or self._magento2_model, params)
 
     def create(self, data):
         """Create a record on the external system"""
-        if self.collection.version == "1.7":
-            return self._call("%s.create" % self._magento_model, [data])
-        raise NotImplementedError
+        if self.collection.version and self.collection.version.startswith("1."):
+            return self._call(f"{self._magento_model}.create", [data])
+        res = self._call(self._magento2_model, data, http_method="POST")
+        return res.get("id") if isinstance(res, dict) else res
 
     def write(self, external_id, data):
         """Update records on the external system"""
-        if self.collection.version == "1.7":
-            return self._call(
-                "%s.update" % self._magento_model, [int(external_id), data]
-            )
-        raise NotImplementedError
+        if self.collection.version and self.collection.version.startswith("1."):
+            return self._call(f"{self._magento_model}.update", [int(external_id), data])
+        return self._call(
+            f"{self._magento2_model}/{self.escape(external_id)}",
+            data,
+            http_method="PUT",
+        )
 
     def delete(self, external_id):
         """Delete a record on the external system"""
-        if self.collection.version == "1.7":
-            return self._call("%s.delete" % self._magento_model, [int(external_id)])
-        raise NotImplementedError
+        if self.collection.version and self.collection.version.startswith("1."):
+            return self._call(f"{self._magento_model}.delete", [int(external_id)])
+        return self._call(
+            f"{self._magento2_model}/{self.escape(external_id)}",
+            http_method="DELETE",
+        )
 
     def admin_url(self, external_id):
         """Return the URL in the Magento admin for a record"""

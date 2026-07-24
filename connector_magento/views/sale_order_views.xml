@@ -37,12 +37,12 @@
         <field name="name">magento.sale.order.tree</field>
         <field name="model">magento.sale.order</field>
         <field name="arch" type="xml">
-            <tree string="Magento Sales Orders" create="false" delete="false">
+            <list string="Magento Sales Orders" create="false" delete="false">
                 <field name="backend_id" />
                 <field name="store_id" />
                 <field name="storeview_id" />
                 <field name="external_id" />
-            </tree>
+            </list>
         </field>
     </record>
 </odoo>

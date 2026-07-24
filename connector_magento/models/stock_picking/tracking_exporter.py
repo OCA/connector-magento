@@ -44,7 +44,7 @@ class MagentoTrackingExporter(Component):
         if binding.state != "done":  # should not happen
             raise ValueError(
                 "Wrong value for picking state, "
-                "it must be 'done', found: %s" % binding.state
+                f"it must be 'done', found: {binding.state}"
             )
         if not binding.carrier_id.magento_carrier_code:
             raise FailedJobError(
@@ -59,21 +59,16 @@ class MagentoTrackingExporter(Component):
         carrier = binding.carrier_id
         if carrier.magento_carrier_code not in allowed_carriers:
             raise FailedJobError(
-                "The carrier %(name)s does not accept "
+                f"The carrier {carrier.name} does not accept "
                 "tracking numbers on Magento.\n\n"
                 "Tracking codes accepted by Magento:\n"
-                "%(allowed)s.\n\n"
-                "Actual tracking code:\n%(code)s\n\n"
+                f"{allowed_carriers}.\n\n"
+                f"Actual tracking code:\n{carrier.magento_carrier_code}\n\n"
                 "Resolution:\n"
-                "* Add support of %(code)s in Magento\n"
+                f"* Add support of {carrier.magento_carrier_code} in Magento\n"
                 "* Or deactivate the export of tracking "
                 "numbers in the setup of the carrier "
-                "%(name)s."
-                % {
-                    "name": carrier.name,
-                    "allowed": allowed_carriers,
-                    "code": carrier.magento_carrier_code,
-                }
+                f"{carrier.name}."
             )
 
     def run(self, binding):
@@ -82,7 +77,7 @@ class MagentoTrackingExporter(Component):
         carrier = binding.carrier_id
         if not carrier:
             return FailedJobError(
-                "The carrier is missing on the picking %s." % binding.name
+                f"The carrier is missing on the picking {binding.name}."
             )
 
         if not carrier.magento_export_tracking:
@@ -96,7 +91,7 @@ class MagentoTrackingExporter(Component):
         if not sale_binding_id:
             return FailedJobError(
                 "No sales order is linked with the picking "
-                "%s, can't export the tracking number." % binding.name
+                f"{binding.name}, can't export the tracking number."
             )
 
         binder = self.binder_for()
@@ -107,8 +102,8 @@ class MagentoTrackingExporter(Component):
             external_id = binder.to_external(binding)
         if not external_id:
             return FailedJobError(
-                "The delivery order %s has no Magento ID, "
-                "can't export the tracking number." % binding.name
+                f"The delivery order {binding.name} has no Magento ID, "
+                "can't export the tracking number."
             )
 
         self._validate(binding)

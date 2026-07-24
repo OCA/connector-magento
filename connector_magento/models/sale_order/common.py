@@ -10,7 +10,6 @@ from odoo import _, api, fields, models
 import odoo.addons.decimal_precision as dp
 from odoo.addons.component.core import Component
 from odoo.addons.connector.exception import IDMissingInBackend
-from odoo.addons.queue_job.job import job
 
 from ...components.backend_adapter import MAGENTO_DATETIME_FORMAT
 
@@ -55,8 +54,6 @@ class MagentoSaleOrder(models.Model):
         related="storeview_id.store_id", string="Storeview", readonly=True
     )
 
-    @job(default_channel="root.magento")
-    @api.multi
     def export_state_change(self, allowed_states=None, comment=None, notify=None):
         """Change state of a sales order on Magento"""
         self.ensure_one()
@@ -66,7 +63,6 @@ class MagentoSaleOrder(models.Model):
                 self, allowed_states=allowed_states, comment=comment, notify=notify
             )
 
-    @job(default_channel="root.magento")
     @api.model
     def import_batch(self, backend, filters=None):
         """Prepare the import of Sales Orders from Magento"""
@@ -93,7 +89,7 @@ class SaleOrder(models.Model):
         For Magento sales orders, the magento parent order is stored
         in the binding, get it from there.
         """
-        super().get_parent_id()
+        res = super().get_parent_id()
         for order in self:
             if not order.magento_bind_ids:
                 continue
@@ -102,6 +98,7 @@ class SaleOrder(models.Model):
             magento_order = order.magento_bind_ids[0]
             if magento_order.magento_parent_id:
                 self.parent_id = magento_order.magento_parent_id.odoo_id
+        return res
 
     def _magento_cancel(self):
         """Cancel sales order on Magento
@@ -119,7 +116,6 @@ class SaleOrder(models.Model):
                     allowed_states=["cancel"]
                 )
 
-    @api.multi
     def write(self, vals):
         if vals.get("state") == "cancel":
             self._magento_cancel()
@@ -140,7 +136,6 @@ class SaleOrder(models.Model):
             job_descr = _("Reopen sales order %s") % (binding.external_id,)
             binding.with_delay(description=job_descr).export_state_change()
 
-    @api.multi
     def copy(self, default=None):
         self_copy = self.with_context(__copy_from_quotation=True)
         new = super(SaleOrder, self_copy).copy(default=default)
@@ -175,7 +170,7 @@ class MagentoSaleOrderLine(models.Model):
         # override 'magento.binding', can't be INSERTed if True:
         required=False,
     )
-    tax_rate = fields.Float(string="Tax Rate", digits=dp.get_precision("Account"))
+    tax_rate = fields.Float(digits=dp.get_precision("Account"))
     notes = fields.Char()
 
     @api.model
@@ -223,7 +218,6 @@ class SaleOrderLine(models.Model):
                 bindings.write({"odoo_id": new_line.id})
         return new_line
 
-    @api.multi
     def copy_data(self, default=None):
         data = super().copy_data(default=default)[0]
         if self.env.context.get("__copy_from_quotation"):
@@ -259,7 +253,7 @@ class SaleOrderAdapter(Component):
             # this is the error in the Magento API
             # when the sales order does not exist
             if err.faultCode == 100:
-                raise IDMissingInBackend
+                raise IDMissingInBackend from err
             else:
                 raise
 
@@ -273,17 +267,35 @@ class SaleOrderAdapter(Component):
         """
         if filters is None:
             filters = {}
+        else:
+            filters = dict(filters)
         dt_fmt = MAGENTO_DATETIME_FORMAT
+        from_date = from_date or filters.pop("from_date", None)
+        to_date = to_date or filters.pop("to_date", None)
+        if "magento_storeview_id" in filters:
+            store_id = filters.pop("magento_storeview_id")
+            filters["store_id"] = store_id
+
         if from_date is not None:
             filters.setdefault("created_at", {})
-            filters["created_at"]["from"] = from_date.strftime(dt_fmt)
+            if isinstance(filters["created_at"], dict):
+                filters["created_at"]["from"] = (
+                    from_date.strftime(dt_fmt)
+                    if hasattr(from_date, "strftime")
+                    else str(from_date)
+                )
         if to_date is not None:
             filters.setdefault("created_at", {})
-            filters["created_at"]["to"] = to_date.strftime(dt_fmt)
+            if isinstance(filters["created_at"], dict):
+                filters["created_at"]["to"] = (
+                    to_date.strftime(dt_fmt)
+                    if hasattr(to_date, "strftime")
+                    else str(to_date)
+                )
         if magento_storeview_ids is not None:
             filters["store_id"] = {"in": magento_storeview_ids}
 
-        if self.collection.version == "1.7":
+        if self.collection.version and str(self.collection.version).startswith("1."):
             arguments = {
                 "imported": False,
                 # 'limit': 200,
@@ -299,20 +311,18 @@ class SaleOrderAdapter(Component):
         :rtype: dict
         """
         # pylint: disable=method-required-super
-        if self.collection.version == "1.7":
-            return self._call(
-                "%s.info" % self._magento_model, [external_id, attributes]
-            )
+        if self.collection.version and self.collection.version.startswith("1."):
+            return self._call(f"{self._magento_model}.info", [external_id, attributes])
         return super().read(external_id, attributes=attributes)
 
     def get_parent(self, external_id):
         if self.collection.version == "2.0":
             res = self.read(external_id)
             return res.get("relation_parent_id")
-        return self._call("%s.get_parent" % self._magento_model, [external_id])
+        return self._call(f"{self._magento_model}.get_parent", [external_id])
 
     def add_comment(self, external_id, status, comment=None, notify=False):
         return self._call(
-            "%s.addComment" % self._magento_model,
+            f"{self._magento_model}.addComment",
             [external_id, status, comment, notify],
         )

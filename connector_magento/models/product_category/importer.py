@@ -21,13 +21,10 @@ class ProductCategoryBatchImporter(Component):
 
     def _import_record(self, external_id, job_options=None):
         """Delay a job for the import"""
-        super()._import_record(external_id, job_options=job_options)
+        return super()._import_record(external_id, job_options=job_options)
 
     def run(self, filters=None):
         """Run the synchronization"""
-        if self.collection.version == "2.0":
-            # TODO. See 8.0 version
-            raise NotImplementedError
         from_date = filters.pop("from_date", None)
         to_date = filters.pop("to_date", None)
         if from_date or to_date:
@@ -70,7 +67,6 @@ class ProductCategoryImporter(Component):
 
     def _create(self, data):
         binding = super()._create(data)
-        self.backend_record.add_checkpoint(binding)
         return binding
 
     def _after_import(self, binding):
@@ -108,8 +104,9 @@ class ProductCategoryImportMapper(Component):
 
         if not parent_binding:
             raise MappingError(
-                "The product category with "
-                "magento id %s is not imported." % record["parent_id"]
+                "The product category with " "magento id {} is not imported.".format(
+                    record["parent_id"]
+                )
             )
 
         parent = parent_binding.odoo_id

@@ -28,7 +28,7 @@ class TestExportPicking(Magento2SyncTestCase):
             if line.product_id.type == "product":
                 inventory = cls.env["stock.inventory"].create(
                     {
-                        "name": "Inventory for line %s" % line.name,
+                        "name": f"Inventory for line {line.name}",
                         "filter": "product",
                         "product_id": line.product_id.id,
                         "line_ids": [

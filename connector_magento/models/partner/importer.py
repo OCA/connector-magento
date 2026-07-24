@@ -87,8 +87,9 @@ class PartnerImportMapper(Component):
 
         if not category:
             raise MappingError(
-                "The partner category with "
-                "magento id %s does not exist" % record["group_id"]
+                "The partner category with " "magento id {} does not exist".format(
+                    record["group_id"]
+                )
             )
 
         # FIXME: should remove the previous tag (all the other tags from
@@ -125,7 +126,7 @@ class PartnerImportMapper(Component):
     @only_create
     @mapping
     def customer(self, record):
-        return {"customer": True}
+        return {}
 
     @mapping
     def type(self, record):
@@ -136,10 +137,11 @@ class PartnerImportMapper(Component):
     def odoo_id(self, record):
         """Will bind the customer on a existing partner
         with the same email"""
+        if not record.get("email"):
+            return {}
         partner = self.env["res.partner"].search(
             [
                 ("email", "=", record["email"]),
-                ("customer", "=", True),
                 "|",
                 ("is_company", "=", True),
                 ("parent_id", "=", False),
@@ -215,7 +217,7 @@ class PartnerAddressBook(Component):
         - Magento 1.x: read the addresses from the address repository
         - Magento 2.x: addresses are included in the partner record
         """
-        if self.collection.version == "1.7":
+        if self.collection.version and self.collection.version.startswith("1."):
             adapter = self.component(usage="backend.adapter")
             mag_address_ids = adapter.search(
                 {"customer_id": {"eq": magento_partner_id}}

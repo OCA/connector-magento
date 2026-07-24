@@ -36,7 +36,6 @@ class DeliveryCarrier(models.Model):
         required=False,
     )
     magento_tracking_title = fields.Char(
-        string="Magento Tracking Title",
         required=False,
     )
     # in Magento, the delivery method is something like that:

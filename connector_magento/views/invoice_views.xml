@@ -2,11 +2,8 @@
 <odoo>
     <record id="view_invoice_magento_form" model="ir.ui.view">
         <field name="name">account.invoice.magento.form</field>
-        <field name="model">account.invoice</field>
-        <field
-            name="inherit_id"
-            ref="connector_ecommerce.view_invoice_connector_form"
-        />
+        <field name="model">account.move</field>
+        <field name="inherit_id" ref="connector_ecommerce.view_move_form" />
         <field name="arch" type="xml">
             <page name="connector" position="attributes">
                 <attribute name="invisible">0</attribute>
@@ -36,10 +33,10 @@
         <field name="name">magento.account.invoice.tree</field>
         <field name="model">magento.account.invoice</field>
         <field name="arch" type="xml">
-            <tree string="Magento Invoice" create="false" delete="false">
+            <list string="Magento Invoice" create="false" delete="false">
                 <field name="backend_id" />
                 <field name="external_id" />
-            </tree>
+            </list>
         </field>
     </record>
 </odoo>

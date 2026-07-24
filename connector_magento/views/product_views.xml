@@ -14,10 +14,10 @@
             <page name="connector" position="inside">
                 <group string="Magento Bindings">
                     <field name="magento_bind_ids" nolabel="1">
-                        <tree>
+                        <list>
                             <field name="backend_id" />
                             <field name="product_type" />
-                        </tree>
+                        </list>
                     </field>
                 </group>
             </page>
@@ -64,10 +64,10 @@
         <field name="name">magento.product.product.tree</field>
         <field name="model">magento.product.product</field>
         <field name="arch" type="xml">
-            <tree string="Magento Product">
+            <list string="Magento Product">
                 <field name="backend_id" />
                 <field name="product_type" />
-            </tree>
+            </list>
         </field>
     </record>
 </odoo>

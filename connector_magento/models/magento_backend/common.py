@@ -4,13 +4,11 @@
 
 import logging
 from contextlib import contextmanager
-from datetime import datetime, timedelta
+from datetime import timedelta
 
 from odoo import _, api, fields, models
 from odoo.exceptions import UserError
 from odoo.tools import ustr
-
-from odoo.addons.connector.models.checkpoint import add_checkpoint
 
 from ...components.backend_adapter import MagentoAPI, MagentoLocation
 
@@ -42,14 +40,13 @@ class MagentoBackend(models.Model):
         )
         return field
 
-    name = fields.Char(string="Name", required=True)
+    name = fields.Char(required=True)
     version = fields.Selection(selection="select_versions", required=True)
     location = fields.Char(
-        string="Location",
         required=True,
         help="Url to magento application",
     )
-    admin_location = fields.Char(string="Admin Location")
+    admin_location = fields.Char()
     use_custom_api_path = fields.Boolean(
         string="Custom Api Path",
         help="The default API path is '/index.php/api/xmlrpc'. "
@@ -57,11 +54,9 @@ class MagentoBackend(models.Model):
         "the location has to be completed with the custom API path ",
     )
     username = fields.Char(
-        string="Username",
         help="Webservice user",
     )
     password = fields.Char(
-        string="Password",
         help="Webservice password",
     )
     token = fields.Char(
@@ -90,7 +85,6 @@ class MagentoBackend(models.Model):
         string="Verify SSL certificate", default=True, help="Only for Magento 2.0+"
     )
     sale_prefix = fields.Char(
-        string="Sale Prefix",
         help="A prefix put before the name of imported sales orders.\n"
         "For instance, if the prefix is 'mag-', the sales "
         "order 100000692 in Magento, will be named 'mag-100000692' "
@@ -185,7 +179,6 @@ class MagentoBackend(models.Model):
         )
     ]
 
-    @api.multi
     def check_magento_structure(self):
         """Used in each data import.
 
@@ -198,7 +191,6 @@ class MagentoBackend(models.Model):
         return True
 
     @contextmanager
-    @api.multi
     def work_on(self, model_name, **kwargs):
         self.ensure_one()
         lang = self.default_lang_id
@@ -227,13 +219,6 @@ class MagentoBackend(models.Model):
             with _super.work_on(model_name, magento_api=magento_api, **kwargs) as work:
                 yield work
 
-    @api.multi
-    def add_checkpoint(self, record):
-        self.ensure_one()
-        record.ensure_one()
-        return add_checkpoint(self.env, record._name, record.id, self._name, self.id)
-
-    @api.multi
     def synchronize_metadata(self):
         try:
             for backend in self:
@@ -252,12 +237,10 @@ class MagentoBackend(models.Model):
             raise UserError(
                 _(
                     "Check your configuration, we can't get the data. "
-                    "Here is the error:\n%s"
+                    f"Here is the error:\n{ustr(e)}"
                 )
-                % ustr(e)
-            )
+            ) from e
 
-    @api.multi
     def import_partners(self):
         """Import partners from all websites"""
         for backend in self:
@@ -265,7 +248,6 @@ class MagentoBackend(models.Model):
             backend.website_ids.import_partners()
         return True
 
-    @api.multi
     def import_sale_orders(self):
         """Import sale orders from all store views"""
         storeview_obj = self.env["magento.storeview"]
@@ -273,7 +255,6 @@ class MagentoBackend(models.Model):
         storeviews.import_sale_orders()
         return True
 
-    @api.multi
     def import_customer_groups(self):
         for backend in self:
             backend.check_magento_structure()
@@ -282,16 +263,11 @@ class MagentoBackend(models.Model):
             )
         return True
 
-    @api.multi
     def _import_from_date(self, model, from_date_field):
-        import_start_time = datetime.now()
+        import_start_time = fields.Datetime.now()
         for backend in self:
             backend.check_magento_structure()
-            from_date = backend[from_date_field]
-            if from_date:
-                from_date = fields.Datetime.from_string(from_date)
-            else:
-                from_date = None
+            from_date = backend[from_date_field] or None
             self.env[model].with_delay().import_batch(
                 backend, filters={"from_date": from_date, "to_date": import_start_time}
             )
@@ -305,22 +281,18 @@ class MagentoBackend(models.Model):
         # but this is not a big deal because they will be skipped when
         # the last `sync_date` is the same.
         next_time = import_start_time - timedelta(seconds=IMPORT_DELTA_BUFFER)
-        next_time = fields.Datetime.to_string(next_time)
         self.write({from_date_field: next_time})
 
-    @api.multi
     def import_product_categories(self):
         self._import_from_date(
             "magento.product.category", "import_categories_from_date"
         )
         return True
 
-    @api.multi
     def import_product_product(self):
         self._import_from_date("magento.product.product", "import_products_from_date")
         return True
 
-    @api.multi
     def _domain_for_update_product_stock_qty(self):
         return [
             ("backend_id", "in", self.ids),
@@ -328,7 +300,6 @@ class MagentoBackend(models.Model):
             ("no_stock_sync", "=", False),
         ]
 
-    @api.multi
     def update_product_stock_qty(self):
         mag_product_obj = self.env["magento.product.product"]
         domain = self._domain_for_update_product_stock_qty()
@@ -417,21 +388,18 @@ class MagentoConfigSpecializer(models.AbstractModel):
     def _parent(self):
         return getattr(self, self._parent_name)
 
-    @api.multi
     def _compute_account_analytic_id(self):
         for this in self:
             this.account_analytic_id = (
                 this.specific_account_analytic_id or this._parent.account_analytic_id
             )
 
-    @api.multi
     def _compute_fiscal_position_id(self):
         for this in self:
             this.fiscal_position_id = (
                 this.specific_fiscal_position_id or this._parent.fiscal_position_id
             )
 
-    @api.multi
     def _compute_warehouse_id(self):
         for this in self:
             this.warehouse_id = this.specific_warehouse_id or this._parent.warehouse_id

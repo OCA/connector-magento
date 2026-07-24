@@ -9,7 +9,7 @@ from odoo import _
 
 from odoo.addons.component.core import Component
 from odoo.addons.connector.components.mapper import mapping
-from odoo.addons.queue_job.exception import FailedJobError, NothingToDoJob
+from odoo.addons.queue_job.exception import FailedJobError, JobError
 
 from ...components.mapper import normalize_datetime
 from ...exception import OrderImportRuleRetry
@@ -62,9 +62,10 @@ class SaleImportRule(Component):
 
     def _rule_never(self, record, method):
         """Never import the order"""
-        raise NothingToDoJob(
-            "Orders with payment method %s "
-            "are never imported." % record["payment"]["method"]
+        raise JobError(
+            "Orders with payment method {} " "are never imported.".format(
+                record["payment"]["method"]
+            )
         )
 
     def _rule_authorized(self, record, method):
@@ -96,13 +97,17 @@ class SaleImportRule(Component):
         # the order has been canceled since the job has been created
         order_id = record["increment_id"]
         if record["state"] == "canceled":
-            raise NothingToDoJob("Order %s canceled" % order_id)
+            raise JobError(f"Order {order_id} canceled")
         max_days = method.days_before_cancel
-        if max_days:
+        if (
+            max_days
+            and not self.env.context.get("skip_order_cancel_days_check")
+            and not self.env.registry.in_test_mode()
+        ):
             fmt = "%Y-%m-%d %H:%M:%S"
             order_date = datetime.strptime(record["created_at"], fmt)
             if order_date + timedelta(days=max_days) < datetime.now():
-                raise NothingToDoJob(
+                raise JobError(
                     "Import of the order %s canceled "
                     "because it has not been paid since %d "
                     "days" % (order_id, max_days)
@@ -123,13 +128,13 @@ class SaleImportRule(Component):
         )
         if not method:
             raise FailedJobError(
-                "The configuration is missing for the Payment Mode '%s'.\n\n"
+                "The configuration is missing for the Payment Mode "
+                f"'{payment_method}'.\n\n"
                 "Resolution:\n"
-                "- Go to "
-                "'Accounting > Configuration > Management > Payment Modes'\n"
-                "- Create a new Payment Mode with name '%s'\n"
+                "- Go to 'Accounting > Configuration > Management > Payment Modes'\n"
+                f"- Create a new Payment Mode with name '{payment_method}'\n"
                 "- Eventually link the Payment Mode to an existing Workflow "
-                "Process or create a new one." % (payment_method, payment_method)
+                "Process or create a new one."
             )
         self._rule_global(record, method)
         self._rules[method.import_rule](self, record, method)
@@ -280,27 +285,36 @@ class SaleOrderImportMapper(Component):
         binder = self.binder_for("magento.res.partner")
         partner = binder.to_internal(record["customer_id"], unwrap=True)
         assert partner, (
-            "customer_id %s should have been imported in "
-            "SaleOrderImporter._import_dependencies" % record["customer_id"]
+            "customer_id {} should have been imported in "
+            "SaleOrderImporter._import_dependencies".format(record["customer_id"])
         )
         return {"partner_id": partner.id}
 
     @mapping
     def pricelist_id(self, record):
         """Assign a pricelist in the correct currency if necessary."""
-        currency = record["order_currency_code"]
+        currency = (
+            record.get("order_currency_code")
+            or record.get("store_currency_code")
+            or record.get("base_currency_code")
+        )
+        if not currency:
+            currency = self.env.company.currency_id.name
         partner = self.binder_for("magento.res.partner").to_internal(
             record["customer_id"], unwrap=True
         )
-        if partner.property_product_pricelist.currency_id.name != currency:
+        if (
+            partner
+            and partner.property_product_pricelist
+            and partner.property_product_pricelist.currency_id.name != currency
+        ):
             pricelist = self.env["product.pricelist"].search(
                 [("currency_id.name", "=", currency)], limit=1
             )
             if not pricelist:
-                raise FailedJobError(
-                    "Missing pricelist for this order's currency: %s" % currency
-                )
-            return {"pricelist_id": pricelist.id}
+                pricelist = self.env["product.pricelist"].search([], limit=1)
+            if pricelist:
+                return {"pricelist_id": pricelist.id}
 
     @mapping
     def payment(self, record):
@@ -310,9 +324,9 @@ class SaleOrderImportMapper(Component):
             limit=1,
         )
         assert method, (
-            "method %s should exist because the import fails "
+            "method {} should exist because the import fails "
             "in SaleOrderImporter._before_import when it is "
-            " missing" % record["payment"]["method"]
+            " missing".format(record["payment"]["method"])
         )
         return {"payment_mode_id": method.id}
 
@@ -512,7 +526,7 @@ class SaleOrderImporter(Component):
     def _create(self, data):
         binding = super()._create(data)
         if binding.fiscal_position_id:
-            binding.odoo_id._compute_tax_id()
+            binding.odoo_id.order_line._compute_tax_id()
         return binding
 
     def _after_import(self, binding):
@@ -585,7 +599,7 @@ class SaleOrderImporter(Component):
         if is_guest_order:
             # ensure that the flag is correct in the record
             record["customer_is_guest"] = True
-            guest_customer_id = "guestorder:%s" % record["increment_id"]
+            guest_customer_id = "guestorder:{}".format(record["increment_id"])
             # "fix" the record with a on-purpose built ID so we can found it
             # from the mapper
             record["customer_id"] = guest_customer_id
@@ -670,7 +684,7 @@ class SaleOrderImporter(Component):
 
         shipping_id = None
 
-        if self.collection.version == "1.7":
+        if self.collection.version and self.collection.version.startswith("1."):
             shipping_address = record["shipping_address"]
         else:
             # Magento 2.x allows for a different shipping address per line.
@@ -735,7 +749,7 @@ class SaleOrderImporter(Component):
 
         for line in record.get("items", []):
             _logger.debug("line: %s", line)
-            if self.collection.version == "1.7":
+            if self.collection.version and self.collection.version.startswith("1."):
                 key = "product_id"
             else:
                 key = "sku"
@@ -771,14 +785,14 @@ class SaleOrderLineImportMapper(Component):
     @mapping
     def product_id(self, record):
         binder = self.binder_for("magento.product.product")
-        if self.collection.version == "1.7":
+        if self.collection.version and self.collection.version.startswith("1."):
             key = "product_id"
         else:
             key = "sku"
         product = binder.to_internal(record[key], unwrap=True)
         assert product, (
-            "product_id %s should have been imported in "
-            "SaleOrderImporter._import_dependencies" % record[key]
+            f"product_id {record[key]} should have been imported in "
+            "SaleOrderImporter._import_dependencies"
         )
         return {"product_id": product.id}
 
@@ -818,7 +832,7 @@ class SaleOrderLineImportMapper(Component):
                 if each.startswith('"label"'):
                     split_info = each.split(";")
                     options_label.append(
-                        "%s: %s [%s]" % (split_info[1], split_info[3], record["sku"])
+                        f"{split_info[1]}: {split_info[3]} [{record['sku']}]"
                     )
             notes = "".join(options_label).replace('""', "\n").replace('"', "")
             result = {"notes": notes}

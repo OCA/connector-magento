@@ -71,7 +71,7 @@ class ProductCategoryAdapter(Component):
             # 101 is the error in the Magento API
             # when the category does not exist
             if err.faultCode == 102:
-                raise IDMissingInBackend
+                raise IDMissingInBackend from err
             else:
                 raise
 
@@ -92,7 +92,7 @@ class ProductCategoryAdapter(Component):
         if to_date is not None:
             filters.setdefault("updated_at", {})
             filters["updated_at"]["to"] = to_date.strftime(dt_fmt)
-        if self.collection.version == "1.7":
+        if self.collection.version and self.collection.version.startswith("1."):
             return self._call(
                 "oerp_catalog_category.search", [filters] if filters else [{}]
             )
@@ -104,9 +104,9 @@ class ProductCategoryAdapter(Component):
         :rtype: dict
         """
         # pylint: disable=method-required-super
-        if self.collection.version == "1.7":
+        if self.collection.version and self.collection.version.startswith("1."):
             return self._call(
-                "%s.info" % self._magento_model,
+                f"{self._magento_model}.info",
                 [int(external_id), storeview_id, attributes],
             )
         return super().read(external_id, attributes, storeview=storeview_id)
@@ -119,28 +119,39 @@ class ProductCategoryAdapter(Component):
 
         def filter_ids(tree):
             children = {}
-            if tree["children"]:
+            if isinstance(tree, dict) and tree.get("children"):
                 for node in tree["children"]:
                     children.update(filter_ids(node))
-            category_id = {tree["category_id"]: children}
-            return category_id
+            categ_id = tree.get("category_id") if isinstance(tree, dict) else None
+            return {categ_id: children} if categ_id else children
 
-        if self.collection.version == "1.7":
+        def filter_ids_m2(node):
+            children = {}
+            if isinstance(node, dict) and node.get("children_data"):
+                for child in node["children_data"]:
+                    children.update(filter_ids_m2(child))
+            node_id = node.get("id") if isinstance(node, dict) else None
+            return {node_id: children} if node_id else children
+
+        if self.collection.version and str(self.collection.version).startswith("1."):
+            args = []
             if parent_id:
-                parent_id = int(parent_id)
-                tree = self._call(
-                    "%s.tree" % self._magento_model, [parent_id, storeview_id]
-                )
+                args.append(int(parent_id))
+            if storeview_id:
+                args.append(storeview_id)
+            tree = self._call(f"{self._magento_model}.tree", args)
             return filter_ids(tree)
-        raise NotImplementedError  # TODO
+        else:
+            res = self._call("categories", None)
+            return filter_ids_m2(res) if isinstance(res, dict) else {}
 
     def move(self, categ_id, parent_id, after_categ_id=None):
-        if self.collection.version == "1.7":
+        if self.collection.version and self.collection.version.startswith("1."):
             return self._call(
-                "%s.move" % self._magento_model, [categ_id, parent_id, after_categ_id]
+                f"{self._magento_model}.move", [categ_id, parent_id, after_categ_id]
             )
         return self._call(
-            "%s/%s/move" % (self._magento2_model, categ_id),
+            f"{self._magento2_model}/{categ_id}/move",
             {
                 "parent_id": parent_id,
                 "after_id": after_categ_id,
@@ -148,29 +159,29 @@ class ProductCategoryAdapter(Component):
         )
 
     def get_assigned_product(self, categ_id):
-        if self.collection.version == "1.7":
-            return self._call("%s.assignedProducts" % self._magento_model, [categ_id])
+        if self.collection.version and self.collection.version.startswith("1."):
+            return self._call(f"{self._magento_model}.assignedProducts", [categ_id])
         raise NotImplementedError  # TODO
 
     def assign_product(self, categ_id, product_id, position=0):
-        if self.collection.version == "1.7":
+        if self.collection.version and self.collection.version.startswith("1."):
             return self._call(
-                "%s.assignProduct" % self._magento_model,
+                f"{self._magento_model}.assignProduct",
                 [categ_id, product_id, position, "id"],
             )
         raise NotImplementedError  # TODO
 
     def update_product(self, categ_id, product_id, position=0):
-        if self.collection.version == "1.7":
+        if self.collection.version and self.collection.version.startswith("1."):
             return self._call(
-                "%s.updateProduct" % self._magento_model,
+                f"{self._magento_model}.updateProduct",
                 [categ_id, product_id, position, "id"],
             )
         raise NotImplementedError  # TODO
 
     def remove_product(self, categ_id, product_id):
-        if self.collection.version == "1.7":
+        if self.collection.version and self.collection.version.startswith("1."):
             return self._call(
-                "%s.removeProduct" % self._magento_model, [categ_id, product_id, "id"]
+                f"{self._magento_model}.removeProduct", [categ_id, product_id, "id"]
             )
         raise NotImplementedError  # TODO

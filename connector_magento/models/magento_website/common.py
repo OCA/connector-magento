@@ -3,9 +3,9 @@
 # License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl).
 
 
-from datetime import datetime, timedelta
+from datetime import timedelta
 
-from odoo import api, fields, models
+from odoo import fields, models
 
 from odoo.addons.component.core import Component
 
@@ -22,7 +22,7 @@ class MagentoWebsite(models.Model):
 
     name = fields.Char(required=True, readonly=True)
     code = fields.Char(readonly=True)
-    sort_order = fields.Integer(string="Sort Order", readonly=True)
+    sort_order = fields.Integer(readonly=True)
     store_ids = fields.One2many(
         comodel_name="magento.store",
         inverse_name="website_id",
@@ -39,16 +39,11 @@ class MagentoWebsite(models.Model):
     )
     is_multi_company = fields.Boolean(related="backend_id.is_multi_company")
 
-    @api.multi
     def import_partners(self):
-        import_start_time = datetime.now()
+        import_start_time = fields.Datetime.now()
         for website in self:
             backend = website.backend_id
-            if website.import_partners_from_date:
-                from_string = fields.Datetime.from_string
-                from_date = from_string(website.import_partners_from_date)
-            else:
-                from_date = None
+            from_date = website.import_partners_from_date or None
             self.env["magento.res.partner"].with_delay().import_batch(
                 backend,
                 filters={
@@ -67,7 +62,6 @@ class MagentoWebsite(models.Model):
         # but this is not a big deal because they will be skipped when
         # the last `sync_date` is the same.
         next_time = import_start_time - timedelta(seconds=IMPORT_DELTA_BUFFER)
-        next_time = fields.Datetime.to_string(next_time)
         self.write({"import_partners_from_date": next_time})
         return True
 

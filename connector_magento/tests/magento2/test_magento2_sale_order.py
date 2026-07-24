@@ -132,10 +132,9 @@ class TestSaleOrder(Magento2SyncTestCase):
         self.assertTrue(
             shipping_line,
             msg="No shipping line with the product of the carrier "
-            "has been found. Line names: %s"
-            % (
+            "has been found. Line names: {}".format(
                 ", ".join(
-                    "%s (%s)" % (line.name, line.product_id.name)
+                    f"{line.name} ({line.product_id.name})"
                     for line in binding.order_line
                 ),
             ),

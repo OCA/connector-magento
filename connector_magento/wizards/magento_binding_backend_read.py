@@ -90,9 +90,8 @@ class MagentoBindingBackendRead(models.TransientModel):
     magento_binding_model = fields.Selection(
         "_get_magento_binding_model", required=True
     )
-    magento_id = fields.Char("Magento Id", required=True)
+    magento_id = fields.Char(required=True)
 
-    @api.multi
     def action_get_info(self):
         self.ensure_one()
 
@@ -101,15 +100,14 @@ class MagentoBindingBackendRead(models.TransientModel):
             data = adapter.read(self.magento_id)
         with contextlib.closing(io.StringIO()) as buf:
             json.dump(data, buf)
-            out = base64.encodestring(buf.getvalue())
+            out = base64.b64encode(buf.getvalue().encode("utf-8"))
 
-        name = "sale_order_%s.json" % self.magento_id
+        name = f"sale_order_{self.magento_id}.json"
         self.write({"state": "get", "data": out, "name": name})
         return {
             "type": "ir.actions.act_window",
             "res_model": "magento.binding.backend.read",
             "view_mode": "form",
-            "view_type": "form",
             "res_id": self.id,
             "views": [(False, "form")],
             "target": "new",

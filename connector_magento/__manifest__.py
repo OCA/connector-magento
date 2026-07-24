@@ -4,7 +4,7 @@
 
 {
     "name": "Magento Connector",
-    "version": "12.0.1.1.7",
+    "version": "18.0.1.0.0",
     "category": "Connector",
     "depends": [
         "account",
@@ -14,6 +14,8 @@
         "sale_stock",
         "product_multi_category",
         "connector_ecommerce",
+        "queue_job",
+        "connector",
     ],
     "external_dependencies": {
         "python": ["magento"],

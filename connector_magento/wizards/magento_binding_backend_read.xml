@@ -9,21 +9,21 @@
         <field name="model">magento.binding.backend.read</field>
         <field name="arch" type="xml">
             <form string="Read Binding information from backend">
-                <group states="choose">
+                <group invisible="state != 'choose'">
                     <field name="state" invisible="1" />
                     <field name="name" invisible="1" />
                     <field name="magento_backend_id" />
                     <field name="magento_binding_model" />
                     <field name="magento_id" />
                 </group>
-                <div states="get">
+                <div invisible="state != 'get'">
                     <p>Here is the file with information read drom the backend: <field
                         name="data"
                         readonly="1"
                         filename="name"
                     /></p>
                 </div>
-                <footer states="choose">
+                <footer invisible="state != 'choose'">
                     <button
                         name="action_get_info"
                         string="Get"
@@ -37,7 +37,7 @@
                         class="btn-default"
                     />
                 </footer>
-                <footer states="get">
+                <footer invisible="state != 'get'">
                     <button
                         special="cancel"
                         string="Close"
@@ -55,7 +55,6 @@
         <field name="res_model">magento.binding.backend.read</field>
         <field name="binding_model_id" ref="connector_magento.model_magento_backend" />
         <field name="view_mode">form</field>
-        <field name="view_type">form</field>
         <field name="target">new</field>
     </record>
 </odoo>

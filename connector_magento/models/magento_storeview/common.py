@@ -3,9 +3,9 @@
 # License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl.html)
 
 import logging
-from datetime import datetime, timedelta
+from datetime import timedelta
 
-from odoo import api, fields, models
+from odoo import fields, models
 
 from odoo.addons.component.core import Component
 
@@ -24,8 +24,8 @@ class MagentoStoreview(models.Model):
 
     name = fields.Char(required=True, readonly=True)
     code = fields.Char(readonly=True)
-    enabled = fields.Boolean(string="Enabled", readonly=True)
-    sort_order = fields.Integer(string="Sort Order", readonly=True)
+    enabled = fields.Boolean(readonly=True)
+    sort_order = fields.Integer(readonly=True)
     store_id = fields.Many2one(
         comodel_name="magento.store", string="Store", ondelete="cascade", readonly=True
     )
@@ -59,9 +59,8 @@ class MagentoStoreview(models.Model):
     catalog_price_tax_included = fields.Boolean(string="Prices include tax")
     is_multi_company = fields.Boolean(related="backend_id.is_multi_company")
 
-    @api.multi
     def import_sale_orders(self):
-        import_start_time = datetime.now()
+        import_start_time = fields.Datetime.now()
         for storeview in self:
             if storeview.no_sales_order_sync:
                 _logger.debug(
@@ -77,10 +76,11 @@ class MagentoStoreview(models.Model):
                 user = self.env["res.users"].browse(self.env.uid)
 
             sale_binding_model = self.env["magento.sale.order"]
-            if user != self.env.user:
-                sale_binding_model = sale_binding_model.sudo(user)
-
-            backend = storeview.sudo(user).backend_id
+            if user and user != self.env.user:
+                sale_binding_model = sale_binding_model.with_user(user)
+                backend = storeview.with_user(user).backend_id
+            else:
+                backend = storeview.backend_id
             from_date = storeview.import_orders_from_date
 
             # Apply the global order import delay

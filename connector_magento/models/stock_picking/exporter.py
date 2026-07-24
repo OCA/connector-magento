@@ -7,7 +7,7 @@ import odoo
 from odoo import _
 
 from odoo.addons.component.core import Component
-from odoo.addons.queue_job.exception import NothingToDoJob
+from odoo.addons.queue_job.exception import JobError
 
 
 class MagentoPickingExporter(Component):
@@ -77,7 +77,7 @@ class MagentoPickingExporter(Component):
         def get_lines_info():
             lines_info = self._get_lines_info(binding)
             if not lines_info:
-                raise NothingToDoJob(
+                raise JobError(
                     _(
                         "Canceled: the delivery order does not "
                         "contain lines from the original sale order."
@@ -88,7 +88,7 @@ class MagentoPickingExporter(Component):
         if binding.external_id:
             return _("Already exported")
 
-        if self.collection.version == "1.7":
+        if self.collection.version and self.collection.version.startswith("1."):
             picking_method = binding.picking_method
             if picking_method == "complete":
                 args = self._get_args(binding)
@@ -99,7 +99,7 @@ class MagentoPickingExporter(Component):
                 raise ValueError(
                     "Wrong value for picking_method, authorized "
                     "values are 'partial' or 'complete', "
-                    "found: %s" % picking_method
+                    f"found: {picking_method}"
                 )
             try:
                 external_id = self.backend_adapter.create(*args)
@@ -108,10 +108,10 @@ class MagentoPickingExporter(Component):
                 # <Fault 102: u"Impossible de faire
                 # l\'exp\xe9dition de la commande.">
                 if err.faultCode == 102:
-                    raise NothingToDoJob(
+                    raise JobError(
                         "Canceled: the delivery order already "
                         "exists on Magento (fault 102)."
-                    )
+                    ) from err
                 raise
 
         else:  # Magento 2.x
@@ -125,7 +125,7 @@ class MagentoPickingExporter(Component):
                 ]
             }
             external_id = self.backend_adapter._call(
-                "order/%s/ship" % binding.sale_id.magento_bind_ids[0].external_id,
+                f"order/{binding.sale_id.magento_bind_ids[0].external_id}/ship",
                 arguments,
                 http_method="post",
             )

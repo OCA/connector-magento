@@ -3,8 +3,6 @@
 
 from odoo import api, fields, models
 
-from odoo.addons.queue_job.job import job, related_action
-
 
 class MagentoBinding(models.AbstractModel):
     """Abstract Model for the Bindings.
@@ -36,7 +34,6 @@ class MagentoBinding(models.AbstractModel):
         ),
     ]
 
-    @job(default_channel="root.magento")
     @api.model
     def import_batch(self, backend, filters=None):
         """Prepare the import of records modified on Magento"""
@@ -46,8 +43,6 @@ class MagentoBinding(models.AbstractModel):
             importer = work.component(usage="batch.importer")
             return importer.run(filters=filters)
 
-    @job(default_channel="root.magento")
-    @related_action(action="related_action_magento_link")
     @api.model
     def import_record(self, backend, external_id, force=False):
         """Import a Magento record"""
@@ -55,9 +50,6 @@ class MagentoBinding(models.AbstractModel):
             importer = work.component(usage="record.importer")
             return importer.run(external_id, force=force)
 
-    @job(default_channel="root.magento")
-    @related_action(action="related_action_unwrap_binding")
-    @api.multi
     def export_record(self, fields=None):
         """Export a record on Magento"""
         self.ensure_one()
@@ -65,8 +57,6 @@ class MagentoBinding(models.AbstractModel):
             exporter = work.component(usage="record.exporter")
             return exporter.run(self, fields)
 
-    @job(default_channel="root.magento")
-    @related_action(action="related_action_magento_link")
     def export_delete_record(self, backend, external_id):
         """Delete a record on Magento"""
         with backend.work_on(self._name) as work:

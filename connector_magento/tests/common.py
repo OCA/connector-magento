@@ -163,7 +163,7 @@ class MagentoTestCase(SavepointComponentCase):
         assert model_name.startswith("magento.")
         table_name = model_name.replace(".", "_")
         # strip 'magento_' from the model_name to shorted the filename
-        filename = "import_%s_%s" % (table_name[8:], str(magento_id))
+        filename = f"import_{table_name[8:]}_{str(magento_id)}"
 
         def run_import():
             with mute_logger(
@@ -246,9 +246,7 @@ class MagentoTestCase(SavepointComponentCase):
             message.append(
                 " ✓ {}({})".format(
                     model_name,
-                    ", ".join(
-                        "%s: %s" % (field, getattr(record, field)) for field in fields
-                    ),
+                    ", ".join(f"{field}: {getattr(record, field)}" for field in fields),
                 )
             )
         for expected in not_found:
@@ -256,9 +254,7 @@ class MagentoTestCase(SavepointComponentCase):
             message.append(
                 " - {}({})".format(
                     model_name,
-                    ", ".join(
-                        "%s: %s" % (k, v) for k, v in list(expected._asdict().items())
-                    ),
+                    ", ".join(f"{k}: {v}" for k, v in list(expected._asdict().items())),
                 )
             )
         for record in records:
@@ -266,9 +262,7 @@ class MagentoTestCase(SavepointComponentCase):
             message.append(
                 " + {}({})".format(
                     model_name,
-                    ", ".join(
-                        "%s: %s" % (field, getattr(record, field)) for field in fields
-                    ),
+                    ", ".join(f"{field}: {getattr(record, field)}" for field in fields),
                 )
             )
         if not_found or records:
@@ -281,7 +275,6 @@ class MagentoSyncTestCase(MagentoTestCase):
     @classmethod
     def setUpClass(cls):
         super().setUpClass()
-        # Mute logging of notifications about new checkpoints
         with mute_logger(
             "odoo.addons.mail.models.mail_mail", "odoo.models.unlink", "odoo.tests"
         ):

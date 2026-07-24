@@ -50,10 +50,10 @@
         <field name="name">magento.res.partner.tree</field>
         <field name="model">magento.res.partner</field>
         <field name="arch" type="xml">
-            <tree string="Magento Partner" create="false" delete="false">
+            <list string="Magento Partner" create="false" delete="false">
                 <field name="backend_id" />
                 <field name="website_id" />
-            </tree>
+            </list>
         </field>
     </record>
 
@@ -80,10 +80,10 @@
         <field name="name">magento.address.tree</field>
         <field name="model">magento.address</field>
         <field name="arch" type="xml">
-            <tree string="Magento Address" create="false" delete="false">
+            <list string="Magento Address" create="false" delete="false">
                 <field name="backend_id" />
                 <field name="website_id" />
-            </tree>
+            </list>
         </field>
     </record>
 
@@ -98,9 +98,9 @@
                         <field name="backend_id" />
                         <field name="external_id" />
                     </form>
-                    <tree string="Magento">
+                    <list string="Magento">
                         <field name="backend_id" />
-                    </tree>
+                    </list>
                 </field>
             </field>
         </field>

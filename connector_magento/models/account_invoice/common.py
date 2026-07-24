@@ -5,11 +5,10 @@
 import logging
 import xmlrpc.client
 
-from odoo import api, fields, models
+from odoo import fields, models
 
 from odoo.addons.component.core import Component
 from odoo.addons.connector.exception import IDMissingInBackend
-from odoo.addons.queue_job.job import job, related_action
 
 _logger = logging.getLogger(__name__)
 
@@ -19,14 +18,11 @@ class MagentoAccountInvoice(models.Model):
 
     _name = "magento.account.invoice"
     _inherit = "magento.binding"
-    _inherits = {"account.invoice": "odoo_id"}
+    _inherits = {"account.move": "odoo_id"}
     _description = "Magento Invoice"
 
     odoo_id = fields.Many2one(
-        comodel_name="account.invoice",
-        string="Invoice",
-        required=True,
-        ondelete="cascade",
+        comodel_name="account.move", string="Invoice", required=True, ondelete="cascade"
     )
     magento_order_id = fields.Many2one(
         comodel_name="magento.sale.order",
@@ -42,9 +38,6 @@ class MagentoAccountInvoice(models.Model):
         ),
     ]
 
-    @job(default_channel="root.magento")
-    @related_action(action="related_action_unwrap_binding")
-    @api.multi
     def export_record(self):
         """Export a validated or paid invoice."""
         self.ensure_one()
@@ -58,7 +51,7 @@ class AccountInvoice(models.Model):
     (``magento_bind_ids``)
     """
 
-    _inherit = "account.invoice"
+    _inherit = "account.move"
 
     magento_bind_ids = fields.One2many(
         comodel_name="magento.account.invoice",
@@ -86,16 +79,16 @@ class AccountInvoiceAdapter(Component):
             # this is the error in the Magento API
             # when the invoice does not exist
             if err.faultCode == 100:
-                raise IDMissingInBackend
+                raise IDMissingInBackend from err
             else:
                 raise
 
     def create(self, order_increment_id, items, comment, email, include_comment):
         """Create a record on the external system"""
         # pylint: disable=method-required-super
-        if self.collection.version == "1.7":
+        if self.collection.version and self.collection.version.startswith("1."):
             return self._call(
-                "%s.create" % self._magento_model,
+                f"{self._magento_model}.create",
                 [order_increment_id, items, comment, email, include_comment],
             )
 
@@ -112,7 +105,7 @@ class AccountInvoiceAdapter(Component):
             "appendComment": include_comment,
         }
         return self._call(
-            "order/%s/invoice" % order_increment_id, arguments, http_method="post"
+            f"order/{order_increment_id}/invoice", arguments, http_method="post"
         )
 
     def search_read(self, filters=None, order_id=None):
@@ -141,7 +134,7 @@ class MagentoBindingInvoiceListener(Component):
 class MagentoInvoiceListener(Component):
     _name = "magento.account.invoice.listener"
     _inherit = "base.event.listener"
-    _apply_on = ["account.invoice"]
+    _apply_on = ["account.move"]
 
     def on_invoice_paid(self, record):
         self.invoice_create_bindings(record)

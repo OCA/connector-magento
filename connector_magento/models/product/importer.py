@@ -94,16 +94,12 @@ class CatalogImageImporter(Component):
         ):
             base64string = base64.b64encode(
                 (
-                    "%s:%s"
-                    % (
-                        self.backend_record.auth_basic_username,
-                        self.backend_record.auth_basic_password,
-                    )
-                ).encode("utf-8")
+                    f"{self.backend_record.auth_basic_username}:{self.backend_record.auth_basic_password}"
+                ).encode()
             )
-            headers["Authorization"] = "Basic %s" % (base64string.decode("utf-8"))
+            headers["Authorization"] = "Basic {}".format(base64string.decode("utf-8"))
         request = requests.get(
-            url, headers=headers, verify=self.backend_record.verify_ssl
+            url, headers=headers, verify=self.backend_record.verify_ssl, timeout=30
         )
         if request.status_code == 404:
             # the image is just missing, we skip it
@@ -230,10 +226,10 @@ class ProductImportMapper(Component):
     @mapping
     def type(self, record):
         if record["type_id"] == "simple":
-            return {"type": "product"}
+            return {"type": "consu", "is_storable": True}
         elif record["type_id"] in ("virtual", "downloadable", "giftcard"):
-            return {"type": "service"}
-        return
+            return {"type": "service", "is_storable": False}
+        return {"type": "consu", "is_storable": True}
 
     @mapping
     def website_ids(self, record):
@@ -261,7 +257,7 @@ class ProductImportMapper(Component):
             if not cat:
                 raise MappingError(
                     "The product category with "
-                    "magento id %s is not imported." % mag_category_id
+                    f"magento id {mag_category_id} is not imported."
                 )
 
             category_ids.append(cat.id)
@@ -291,7 +287,7 @@ class ProductImporter(Component):
 
     def _import_bundle_dependencies(self):
         """Import the dependencies for a Bundle"""
-        if self.collection.version == "1.7":
+        if self.collection.version and self.collection.version.startswith("1."):
             for dependency in [
                 selection
                 for option in self.magento_record["_bundle_data"]["options"]
@@ -331,8 +327,8 @@ class ProductImporter(Component):
         available_types = [typ[0] for typ in types]
         if product_type not in available_types:
             raise InvalidDataError(
-                "The product type '%s' is not "
-                "yet supported in the connector." % product_type
+                f"The product type '{product_type}' is not "
+                "yet supported in the connector."
             )
 
     def _must_skip(self):
@@ -369,7 +365,6 @@ class ProductImporter(Component):
         if not binding.active:
             # Disable reordering rules that has been created automatically
             binding.orderpoint_ids.write({"active": False})
-        self.backend_record.add_checkpoint(binding)
         return binding
 
     def _update(self, binding, data):
