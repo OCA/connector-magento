@@ -2,12 +2,12 @@
 # © 2016 Sodexis
 # License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl).
 
-from odoo import models, fields, api
+from odoo import api, fields, models
 
 
 # TODO magento.delivery.carrier & move specific stuff
 class DeliveryCarrier(models.Model):
-    """ Adds Magento specific fields to ``delivery.carrier``
+    """Adds Magento specific fields to ``delivery.carrier``
 
     ``magento_code``
 
@@ -28,14 +28,15 @@ class DeliveryCarrier(models.Model):
 
         Defines if the tracking numbers should be exported to Magento.
     """
+
     _inherit = "delivery.carrier"
 
     magento_code = fields.Char(
-        string='Magento Carrier Code',
+        string="Magento Carrier Code",
         required=False,
     )
     magento_tracking_title = fields.Char(
-        string='Magento Tracking Title',
+        string="Magento Tracking Title",
         required=False,
     )
     # in Magento, the delivery method is something like that:
@@ -43,15 +44,15 @@ class DeliveryCarrier(models.Model):
     # where the first part before the first _ is always the carrier code
     # in this example, the carrier code is tntmodule2
     magento_carrier_code = fields.Char(
-        compute='_compute_carrier_code',
-        string='Magento Base Carrier Code',
+        compute="_compute_carrier_code",
+        string="Magento Base Carrier Code",
     )
-    magento_export_tracking = fields.Boolean(string='Export tracking numbers',
-                                             default=True)
+    magento_export_tracking = fields.Boolean(
+        string="Export tracking numbers", default=True
+    )
 
-    @api.depends('magento_code')
+    @api.depends("magento_code")
     def _compute_carrier_code(self):
         for carrier in self:
             if carrier.magento_code:
-                carrier.magento_carrier_code = carrier.magento_code.split(
-                    '_')[0]
+                carrier.magento_carrier_code = carrier.magento_code.split("_")[0]

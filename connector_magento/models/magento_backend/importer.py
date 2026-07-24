@@ -5,7 +5,7 @@ from odoo.addons.component.core import Component
 
 
 class MetadataBatchImporter(Component):
-    """ Import the records directly, without delaying the jobs.
+    """Import the records directly, without delaying the jobs.
 
     Import the Magento Websites, Stores, Storeviews
 
@@ -15,10 +15,10 @@ class MetadataBatchImporter(Component):
 
     """
 
-    _name = 'magento.metadata.batch.importer'
-    _inherit = 'magento.direct.batch.importer'
+    _name = "magento.metadata.batch.importer"
+    _inherit = "magento.direct.batch.importer"
     _apply_on = [
-        'magento.website',
-        'magento.store',
-        'magento.storeview',
+        "magento.website",
+        "magento.store",
+        "magento.storeview",
     ]

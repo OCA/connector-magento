@@ -6,15 +6,15 @@ from odoo.addons.component.core import AbstractComponent
 
 
 class MagentoImportMapper(AbstractComponent):
-    _name = 'magento.import.mapper'
-    _inherit = ['base.magento.connector', 'base.import.mapper']
-    _usage = 'import.mapper'
+    _name = "magento.import.mapper"
+    _inherit = ["base.magento.connector", "base.import.mapper"]
+    _usage = "import.mapper"
 
 
 class MagentoExportMapper(AbstractComponent):
-    _name = 'magento.export.mapper'
-    _inherit = ['base.magento.connector', 'base.export.mapper']
-    _usage = 'export.mapper'
+    _name = "magento.export.mapper"
+    _inherit = ["base.magento.connector", "base.export.mapper"]
+    _usage = "export.mapper"
 
 
 def normalize_datetime(field):
@@ -23,7 +23,8 @@ def normalize_datetime(field):
     OpenERP"""
 
     def modifier(self, record, to_attr):
-        if record[field] == '0000-00-00 00:00:00':
+        if record[field] == "0000-00-00 00:00:00":
             return None
         return record[field]
+
     return modifier
