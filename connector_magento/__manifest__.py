@@ -18,7 +18,7 @@
         "connector",
     ],
     "external_dependencies": {
-        "python": ["magento"],
+        "python": ["suds-community", "magento"],
     },
     "author": "Camptocamp,Akretion,Sodexis,Odoo Community Association (OCA)",
     "license": "AGPL-3",
