@@ -55,6 +55,7 @@
           'stock_view.xml',
           'security/ir.model.access.csv',
           'payment_method_view.xml',
+          'res_company_view.xml',
           ],
  'installable': True,
  'application': True,

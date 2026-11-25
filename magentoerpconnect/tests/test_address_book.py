@@ -48,13 +48,14 @@ class TestImportAddressBook(common.TransactionCase):
         self.model = self.env['magento.res.partner']
         self.address_model = self.env['magento.address']
         warehouse_id = self.env.ref('stock.warehouse0').id
-        self.backend_id = self.backend_model.create({
+        self.backend = self.backend_model.create({
             'name': 'Test Magento Address book',
             'version': '1.7',
             'location': 'http://anyurl',
             'username': 'guewen',
             'warehouse_id': warehouse_id,
-            'password': '42'}).id
+            'password': '42'})
+        self.backend_id = self.backend.id
         with mock_api(magento_base_responses):
             import_batch(self.session, 'magento.website', self.backend_id)
             import_batch(self.session, 'magento.store', self.backend_id)
@@ -93,6 +94,8 @@ class TestImportAddressBook(common.TransactionCase):
         self.assertEqual(address_bind.magento_id, '9999253',
                          msg="The merged address should be the "
                              "billing address")
+        self.assertEqual(partner.company_id.id,
+                         self.backend.warehouse_id.company_id.id)
 
     def test_individual_2_addresses(self):
         """ Import an individual (b2c) with 2 addresses """
@@ -117,6 +120,10 @@ class TestImportAddressBook(common.TransactionCase):
         self.assertEqual(partner.child_ids[0].type, 'delivery',
                          msg="The shipping address should be of "
                              "type 'delivery'")
+        self.assertEqual(partner.company_id.id,
+                         self.backend.company_id.id)
+        self.assertEqual(partner.child_ids[0].company_id.id,
+                         self.backend.company_id.id)
 
     def test_company_1_address(self):
         """ Import an company (b2b) with 1 address """
@@ -169,3 +176,30 @@ class TestImportAddressBook(common.TransactionCase):
         self.assertEqual(address.type, 'delivery',
                          msg="The shipping address should be of "
                              "type 'delivery'")
+
+    def test_multi_company_2_addresses(self):
+        """Import an invidual on multi backend company"""
+        self.backend.is_multi_company = True
+        with mock_api(individual_2_addresses):
+            import_record(self.session, 'magento.res.partner',
+                          self.backend_id, '9999255')
+        partner = self.model.search([('magento_id', '=', '9999255'),
+                                     ('backend_id', '=', self.backend_id)])
+        self.assertEqual(len(partner), 1)
+        # Name of the billing address
+        self.assertEqual(partner.name, u'Mace Sébastien')
+        self.assertEqual(partner.type, 'default')
+        # billing address merged with the partner,
+        # second address as a contact
+        self.assertEqual(len(partner.child_ids), 1)
+        self.assertEqual(len(partner.magento_bind_ids), 1)
+        self.assertEqual(len(partner.magento_address_bind_ids), 1)
+        address_bind = partner.magento_address_bind_ids[0]
+        self.assertEqual(address_bind.magento_id, '9999254',
+                         msg="The merged address should be the "
+                             "billing address")
+        self.assertEqual(partner.child_ids[0].type, 'delivery',
+                         msg="The shipping address should be of "
+                             "type 'delivery'")
+        self.assertFalse(partner.company_id.id)
+        self.assertFalse(partner.child_ids[0].company_id.id)
